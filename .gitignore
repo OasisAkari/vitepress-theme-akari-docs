@@ -1,0 +1,8 @@
+node_modules
+docs/.vitepress/dist
+docs/.vitepress/cache
+docs/public/search-index.json
+.superpowers
+.DS_Store
+*.log
+.vitest

@@ -1,0 +1,271 @@
+import type {
+  M3eSearchBackendConfig,
+  M3eSearchResult,
+} from "../types";
+import { searchLocal } from "./local";
+import { getSearchBackend } from "./registry";
+import type {
+  M3eSearchBackend,
+  M3eSearchContext,
+  SearchIndexEntry,
+  SearchIndexFile,
+} from "./types";
+
+const MAX_TITLE_LENGTH = 200;
+const MAX_EXCERPT_LENGTH = 320;
+
+interface HttpSearchBackendConfig {
+  type: "http";
+  endpoint: string;
+  method?: "GET" | "POST";
+  headers?: Record<string, string>;
+  credentials?: RequestCredentials;
+  queryParam?: string;
+  limitParam?: string;
+}
+
+export function resolveSearchEndpoint(endpoint: string, base = "/"): string {
+  if (/^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(endpoint)) return endpoint;
+
+  const normalizedBase = base === "/" ? "" : base.replace(/\/+$/, "");
+  const path = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+  return `${normalizedBase}${path}` || "/";
+}
+
+function normalizeField(value: unknown): string | undefined {
+  return typeof value === "string" && value.trim()
+    ? value.trim()
+    : undefined;
+}
+
+function toRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object"
+    ? (value as Record<string, unknown>)
+    : null;
+}
+
+function unwrapResults(raw: unknown): unknown[] {
+  if (Array.isArray(raw)) return raw;
+
+  const record = toRecord(raw);
+  if (record && Array.isArray(record.results)) return record.results;
+  if (record && Array.isArray(record.data)) return record.data;
+
+  return [];
+}
+
+export function normalizeSearchResults(
+  raw: unknown,
+  limit: number,
+): M3eSearchResult[] {
+  const results: M3eSearchResult[] = [];
+  const seen = new Set<string>();
+
+  for (const item of unwrapResults(raw)) {
+    const record = toRecord(item);
+    if (!record) continue;
+
+    const href = normalizeField(record.href ?? record.url ?? record.path);
+    const rawTitle =
+      record.title ?? record.heading ?? record.pageTitle ?? record.name;
+    const title = normalizeField(rawTitle);
+
+    if (!href || !title) continue;
+
+    const key = `${href}::${title}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+
+    const pageTitle =
+      normalizeField(record.pageTitle ?? record.page ?? title) ?? title;
+    const heading = normalizeField(record.heading ?? record.section);
+    const excerpt =
+      normalizeField(
+        record.excerpt ?? record.snippet ?? record.content ?? record.description,
+      ) ?? "";
+    const id = normalizeField(record.id) ?? `${href}::${results.length}`;
+
+    results.push({
+      id,
+      title: title.slice(0, MAX_TITLE_LENGTH),
+      href,
+      pageTitle: pageTitle.slice(0, MAX_TITLE_LENGTH),
+      heading: heading?.slice(0, MAX_TITLE_LENGTH),
+      excerpt: excerpt.slice(0, MAX_EXCERPT_LENGTH),
+    });
+
+    if (results.length >= limit) break;
+  }
+
+  return results;
+}
+
+function rejectedAbort(): Error {
+  const error = new Error("Search aborted");
+  error.name = "AbortError";
+  return error;
+}
+
+function createLocalSearchBackend(
+  endpoint: string,
+  base: string,
+): M3eSearchBackend {
+  let indexPromise: Promise<SearchIndexEntry[]> | undefined;
+
+  async function loadIndex(): Promise<SearchIndexEntry[]> {
+    if (!indexPromise) {
+      indexPromise = fetch(resolveSearchEndpoint(endpoint, base), {
+        cache: "no-store",
+      })
+        .then(async (response) => {
+          if (!response.ok) {
+            throw new Error(`无法加载本地搜索索引（HTTP ${response.status}）。`);
+          }
+
+          const payload = (await response.json()) as Partial<SearchIndexFile>;
+          if (!Array.isArray(payload.entries)) {
+            throw new Error("本地搜索索引格式无效。");
+          }
+
+          return payload.entries;
+        })
+        .catch((error) => {
+          indexPromise = undefined;
+          throw error;
+        });
+    }
+
+    return indexPromise;
+  }
+
+  return {
+    async search(query, context) {
+      if (context.signal?.aborted) throw rejectedAbort();
+
+      const entries = await loadIndex();
+
+      if (context.signal?.aborted) throw rejectedAbort();
+      return searchLocal(entries, query, context.limit);
+    },
+  };
+}
+
+export interface HttpRequestInit {
+  url: string;
+  init: RequestInit;
+}
+
+export function buildHttpRequest(
+  config: HttpSearchBackendConfig,
+  query: string,
+  limit: number,
+  base = "/",
+): HttpRequestInit {
+  const endpoint = resolveSearchEndpoint(config.endpoint, base);
+  const queryParam = config.queryParam?.trim() || "q";
+  const limitParam = config.limitParam?.trim() || "limit";
+  const method = config.method === "POST" ? "POST" : "GET";
+  const headers = { ...(config.headers ?? {}) };
+
+  if (method === "GET") {
+    const separator = endpoint.includes("?") ? "&" : "?";
+    const params = new URLSearchParams();
+    params.set(queryParam, query);
+    params.set(limitParam, String(limit));
+
+    return {
+      url: `${endpoint}${separator}${params.toString()}`,
+      init: {
+        method,
+        headers,
+        credentials: config.credentials ?? "same-origin",
+        cache: "no-store",
+      },
+    };
+  }
+
+  if (
+    !Object.keys(headers).some(
+      (key) => key.toLowerCase() === "content-type",
+    )
+  ) {
+    headers["Content-Type"] = "application/json";
+  }
+
+  return {
+    url: endpoint,
+    init: {
+      method,
+      headers,
+      credentials: config.credentials ?? "same-origin",
+      cache: "no-store",
+      body: JSON.stringify({
+        [queryParam]: query,
+        [limitParam]: limit,
+      }),
+    },
+  };
+}
+
+function createHttpSearchBackend(
+  config: HttpSearchBackendConfig,
+  base: string,
+): M3eSearchBackend {
+  return {
+    async search(query, context) {
+      const request = buildHttpRequest(config, query, context.limit, base);
+      const response = await fetch(request.url, {
+        ...request.init,
+        signal: context.signal,
+      });
+
+      if (!response.ok) {
+        throw new Error(`搜索请求失败（HTTP ${response.status}）。`);
+      }
+
+      return normalizeSearchResults(
+        await response.json(),
+        context.limit,
+      );
+    },
+  };
+}
+
+function createRegisteredSearchBackend(id: string): M3eSearchBackend {
+  return {
+    async search(query, context) {
+      const handler = getSearchBackend(id);
+
+      if (!handler) {
+        throw new Error(`未找到搜索后端 "${id}"。`);
+      }
+
+      const result = await handler(query, {
+        limit: context.limit,
+        signal: context.signal,
+      });
+
+      return normalizeSearchResults(result, context.limit);
+    },
+  };
+}
+
+export function createSearchBackend(
+  config: M3eSearchBackendConfig,
+  options: { base?: string } = {},
+): M3eSearchBackend {
+  const base = options.base ?? "/";
+
+  switch (config.type) {
+    case "http":
+      return createHttpSearchBackend(config, base);
+    case "registered":
+      return createRegisteredSearchBackend(config.id);
+    case "local":
+    default:
+      return createLocalSearchBackend(
+        config.endpoint || "/search-index.json",
+        base,
+      );
+  }
+}
