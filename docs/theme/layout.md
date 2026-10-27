@@ -82,7 +82,7 @@ appBar: {
   </m3e-app-bar>
 </div>
 
-实际站点的顶栏固定在应用壳顶部，背景使用 `surface-container-low`，不随内容滚动。
+实际站点的顶栏固定在应用壳顶部，背景使用 `surface-container-low`，不随内容滚动。页面级 `html`/`body` 背景与前景由 Layout 从当前 `m3e-theme` 色板同步到根元素，跟随明暗模式与配色设置。
 
 ## 内容面板与目录
 

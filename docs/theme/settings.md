@@ -30,6 +30,8 @@ settings: {
 
 颜色使用原生 `<input type="color">`，选择后立即生成新的动态色板。色调变体使用可多选外观、单选行为的 Filter Chip 组；明暗、对比度、动效、方向与字号使用分段按钮。
 
+页面外壳与组件共用同一套 `--md-sys-color-*` 令牌：Layout 会把当前 shell 色令牌同步到根元素，`html`/`body`、顶栏、侧栏、内容面板、目录与搜索弹窗都会随种子色、变体、明暗和对比度更新，不存在独立的固定背景色板。
+
 <div class="demo-surface">
   <div class="demo-stack">
     <div class="demo-row">

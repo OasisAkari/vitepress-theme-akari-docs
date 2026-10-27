@@ -63,9 +63,9 @@ onUnmounted(() => setTrigger(null));
   box-sizing: border-box;
   width: clamp(180px, 22vw, 300px);
   height: 40px;
-  padding-inline: 12px;
+  padding-inline: var(--md-sys-measurement-space150, 12px);
   border: 1px solid var(--md-sys-color-outline-variant);
-  border-radius: 20px;
+  border-radius: var(--md-sys-shape-corner-full);
   background-color: var(--md-sys-color-surface-container-high);
   color: var(--md-sys-color-on-surface-variant);
   font: inherit;
@@ -103,15 +103,31 @@ onUnmounted(() => setTrigger(null));
 }
 
 .m3e-search-trigger__kbd {
+  display: inline-flex;
   flex: none;
-  padding: 2px 6px;
-  border: 1px solid var(--md-sys-color-outline-variant);
-  border-radius: 6px;
-  background-color: var(--md-sys-color-surface-container-lowest);
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-inline-size: var(--md-sys-measurement-space350, 28px);
+  min-block-size: var(--md-sys-measurement-space250, 20px);
+  padding-inline: var(--md-sys-measurement-space100, 8px);
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-corner-full);
+  background-color: transparent;
   color: var(--md-sys-color-on-surface-variant);
   font-family: inherit;
-  font-size: 0.6875rem;
-  line-height: 1.2;
+  font-size: var(--md-sys-typescale-label-small-font-size);
+  font-weight: var(--md-sys-typescale-label-small-font-weight);
+  line-height: var(--md-sys-typescale-label-small-line-height);
+  letter-spacing: 0.5px;
+  direction: ltr;
+  unicode-bidi: isolate;
+  white-space: nowrap;
+  transition: color 160ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.m3e-search-trigger:hover .m3e-search-trigger__kbd {
+  color: var(--md-sys-color-on-surface);
 }
 
 @media (max-width: 1199px) {
@@ -126,6 +142,11 @@ onUnmounted(() => setTrigger(null));
     width: clamp(150px, 20vw, 200px);
     flex-basis: 200px;
   }
+
+  .m3e-search-trigger__kbd {
+    min-inline-size: var(--md-sys-measurement-space300, 24px);
+    padding-inline: var(--md-sys-measurement-space75, 6px);
+  }
 }
 
 @media (max-width: 767px) {
@@ -134,7 +155,7 @@ onUnmounted(() => setTrigger(null));
     width: 40px;
     height: 40px;
     padding: 0;
-    border-radius: 50%;
+    border-radius: var(--md-sys-shape-corner-full);
     justify-content: center;
   }
 

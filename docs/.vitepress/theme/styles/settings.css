@@ -13,7 +13,11 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  scrollbar-color: var(--m3e-scrollbar-thumb-color, #938f94) transparent;
+  scrollbar-color: var(
+      --m3e-scrollbar-thumb-color,
+      var(--md-sys-color-outline)
+    )
+    transparent;
 }
 
 .m3e-settings__section {
@@ -37,11 +41,11 @@
   -webkit-appearance: none;
   background: transparent;
   cursor: pointer;
-  outline-color: var(--md-sys-color-secondary, #625b71);
+  outline-color: var(--md-sys-color-secondary);
 }
 
 .m3e-settings input[type="color"]:focus-visible {
-  outline: 3px solid var(--md-sys-color-secondary, #625b71);
+  outline: 3px solid var(--md-sys-color-secondary);
   outline-offset: 2px;
 }
 

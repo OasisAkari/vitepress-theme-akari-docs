@@ -63,6 +63,23 @@ function isDarkScheme(): boolean {
   );
 }
 
+const SHELL_COLOR_TOKENS = [
+  "--md-sys-color-surface-container-low",
+  "--md-sys-color-on-surface",
+  "--md-sys-color-outline",
+  "--m3e-scrollbar-thumb-color",
+] as const;
+
+function copyThemeColorTokens(theme: HTMLElement): void {
+  const computed = getComputedStyle(theme);
+  const rootStyle = document.documentElement.style;
+
+  for (const token of SHELL_COLOR_TOKENS) {
+    const value = computed.getPropertyValue(token).trim();
+    if (value) rootStyle.setProperty(token, value);
+  }
+}
+
 function syncBodyTheme(): void {
   if (typeof document === "undefined") return;
 
@@ -73,17 +90,11 @@ function syncBodyTheme(): void {
   const theme = themeElement.value;
   if (!theme) return;
 
-  const style = getComputedStyle(theme);
-  const background = style
-    .getPropertyValue("--md-sys-color-surface-container-low")
-    .trim();
-  const foreground = style.getPropertyValue("--md-sys-color-on-surface").trim();
-
-  if (background) {
-    document.documentElement.style.backgroundColor = background;
-    document.body.style.backgroundColor = background;
-  }
-  if (foreground) document.body.style.color = foreground;
+  // m3e-theme is nested inside #app, so the palette it publishes on its
+  // shadow host never reaches html/body on its own. Copy the active color
+  // tokens to the document root; html/body then resolve their background and
+  // foreground from the same dynamic palette as everything inside the theme.
+  copyThemeColorTokens(theme);
 }
 
 function syncThemeAttributes(): void {

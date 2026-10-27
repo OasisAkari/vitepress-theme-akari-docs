@@ -37,7 +37,7 @@
   z-index: 0;
   background-color: color-mix(
     in srgb,
-    var(--md-sys-color-scrim, #000) 42%,
+    var(--md-sys-color-scrim) 42%,
     transparent
   );
   opacity: 0;
@@ -66,12 +66,12 @@
   box-shadow:
     0 8px 12px 6px color-mix(
       in srgb,
-      var(--md-sys-color-shadow, #000) 15%,
+      var(--md-sys-color-shadow) 15%,
       transparent
     ),
     0 1px 3px 0 color-mix(
       in srgb,
-      var(--md-sys-color-shadow, #000) 30%,
+      var(--md-sys-color-shadow) 30%,
       transparent
     );
 }
@@ -153,7 +153,11 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  scrollbar-color: var(--m3e-scrollbar-thumb-color, #938f94) transparent;
+  scrollbar-color: var(
+      --m3e-scrollbar-thumb-color,
+      var(--md-sys-color-outline)
+    )
+    transparent;
   padding-inline: 4px;
   margin-inline: -4px;
 }
@@ -236,19 +240,23 @@
 .m3e-search-dialog__hints kbd,
 .m3e-search-state__hint kbd {
   display: inline-flex;
-  min-width: 20px;
-  height: 20px;
+  min-inline-size: var(--md-sys-measurement-space250, 20px);
+  block-size: var(--md-sys-measurement-space250, 20px);
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  padding-inline: 4px;
-  border: 1px solid var(--md-sys-color-outline-variant);
-  border-radius: 5px;
-  background-color: var(--md-sys-color-surface-container-lowest);
+  padding-inline: var(--md-sys-measurement-space50, 4px);
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-corner-extra-small);
+  background-color: transparent;
   color: var(--md-sys-color-on-surface-variant);
   font-family: inherit;
-  font-size: 0.6875rem;
-  line-height: 1;
+  font-size: var(--md-sys-typescale-label-small-font-size);
+  font-weight: var(--md-sys-typescale-label-small-font-weight);
+  line-height: var(--md-sys-typescale-label-small-line-height);
+  letter-spacing: 0.5px;
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 
 .m3e-search-state {

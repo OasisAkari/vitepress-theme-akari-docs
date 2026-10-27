@@ -192,7 +192,7 @@ import "@m3e/icons/outlined/your_icon_name";
 }
 ```
 
-颜色优先使用 m3e 注入的 `--md-sys-color-*` 令牌。
+颜色优先使用 m3e 注入的 `--md-sys-color-*` 令牌。`styles/tokens.css` 只保存布局变量，不维护静态调色板；Layout 会把当前 `m3e-theme` 的 shell 色令牌同步到根元素，`html`/`body` 通过 `--m3e-doc-page-background` 与 `--m3e-doc-page-foreground` 随种子色、变体、明暗和对比度更新。
 
 ## 已知限制
 
@@ -200,7 +200,7 @@ import "@m3e/icons/outlined/your_icon_name";
 - 多语言与 60+ 组件全量 API 页不在当前阶段范围内。
 - 本地搜索是轻量级子串检索，不提供语义搜索或拼写纠错；可通过 HTTP/注册式后端替换。
 - m3e 组件按需注册；在 Markdown 中使用新组件前，需要在 `m3e.ts` 增加对应导入。
-- JS 水合前使用基线设计令牌，动态色会在客户端主题就绪后接管。
+- JS 水合前 `html`/`body` 回退到系统 `Canvas` / `CanvasText`；m3e 主题就绪后由动态色板接管。默认种子色 `#6750A4` 与品牌 logo 是固定输入/品牌资产，不参与令牌替换。
 
 ## 设计资料
 
