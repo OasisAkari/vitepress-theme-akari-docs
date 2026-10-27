@@ -6,7 +6,7 @@
 
 - M3E 应用式文档壳，不使用 iframe，保留 VitePress 的 Markdown、SSR 与 SPA 路由。
 - 双模式侧边栏：富配置支持图标、徽标、分组与自动展开，也可回退 VitePress 原生 `themeConfig.sidebar`。
-- 文档搜索：顶栏入口、`⌘K / Ctrl K` 快捷键、M3 居中搜索对话框、中文友好的本地 Markdown 索引。
+- 文档搜索：顶栏入口、`⌘K / Ctrl K` 快捷键、由按钮当前样式克隆并吸附到中心的 MD3 动效搜索面板、中文友好的本地 Markdown 索引。
 - 可配置搜索后端：本地索引、HTTP 接口或 `registerSearchBackend()` 注册的 JS handler。
 - 搜索索引由 Vite 插件在开发/构建期生成到 `docs/public/search-index.json`，不提交生成物。
 - 右侧设置：颜色、8 种色调变体、明暗、对比度、动效、方向与字号，支持 localStorage 持久化。

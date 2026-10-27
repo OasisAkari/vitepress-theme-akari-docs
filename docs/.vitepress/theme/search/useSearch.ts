@@ -26,6 +26,8 @@ export interface M3eSearchApi {
   openSearch(): void;
   closeSearch(): void;
   finalizeClose(): void;
+  setTrigger(element: HTMLElement | null): void;
+  getTriggerRect(): DOMRect | null;
   setQuery(value: string): void;
   retry(): void;
   handleInputKeydown(event: KeyboardEvent): void;
@@ -62,6 +64,7 @@ export function provideM3eSearch(
   let controller: AbortController | undefined;
   let requestId = 0;
   let previousFocus: HTMLElement | null = null;
+  let triggerElement: HTMLElement | null = null;
 
   function clearTimer(): void {
     if (timer !== undefined) {
@@ -138,10 +141,12 @@ export function provideM3eSearch(
   function openSearch(): void {
     if (!config.search.enabled || isOpen.value) return;
 
+    const active = document.activeElement;
     previousFocus =
-      document.activeElement instanceof HTMLElement &&
-      document.activeElement !== document.body
-        ? document.activeElement
+      active instanceof HTMLElement &&
+      active !== document.body &&
+      !active.closest(".m3e-search-dialog")
+        ? active
         : null;
     query.value = "";
     resetResults();
@@ -160,8 +165,23 @@ export function provideM3eSearch(
     isOpen.value = false;
     query.value = "";
     resetResults();
-    previousFocus?.focus({ preventScroll: true });
+    const focusTarget =
+      previousFocus?.isConnected ? previousFocus : triggerElement;
+    focusTarget?.focus({ preventScroll: true });
     previousFocus = null;
+  }
+
+  function setTrigger(element: HTMLElement | null): void {
+    triggerElement = element;
+  }
+
+  function getTriggerRect(): DOMRect | null {
+    if (triggerElement?.isConnected) {
+      return triggerElement.getBoundingClientRect();
+    }
+
+    const fallback = document.querySelector<HTMLElement>(".m3e-search-trigger");
+    return fallback?.getBoundingClientRect() ?? null;
   }
 
   function setQuery(value: string): void {
@@ -296,6 +316,8 @@ export function provideM3eSearch(
     openSearch,
     closeSearch,
     finalizeClose,
+    setTrigger,
+    getTriggerRect,
     setQuery,
     retry,
     handleInputKeydown,

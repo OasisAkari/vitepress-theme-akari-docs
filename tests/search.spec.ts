@@ -2,6 +2,10 @@ import { describe, expect, it } from "vitest";
 
 import { resolveM3eConfig } from "../docs/.vitepress/theme/config";
 import {
+  computeMorphTransform,
+  getSearchMotionPreset,
+} from "../docs/.vitepress/theme/search/animation";
+import {
   buildHttpRequest,
   createSearchBackend,
   normalizeSearchResults,
@@ -212,6 +216,45 @@ describe("highlight splitting", () => {
     expect(splitHighlight("文档搜索", "   ")).toEqual([
       { text: "文档搜索", match: false },
     ]);
+  });
+});
+
+describe("search morph animation", () => {
+  it("maps the trigger rect onto the dialog rect", () => {
+    const morph = computeMorphTransform(
+      { left: 100, top: 20, width: 300, height: 40 },
+      { left: 360, top: 160, width: 720, height: 300 },
+    );
+
+    expect(morph.scaleX).toBeCloseTo(300 / 720);
+    expect(morph.scaleY).toBeCloseTo(40 / 300);
+    expect(morph.translateX).toBe(-260);
+    expect(morph.translateY).toBe(-140);
+    expect(morph.transform).toBe(
+      "translate(-260px, -140px) scale(0.4166666666666667, 0.13333333333333333)",
+    );
+  });
+
+  it("keeps a minimum scale for tiny triggers", () => {
+    const morph = computeMorphTransform(
+      { left: 0, top: 0, width: 0, height: 0 },
+      { left: 0, top: 0, width: 720, height: 600 },
+    );
+
+    expect(morph.scaleX).toBe(0.02);
+    expect(morph.scaleY).toBe(0.02);
+  });
+
+  it("provides distinct standard and expressive MD3 presets", () => {
+    const standard = getSearchMotionPreset("standard");
+    const expressive = getSearchMotionPreset("expressive");
+
+    expect(standard.easing).toBe("cubic-bezier(0.2, 0, 0, 1)");
+    expect(expressive.easing).toBe("cubic-bezier(0.38, 1.21, 0.22, 1)");
+    expect(expressive.duration).toBeGreaterThan(standard.duration);
+    expect(expressive.contentDuration).toBeGreaterThan(
+      standard.contentDuration,
+    );
   });
 });
 

@@ -13,14 +13,15 @@
 ### 顶栏
 
 - 桌面端在顶栏 trailing 区域渲染真实占位的搜索框：搜索图标、`搜索文档` 占位、`⌘K / Ctrl K` 提示。
-- 点击搜索框打开居中 `m3e-dialog`，保留 m3e 内建的 emphasized 高度展开、上移、透明度过渡与 scrim 动画。
+- 点击搜索框后，按钮的当前样式（背景、边框、圆角、阴影、图标、占位与快捷键）被克隆为动画表面，从按钮位置过渡到居中的自定义原生 `<dialog>`。
 - 移动端收缩为圆形搜索图标；宽度低于 768px 时隐藏 GitHub/npm 社交入口，为搜索、设置和标题留出空间。
 - 全局快捷键 `Meta/Ctrl + K` 打开搜索；已打开时只聚焦输入框，不重置查询。
 
 ### 搜索对话框
 
-- 使用 `m3e-dialog`，`dismissible`，最大宽度 720px，最大高度 `min(680px, 100dvh - 64px)`。
-- Header 使用 `m3e-search-bar`，输入框自动聚焦；X 关闭按钮由 dialog 提供。
+- 使用自定义原生 modal `<dialog>` 承载 M3 surface 面板，最大宽度 720px，最大高度 `min(680px, 100dvh - 64px)`；关闭按钮为 `m3e-icon-button`。
+- 面板从搜索按钮的真实 rect morph 到视口中心，关闭时反向回放；按钮与面板尺寸均在运行时测量。触发按钮的克隆保留当前计算样式，作为动画表面本身；真实面板在表面接近落点前保持隐藏，避免初始帧出现空白 surface。
+- Header 使用 `m3e-search-bar`；morph surface 接近面板尺寸时即交叉淡入面板与内容并聚焦输入框，不等待完整时长。
 - 结果使用 `m3e-list` + `m3e-list-action`，每条显示页面 Overline、章节标题、摘要与 `article` 图标。
 - 查询高亮使用 `<mark>`，不插入 HTML。
 - 键盘：输入框中 `ArrowUp` / `ArrowDown` 切换结果，`Enter` 打开当前结果，`Escape` 关闭；活动结果自动滚入可视区域。
@@ -150,10 +151,13 @@ docs/.vitepress/theme/search/
 
 ## 7. 实施修订
 
-- `m3e-dialog` 的 `show()` / `hide()` 不会同步宿主元素的 `open` property；不能通过 `:open` 绑定控制。搜索对话框通过 ref 调用公开方法，并以原生 dialog 的打开状态判断是否需要关闭。
-- Vue 对自定义元素的布尔绑定在 hydration 阶段可能写出 `open="false"`，Lit 会视为 true；搜索关闭状态不再通过属性驱动。
-- 对话框关闭分为 requestClose（触发关闭动画、保留结果内容）与 finalizeClose（动画结束后清理状态并恢复焦点）。
-- `m3e-search-bar` 的 `clearable` 与 dialog 的 dismissible 关闭按钮会产生两个 X；搜索框不启用 clearable，只保留 dialog 的关闭按钮。
+- 搜索弹窗外壳从 `m3e-dialog` 替换为自定义原生 `<dialog>` + M3 panel：`m3e-dialog` 的动画位于 shadow/top layer，无法从顶栏按钮位置 morph 到中心。
+- 打开动画以搜索按钮的 DOM 克隆作为 morph surface：初始帧复制按钮当前计算样式（图标、占位、快捷键、边框与背景），表面本身位移、缩放并以圆角/边框/阴影插值到面板位置；不再是“按钮留在原处 + 空白面板从中心展开”。
+- morph surface 接近面板尺寸时交叉淡入真实面板与内容；内容淡入与表面收尾重叠，避免表面提前到位后长时间空白。
+- 关闭先短暂淡出面板内容，再复用当前 morph surface 沿原路径缩回按钮；接近按钮时恢复图标/占位/快捷键，空间运动完全落定后才关闭 modal，避免 expressive 过冲造成末帧跳变。
+- 动效跟随 `settings.motion`：standard 空间运动约 300ms `cubic-bezier(0.2,0,0,1)`，expressive 约 500ms `cubic-bezier(0.38,1.21,0.22,1)`；原生 dialog 提供 top layer、背景 inert、Esc 与焦点约束。
+- 打开时由 dialog 保持焦点，内容落定即进入输入框；关闭优先恢复打开前焦点，否则回到搜索按钮。
+- `m3e-search-bar` 不启用 clearable，面板 header 只保留一个 `m3e-icon-button` 关闭按钮。
 - 索引生成产物位于 `docs/public/search-index.json`，由 Vite 插件在 `configResolved`、开发服务器 Markdown 变化和 `closeBundle` 时维护；当前构建包含 13 个内容页。
 - 搜索输入增加 `id` / `name`，避免浏览器表单字段无障碍提示。
 

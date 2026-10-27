@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 
 import { useM3eConfig } from "../../composables/useM3eConfig";
 import { useM3eSearch } from "../useSearch";
 
 const config = useM3eConfig();
-const { isOpen, openSearch } = useM3eSearch();
+const { isOpen, openSearch, setTrigger } = useM3eSearch();
+const trigger = ref<HTMLButtonElement | null>(null);
 
 const shortcutLabel = ref("⌘K");
 
@@ -22,14 +23,19 @@ const ariaLabel = computed(() =>
 );
 
 onMounted(() => {
+  setTrigger(trigger.value);
+
   if (!/(Mac|iPhone|iPad)/.test(navigator.userAgent)) {
     shortcutLabel.value = "Ctrl K";
   }
 });
+
+onUnmounted(() => setTrigger(null));
 </script>
 
 <template>
   <button
+    ref="trigger"
     type="button"
     class="m3e-search-trigger"
     :aria-label="ariaLabel"
@@ -108,10 +114,17 @@ onMounted(() => {
   line-height: 1.2;
 }
 
+@media (max-width: 1199px) {
+  .m3e-search-trigger {
+    width: clamp(200px, 20vw, 260px);
+    flex-basis: 260px;
+  }
+}
+
 @media (max-width: 960px) {
   .m3e-search-trigger {
-    width: clamp(150px, 20vw, 220px);
-    flex-basis: 220px;
+    width: clamp(150px, 20vw, 200px);
+    flex-basis: 200px;
   }
 }
 
