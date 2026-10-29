@@ -10,7 +10,7 @@ icon: home
 Vitepress Theme Akari Docs est un thème de documentation construit avec VitePress et `@m3e/web`.
 
 <div class="demo-row">
-  <m3e-button id="overview-demo-button" variant="filled" href="/fr-FR/getting-started/installation.html">
+  <m3e-button variant="filled" href="/fr-FR/getting-started/installation.html">
     <m3e-icon slot="icon" name="rocket_launch"></m3e-icon>
     Guide d'installation
   </m3e-button>
@@ -23,7 +23,6 @@ Vitepress Theme Akari Docs est un thème de documentation construit avec VitePre
     Web Components
   </m3e-chip>
   <m3e-badge size="large">v1.0.0</m3e-badge>
-  <m3e-badge for="overview-demo-button" position="above-after">6</m3e-badge>
 </div>
 
 ## Fonctionnalités
