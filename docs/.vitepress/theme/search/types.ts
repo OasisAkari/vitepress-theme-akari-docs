@@ -1,4 +1,4 @@
-import type { M3eSearchResult } from "../types";
+import type { AkariSearchResult } from "../types";
 
 export interface SearchIndexEntry {
   id: string;
@@ -16,16 +16,20 @@ export interface SearchIndexFile {
   entries: SearchIndexEntry[];
 }
 
-export interface M3eSearchContext {
+export interface AkariSearchContext {
   limit: number;
   signal?: AbortSignal;
+  /** Language of the locale being read, e.g. `en-US`. */
+  lang?: string;
+  /** Key of the VitePress locale being read; `root` for the default one. */
+  locale?: string;
 }
 
-export type M3eSearchHandler = (
+export type AkariSearchHandler = (
   query: string,
-  context: M3eSearchContext,
-) => Promise<M3eSearchResult[]> | M3eSearchResult[];
+  context: AkariSearchContext,
+) => Promise<AkariSearchResult[]> | AkariSearchResult[];
 
-export interface M3eSearchBackend {
-  search(query: string, context: M3eSearchContext): Promise<M3eSearchResult[]>;
+export interface AkariSearchBackend {
+  search(query: string, context: AkariSearchContext): Promise<AkariSearchResult[]>;
 }

@@ -1,5 +1,5 @@
 import type {
-  M3eSidebarItem,
+  AkariSidebarItem,
   ResolvedSidebarConfig,
 } from "./types";
 
@@ -7,6 +7,7 @@ interface NativeSidebarItem {
   text?: string;
   link?: string;
   items?: NativeSidebarItem[];
+  tabs?: NativeSidebarItem[];
   collapsed?: boolean;
   base?: string;
   icon?: string;
@@ -83,11 +84,14 @@ function pickItems<T>(
 function normalizeNativeItems(
   items: NativeSidebarItem[],
   parentBase = "",
-): M3eSidebarItem[] {
+): AkariSidebarItem[] {
   return items.map((item) => {
     const childBase = item.base ? joinLink(parentBase, item.base) : parentBase;
     const children = Array.isArray(item.items)
       ? normalizeNativeItems(item.items, childBase)
+      : undefined;
+    const tabs = Array.isArray(item.tabs)
+      ? normalizeNativeItems(item.tabs, childBase)
       : undefined;
 
     return {
@@ -97,6 +101,7 @@ function normalizeNativeItems(
       badge: item.badge,
       collapsed: item.collapsed,
       ...(children ? { items: children } : {}),
+      ...(tabs ? { tabs } : {}),
     };
   });
 }
@@ -109,9 +114,9 @@ export function resolveSidebarItems(
   config: ResolvedSidebarConfig,
   path: string,
   base = "/",
-): M3eSidebarItem[] {
-  if (config.source === "m3e" && config.m3eItems) {
-    return pickItems<M3eSidebarItem>(config.m3eItems, path, base);
+): AkariSidebarItem[] {
+  if (config.source === "akari" && config.akariItems) {
+    return pickItems<AkariSidebarItem>(config.akariItems, path, base);
   }
 
   if (!isNativeSidebar(config.nativeItems)) return [];
@@ -130,12 +135,24 @@ export function isActiveLink(
   return normalizePath(currentPath, base) === normalizePath(target, base);
 }
 
+/** Whether an item stands for parallel pages switched with a tab bar. */
+export function isTabGroup(item: AkariSidebarItem): boolean {
+  return item.tabs?.some((tab) => !!tab.link) ?? false;
+}
+
 export function hasActiveItem(
-  item: M3eSidebarItem,
+  item: AkariSidebarItem,
   currentPath: string,
   base = "/",
 ): boolean {
   if (item.link && isActiveLink(currentPath, item.link, base)) return true;
+  if (
+    item.tabs?.some(
+      (tab) => !!tab.link && isActiveLink(currentPath, tab.link, base),
+    )
+  ) {
+    return true;
+  }
   return (
     item.items?.some((child) =>
       hasActiveItem(child, currentPath, base),
@@ -143,22 +160,74 @@ export function hasActiveItem(
   );
 }
 
-export function flattenSidebar(items: M3eSidebarItem[]): M3eSidebarItem[] {
-  const result: M3eSidebarItem[] = [];
+/**
+ * The pages of a navigation tree in reading order. A tab group contributes
+ * its tabs, so stepping through pages visits each of them; with
+ * `tabs: "group"` it contributes a single entry for the group instead.
+ */
+export function flattenSidebar(
+  items: AkariSidebarItem[],
+  options: { tabs?: "expand" | "group" } = {},
+): AkariSidebarItem[] {
+  const result: AkariSidebarItem[] = [];
 
   for (const item of items) {
-    if (item.link) result.push(item);
-    if (item.items) result.push(...flattenSidebar(item.items));
+    if (isTabGroup(item)) {
+      const tabs = item.tabs!.filter((tab) => !!tab.link);
+      if (options.tabs === "group") {
+        result.push({ ...item, link: item.link ?? tabs[0]!.link });
+      } else {
+        result.push(...tabs);
+      }
+    } else if (item.link) {
+      result.push(item);
+    }
+    if (item.items) result.push(...flattenSidebar(item.items, options));
   }
 
   return result;
 }
 
-export function findPrevNext(
-  items: M3eSidebarItem[],
+/**
+ * The first navigable link of an item, depth-first: its own, its first
+ * tab's, then its children's.
+ */
+export function findFirstLink(item: AkariSidebarItem): string | undefined {
+  return (
+    item.link ??
+    item.tabs?.find((tab) => !!tab.link)?.link ??
+    flattenSidebar(item.items ?? [])[0]?.link
+  );
+}
+
+/** The tab group the current page belongs to, if any. */
+export function findTabGroup(
+  items: AkariSidebarItem[],
   currentPath: string,
   base = "/",
-): { prev?: M3eSidebarItem; next?: M3eSidebarItem } {
+): AkariSidebarItem | undefined {
+  for (const item of items) {
+    if (
+      isTabGroup(item) &&
+      item.tabs!.some(
+        (tab) => !!tab.link && isActiveLink(currentPath, tab.link, base),
+      )
+    ) {
+      return item;
+    }
+
+    const nested = item.items && findTabGroup(item.items, currentPath, base);
+    if (nested) return nested;
+  }
+
+  return undefined;
+}
+
+export function findPrevNext(
+  items: AkariSidebarItem[],
+  currentPath: string,
+  base = "/",
+): { prev?: AkariSidebarItem; next?: AkariSidebarItem } {
   const flat = flattenSidebar(items);
   const index = flat.findIndex(
     (item) => item.link && isActiveLink(currentPath, item.link, base),

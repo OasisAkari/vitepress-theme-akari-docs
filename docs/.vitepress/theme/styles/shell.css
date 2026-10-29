@@ -1,23 +1,19 @@
-.m3e-content {
+.akari-content {
   min-height: 100%;
 }
 
-.m3e-content > .m3e-prose:first-child {
+.akari-content > .akari-prose:first-child {
   margin-block-start: 0;
 }
 
-.m3e-content-pane:defined {
-  display: block;
-}
-
-.m3e-not-found {
+.akari-not-found {
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding-block: 48px;
 }
 
-.m3e-not-found__code {
+.akari-not-found__code {
   margin: 0;
   color: var(--md-sys-color-primary);
   font-size: clamp(4rem, 12vw, 7rem);
@@ -25,7 +21,7 @@
   line-height: 1;
 }
 
-.m3e-not-found h1 {
+.akari-not-found h1 {
   margin: 0;
   color: var(--md-sys-color-on-surface);
   font-size: 2.5rem;
@@ -33,12 +29,12 @@
   line-height: 1.2;
 }
 
-.m3e-not-found p {
+.akari-not-found p {
   margin: 0;
   color: var(--md-sys-color-on-surface-variant);
 }
 
-.m3e-not-found__link {
+.akari-not-found__link {
   width: fit-content;
   color: var(--md-sys-color-primary);
   text-decoration: underline;

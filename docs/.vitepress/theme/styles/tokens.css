@@ -8,14 +8,158 @@
  */
 
 :root {
-  --m3e-doc-content-max-width: 100%;
-  --m3e-doc-gap: 16px;
-  --m3e-doc-radius: 28px;
-  --m3e-doc-app-bar-height: 64px;
+  /*
+   * Before the theme script syncs the chosen scheme, let the Canvas fallback
+   * background follow the system preference instead of flashing light.
+   */
+  color-scheme: light dark;
 
-  --m3e-doc-page-background: var(
+  --akari-doc-text-measure: 760px;
+  --akari-doc-text-offset: 22px;
+  --akari-doc-gap: 16px;
+  --akari-doc-radius: 28px;
+  --akari-doc-padding: 32px;
+  /* Space between the app bar and the top of the document surface. */
+  --akari-doc-top-space: 32px;
+  /* Widest the article, its table of contents and the footer get. */
+  --akari-doc-max-width: 1280px;
+  /* How far below the app bar the table of contents hangs. */
+  --akari-doc-toc-offset: 128px;
+  --akari-doc-app-bar-height: 64px;
+  --akari-doc-rail-width: 96px;
+  --akari-doc-nav-gap: 8px;
+  /*
+   * How much outline-variant the light dividers carry: the rail divider and
+   * the outline surfaces gain while scrolled share it, so they match.
+   */
+  --akari-doc-divider-strength: 30%;
+  --akari-doc-divider-color: color-mix(
+    in srgb,
+    var(--md-sys-color-outline-variant) var(--akari-doc-divider-strength),
+    transparent
+  );
+
+  --akari-doc-nav-drawer-modal-color: var(
+    --md-sys-color-surface-container-low
+  );
+  /*
+   * m3e's level 1 to 5 elevations, for surfaces no m3e component draws.
+   * The three layers keep m3e's geometry; their strength is set apart so the
+   * dark scheme can deepen it. The shadow color falls back to black because
+   * m3e-theme publishes its palette below the root.
+   */
+  --akari-doc-shadow-umbra: 20%;
+  --akari-doc-shadow-penumbra: 14%;
+  --akari-doc-shadow-ambient: 12%;
+  --akari-doc-elevation-level1:
+    color-mix(
+        in srgb,
+        var(--md-sys-color-shadow, #000) var(--akari-doc-shadow-umbra),
+        transparent
+      )
+      0px 2px 1px -1px,
+    color-mix(
+        in srgb,
+        var(--md-sys-color-shadow, #000) var(--akari-doc-shadow-penumbra),
+        transparent
+      )
+      0px 1px 1px 0px,
+    color-mix(
+        in srgb,
+        var(--md-sys-color-shadow, #000) var(--akari-doc-shadow-ambient),
+        transparent
+      )
+      0px 1px 3px 0px;
+  --akari-doc-elevation-level2:
+    color-mix(
+        in srgb,
+        var(--md-sys-color-shadow, #000) var(--akari-doc-shadow-umbra),
+        transparent
+      )
+      0px 3px 3px -2px,
+    color-mix(
+        in srgb,
+        var(--md-sys-color-shadow, #000) var(--akari-doc-shadow-penumbra),
+        transparent
+      )
+      0px 3px 4px 0px,
+    color-mix(
+        in srgb,
+        var(--md-sys-color-shadow, #000) var(--akari-doc-shadow-ambient),
+        transparent
+      )
+      0px 1px 8px 0px;
+  --akari-doc-elevation-level3:
+    color-mix(
+        in srgb,
+        var(--md-sys-color-shadow, #000) var(--akari-doc-shadow-umbra),
+        transparent
+      )
+      0px 3px 5px -1px,
+    color-mix(
+        in srgb,
+        var(--md-sys-color-shadow, #000) var(--akari-doc-shadow-penumbra),
+        transparent
+      )
+      0px 6px 10px 0px,
+    color-mix(
+        in srgb,
+        var(--md-sys-color-shadow, #000) var(--akari-doc-shadow-ambient),
+        transparent
+      )
+      0px 1px 18px 0px;
+  --akari-doc-elevation-level4:
+    color-mix(
+        in srgb,
+        var(--md-sys-color-shadow, #000) var(--akari-doc-shadow-umbra),
+        transparent
+      )
+      0px 5px 5px -3px,
+    color-mix(
+        in srgb,
+        var(--md-sys-color-shadow, #000) var(--akari-doc-shadow-penumbra),
+        transparent
+      )
+      0px 8px 10px 1px,
+    color-mix(
+        in srgb,
+        var(--md-sys-color-shadow, #000) var(--akari-doc-shadow-ambient),
+        transparent
+      )
+      0px 3px 14px 2px;
+  --akari-doc-elevation-level5:
+    color-mix(
+        in srgb,
+        var(--md-sys-color-shadow, #000) var(--akari-doc-shadow-umbra),
+        transparent
+      )
+      0px 7px 8px -4px,
+    color-mix(
+        in srgb,
+        var(--md-sys-color-shadow, #000) var(--akari-doc-shadow-penumbra),
+        transparent
+      )
+      0px 12px 17px 2px,
+    color-mix(
+        in srgb,
+        var(--md-sys-color-shadow, #000) var(--akari-doc-shadow-ambient),
+        transparent
+      )
+      0px 5px 22px 4px;
+
+  --akari-doc-page-background: var(
     --md-sys-color-surface-container-low,
     Canvas
   );
-  --m3e-doc-page-foreground: var(--md-sys-color-on-surface, CanvasText);
+  --akari-doc-page-foreground: var(--md-sys-color-on-surface, CanvasText);
+}
+
+/*
+ * A shadow barely darkens a dark surface. The dark scheme deepens shadows so
+ * a raised surface still stands apart from a same-colored one behind it.
+ */
+html.dark {
+  --akari-doc-shadow-umbra: 50%;
+  --akari-doc-shadow-penumbra: 35%;
+  --akari-doc-shadow-ambient: 30%;
 }

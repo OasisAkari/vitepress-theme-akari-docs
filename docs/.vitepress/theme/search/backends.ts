@@ -1,12 +1,15 @@
+import { formatMessage, resolveMessages } from "../i18n";
+import { localeKeyForPath } from "../locales";
 import type {
-  M3eSearchBackendConfig,
-  M3eSearchResult,
+  AkariMessages,
+  AkariSearchBackendConfig,
+  AkariSearchResult,
 } from "../types";
 import { searchLocal } from "./local";
 import { getSearchBackend } from "./registry";
 import type {
-  M3eSearchBackend,
-  M3eSearchContext,
+  AkariSearchBackend,
+  AkariSearchContext,
   SearchIndexEntry,
   SearchIndexFile,
 } from "./types";
@@ -22,6 +25,47 @@ interface HttpSearchBackendConfig {
   credentials?: RequestCredentials;
   queryParam?: string;
   limitParam?: string;
+}
+
+export type AkariSearchErrorCode =
+  | "index-unavailable"
+  | "index-invalid"
+  | "request-failed"
+  | "backend-missing";
+
+const ERROR_MESSAGES: Record<AkariSearchErrorCode, keyof AkariMessages> = {
+  "index-unavailable": "searchIndexUnavailable",
+  "index-invalid": "searchIndexInvalid",
+  "request-failed": "searchRequestFailed",
+  "backend-missing": "searchBackendMissing",
+};
+
+/**
+ * A failure of a built-in backend. The dialog shows it in the reader's
+ * language; `message` is the English text for logs.
+ */
+export class AkariSearchError extends Error {
+  constructor(
+    readonly code: AkariSearchErrorCode,
+    readonly params: Readonly<Record<string, string | number>> = {},
+  ) {
+    super(formatMessage(resolveMessages("en")[ERROR_MESSAGES[code]], params));
+    this.name = "AkariSearchError";
+  }
+}
+
+/** Text for a failed search, in the language of `messages`. */
+export function describeSearchError(
+  cause: unknown,
+  messages: AkariMessages,
+): string {
+  if (cause instanceof AkariSearchError) {
+    return formatMessage(messages[ERROR_MESSAGES[cause.code]], cause.params);
+  }
+
+  // Custom backends speak for themselves.
+  if (cause instanceof Error && cause.message) return cause.message;
+  return messages.searchFailed;
 }
 
 export function resolveSearchEndpoint(endpoint: string, base = "/"): string {
@@ -57,8 +101,8 @@ function unwrapResults(raw: unknown): unknown[] {
 export function normalizeSearchResults(
   raw: unknown,
   limit: number,
-): M3eSearchResult[] {
-  const results: M3eSearchResult[] = [];
+): AkariSearchResult[] {
+  const results: AkariSearchResult[] = [];
   const seen = new Set<string>();
 
   for (const item of unwrapResults(raw)) {
@@ -109,7 +153,8 @@ function rejectedAbort(): Error {
 function createLocalSearchBackend(
   endpoint: string,
   base: string,
-): M3eSearchBackend {
+  locales: readonly string[],
+): AkariSearchBackend {
   let indexPromise: Promise<SearchIndexEntry[]> | undefined;
 
   async function loadIndex(): Promise<SearchIndexEntry[]> {
@@ -119,12 +164,14 @@ function createLocalSearchBackend(
       })
         .then(async (response) => {
           if (!response.ok) {
-            throw new Error(`无法加载本地搜索索引（HTTP ${response.status}）。`);
+            throw new AkariSearchError("index-unavailable", {
+              status: response.status,
+            });
           }
 
           const payload = (await response.json()) as Partial<SearchIndexFile>;
           if (!Array.isArray(payload.entries)) {
-            throw new Error("本地搜索索引格式无效。");
+            throw new AkariSearchError("index-invalid");
           }
 
           return payload.entries;
@@ -145,7 +192,17 @@ function createLocalSearchBackend(
       const entries = await loadIndex();
 
       if (context.signal?.aborted) throw rejectedAbort();
-      return searchLocal(entries, query, context.limit);
+
+      // One index covers every locale; results stay in the one being read.
+      const { locale } = context;
+      const scoped =
+        locale && locales.length > 1
+          ? entries.filter(
+              (entry) => localeKeyForPath(entry.href, locales) === locale,
+            )
+          : entries;
+
+      return searchLocal(scoped, query, context.limit);
     },
   };
 }
@@ -210,7 +267,7 @@ export function buildHttpRequest(
 function createHttpSearchBackend(
   config: HttpSearchBackendConfig,
   base: string,
-): M3eSearchBackend {
+): AkariSearchBackend {
   return {
     async search(query, context) {
       const request = buildHttpRequest(config, query, context.limit, base);
@@ -220,7 +277,9 @@ function createHttpSearchBackend(
       });
 
       if (!response.ok) {
-        throw new Error(`搜索请求失败（HTTP ${response.status}）。`);
+        throw new AkariSearchError("request-failed", {
+          status: response.status,
+        });
       }
 
       return normalizeSearchResults(
@@ -231,19 +290,16 @@ function createHttpSearchBackend(
   };
 }
 
-function createRegisteredSearchBackend(id: string): M3eSearchBackend {
+function createRegisteredSearchBackend(id: string): AkariSearchBackend {
   return {
     async search(query, context) {
       const handler = getSearchBackend(id);
 
       if (!handler) {
-        throw new Error(`未找到搜索后端 "${id}"。`);
+        throw new AkariSearchError("backend-missing", { id });
       }
 
-      const result = await handler(query, {
-        limit: context.limit,
-        signal: context.signal,
-      });
+      const result = await handler(query, context);
 
       return normalizeSearchResults(result, context.limit);
     },
@@ -251,9 +307,9 @@ function createRegisteredSearchBackend(id: string): M3eSearchBackend {
 }
 
 export function createSearchBackend(
-  config: M3eSearchBackendConfig,
-  options: { base?: string } = {},
-): M3eSearchBackend {
+  config: AkariSearchBackendConfig,
+  options: { base?: string; locales?: readonly string[] } = {},
+): AkariSearchBackend {
   const base = options.base ?? "/";
 
   switch (config.type) {
@@ -266,6 +322,7 @@ export function createSearchBackend(
       return createLocalSearchBackend(
         config.endpoint || "/search-index.json",
         base,
+        options.locales ?? [],
       );
   }
 }

@@ -7,11 +7,11 @@ import {
   TEXT_SIZE_VALUES,
   VARIANT_VALUES,
 } from "./constants";
-import type { M3eThemeSettings, StorageLike } from "./types";
+import type { AkariThemeSettings, StorageLike } from "./types";
 
 const HEX_COLOR = /^#[0-9a-f]{6}$/i;
 
-function copySettings(settings: M3eThemeSettings): M3eThemeSettings {
+function copySettings(settings: AkariThemeSettings): AkariThemeSettings {
   return { ...settings };
 }
 
@@ -21,8 +21,8 @@ function includes<T extends string>(values: T[], value: unknown): value is T {
 
 export function normalizeSettings(
   input: unknown,
-  defaults: M3eThemeSettings = DEFAULT_SETTINGS,
-): M3eThemeSettings {
+  defaults: AkariThemeSettings = DEFAULT_SETTINGS,
+): AkariThemeSettings {
   const source =
     input && typeof input === "object"
       ? (input as Record<string, unknown>)
@@ -55,9 +55,9 @@ export function normalizeSettings(
 }
 
 export function mergeSettings(
-  base: M3eThemeSettings,
-  overrides?: Partial<M3eThemeSettings> | null,
-): M3eThemeSettings {
+  base: AkariThemeSettings,
+  overrides?: Partial<AkariThemeSettings> | null,
+): AkariThemeSettings {
   const normalizedBase = normalizeSettings(base, base);
   return normalizeSettings(
     { ...normalizedBase, ...overrides },
@@ -67,8 +67,8 @@ export function mergeSettings(
 
 export function parseStoredSettings(
   raw: string | null,
-  defaults: M3eThemeSettings = DEFAULT_SETTINGS,
-): M3eThemeSettings {
+  defaults: AkariThemeSettings = DEFAULT_SETTINGS,
+): AkariThemeSettings {
   if (!raw) return copySettings(defaults);
 
   try {
@@ -81,8 +81,8 @@ export function parseStoredSettings(
 export function readStoredSettings(
   storage: StorageLike | undefined,
   key: string,
-  defaults: M3eThemeSettings = DEFAULT_SETTINGS,
-): M3eThemeSettings {
+  defaults: AkariThemeSettings = DEFAULT_SETTINGS,
+): AkariThemeSettings {
   if (!storage) return copySettings(defaults);
 
   try {
@@ -95,7 +95,7 @@ export function readStoredSettings(
 export function writeStoredSettings(
   storage: StorageLike | undefined,
   key: string,
-  settings: M3eThemeSettings,
+  settings: AkariThemeSettings,
 ): void {
   if (!storage) return;
 

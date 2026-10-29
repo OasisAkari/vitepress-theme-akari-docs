@@ -1,0 +1,105 @@
+---
+icon: tune
+order: 2
+tab: نظرة عامة
+parallel:
+  - api
+  - details
+---
+
+# التهيئة
+
+توجد التهيئة في المجلد `docs`، على مستويين:
+
+- `docs/config.ts`: تهيئة مشتركة بين جميع اللغات.
+- `docs/<language code>/config.ts`: تهيئة لغة واحدة، مثل `docs/ar-SA/config.ts`. المجلد الذي يحتوي على هذا الملف هو مجلد لغة.
+
+الحقل في تهيئة اللغة يحل محل الحقل الذي يحمل الاسم نفسه في التهيئة المشتركة، وتُدمج الكائنات حقلًا بحقل، لذا لا تحتوي تهيئة اللغة إلا على ما يختلف في تلك اللغة. أما `docs/.vitepress/config.mts` فيقتصر على ربط السمة بـ VitePress، ونادرًا ما تحتاج إلى تغييره.
+
+```text
+docs/
+├─ config.ts                 التهيئة المشتركة
+├─ zh-CN/                    الصينية المبسطة، في جذر الموقع
+│  ├─ config.ts              تهيئة اللغة
+│  └─ …                      الصفحات، راجع «كتابة الصفحات»
+├─ en-US/                    الإنجليزية، تحت /en-US/
+│  ├─ config.ts
+│  └─ …
+└─ .vitepress/config.mts
+```
+
+## التهيئة المشتركة
+
+ما هو واحد في كل اللغات: اللغة الجذرية، والشعار، والإصدار والروابط الاجتماعية، وأيقونات الفئات وترتيبها، والإعدادات والبحث.
+
+```ts
+// docs/config.ts
+import { defineAkariConfig } from "./.vitepress/theme/define.ts";
+
+export default defineAkariConfig({
+  // مجلد اللغة الذي يُقدَّم في جذر الموقع
+  rootLanguage: "zh-CN",
+  logo: "/logo.svg",
+  head: [["link", { rel: "icon", type: "image/svg+xml", href: "/logo.svg" }]],
+  appBar: {
+    version: "v1.0.0",
+    socialLinks: [
+      { icon: "github", link: "https://github.com/OasisAkari/vitepress-theme-akari-docs", label: "GitHub" },
+    ],
+  },
+  sidebar: {
+    // أسماء مجلدات الفئات وأيقوناتها؛ ترتيب المفاتيح هو ترتيبها في شريط التنقل
+    categories: {
+      "getting-started": { icon: "rocket_launch" },
+      theme: { icon: "palette" },
+    },
+  },
+  settings: { storageKey: "akari-docs-settings" },
+  search: { maxResults: 8 },
+  footer: { copyright: "Vitepress Theme Akari Docs" },
+});
+```
+
+## تهيئة اللغة
+
+اسم اللغة وعنوانها ونصوصها الخاصة بها. القيمة الافتراضية لـ `lang` هي اسم المجلد، ومنها تختار السمة نصوص الواجهة المدمجة المطابقة. واللغة التي تُكتب من اليمين إلى اليسار تضبط أيضًا `dir: "rtl"`.
+
+```ts
+// docs/ar-SA/config.ts
+import { defineAkariConfig } from "../.vitepress/theme/define.ts";
+
+export default defineAkariConfig({
+  label: "العربية",
+  // تُكتب من اليمين إلى اليسار.
+  dir: "rtl",
+  title: "Vitepress Theme Akari Docs",
+  description: "قالب توثيق مبني على VitePress و M3E Web Components",
+  markdown: {
+    codeCopyButton: { tooltipText: "نسخ الشيفرة", copiedText: "تم النسخ" },
+  },
+  appBar: { title: "Vitepress Theme Akari Docs" },
+  sidebar: {
+    categories: {
+      "getting-started": { text: "البدء" },
+      theme: { text: "السمة" },
+    },
+  },
+  footer: { message: "صُنع باستخدام VitePress و M3E Web Components" },
+});
+```
+
+## التغييرات الشائعة
+
+| لكي | اكتب في | الحقل |
+| --- | --- | --- |
+| تغيّر اسم الموقع | تهيئة اللغة | `title`، `appBar.title` |
+| تضيف إصدارًا أو روابط اجتماعية | التهيئة المشتركة | `appBar.version`، `appBar.socialLinks` |
+| تغيّر ترتيب الفئات أو أيقوناتها | التهيئة المشتركة | `sidebar.categories` |
+| تعيد تسمية فئة | تهيئة اللغة | `sidebar.categories.<folder>.text` |
+| تغيّر اللون الافتراضي والوضع الفاتح والوضع الداكن | التهيئة المشتركة | `settings.defaults` |
+| توقف البحث أو تربط خدمة بحث | التهيئة المشتركة | `search` |
+| تغيّر رسالة التذييل وحقوق النشر | تهيئة اللغة / التهيئة المشتركة | `footer.message`، `footer.copyright` |
+| تعيد كتابة نصوص الواجهة | تهيئة اللغة | `messages` |
+| تضيف لغة | مجلد لغة جديد | راجع [التدويل](/ar-SA/theme/i18n) |
+
+لمعرفة نوع كل حقل وقيمته الافتراضية، راجع [API](/ar-SA/getting-started/configuration/api). ولمعرفة كيف تتراكب التهيئة وكيف تُولَّد اللغات والتنقل، راجع [التفاصيل](/ar-SA/getting-started/configuration/details).

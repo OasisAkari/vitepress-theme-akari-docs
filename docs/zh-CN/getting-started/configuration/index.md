@@ -1,0 +1,103 @@
+---
+icon: tune
+order: 2
+tab: 概览
+parallel:
+  - api
+  - details
+---
+
+# 配置
+
+配置写在 `docs` 目录中，分两层：
+
+- `docs/config.ts`：各语言共用的配置。
+- `docs/<语言代码>/config.ts`：一种语言的配置，例如 `docs/zh-CN/config.ts`。带有这个文件的文件夹就是一个语言文件夹。
+
+语言配置里的字段替换共用配置中的同名字段，对象逐个字段合并，所以语言配置只需要写这种语言不同的部分。`docs/.vitepress/config.mts` 只负责把主题接入 VitePress，一般不需要修改。
+
+```text
+docs/
+├─ config.ts                 共用配置
+├─ zh-CN/                    简体中文，放在站点根路径
+│  ├─ config.ts              语言配置
+│  └─ …                      页面，见「撰写页面」
+├─ en-US/                    English，放在 /en-US/
+│  ├─ config.ts
+│  └─ …
+└─ .vitepress/config.mts
+```
+
+## 共用配置
+
+各语言相同的部分：根语言、logo、版本号与社交链接、分类的图标与顺序、设置与搜索。
+
+```ts
+// docs/config.ts
+import { defineAkariConfig } from "./.vitepress/theme/define.ts";
+
+export default defineAkariConfig({
+  // 放在站点根路径的语言文件夹
+  rootLanguage: "zh-CN",
+  logo: "/logo.svg",
+  head: [["link", { rel: "icon", type: "image/svg+xml", href: "/logo.svg" }]],
+  appBar: {
+    version: "v1.0.0",
+    socialLinks: [
+      { icon: "github", link: "https://github.com/OasisAkari/vitepress-theme-akari-docs", label: "GitHub" },
+    ],
+  },
+  sidebar: {
+    // 分类的文件夹名与图标，键的顺序就是 rail 中的顺序
+    categories: {
+      "getting-started": { icon: "rocket_launch" },
+      theme: { icon: "palette" },
+    },
+  },
+  settings: { storageKey: "akari-docs-settings" },
+  search: { maxResults: 8 },
+  footer: { copyright: "Vitepress Theme Akari Docs" },
+});
+```
+
+## 语言配置
+
+这种语言自己的名称、标题与文字。`lang` 默认就是文件夹名，界面文字随之选择对应的内置语言；从右到左书写的语言再写 `dir: "rtl"`。
+
+```ts
+// docs/zh-CN/config.ts
+import { defineAkariConfig } from "../.vitepress/theme/define.ts";
+
+export default defineAkariConfig({
+  label: "简体中文",
+  title: "Vitepress Theme Akari Docs",
+  description: "基于 VitePress 与 M3E Web Components 的文档主题",
+  markdown: {
+    codeCopyButton: { tooltipText: "复制代码", copiedText: "已复制" },
+  },
+  appBar: { title: "Vitepress Theme Akari Docs" },
+  sidebar: {
+    categories: {
+      "getting-started": { text: "开始" },
+      theme: { text: "主题" },
+    },
+  },
+  footer: { message: "基于 VitePress 与 M3E Web Components 构建" },
+});
+```
+
+## 常见改动
+
+| 想要 | 写在 | 字段 |
+| --- | --- | --- |
+| 改站点名称 | 语言配置 | `title`、`appBar.title` |
+| 加版本号或社交链接 | 共用配置 | `appBar.version`、`appBar.socialLinks` |
+| 调整分类的顺序或图标 | 共用配置 | `sidebar.categories` |
+| 改分类名称 | 语言配置 | `sidebar.categories.<文件夹>.text` |
+| 改默认配色与明暗模式 | 共用配置 | `settings.defaults` |
+| 关闭搜索或接入搜索后端 | 共用配置 | `search` |
+| 改页尾的说明与版权 | 语言配置 / 共用配置 | `footer.message`、`footer.copyright` |
+| 改写界面文字 | 语言配置 | `messages` |
+| 新增一种语言 | 新的语言文件夹 | 见[国际化](/theme/i18n) |
+
+全部字段的类型与默认值见[接口](/getting-started/configuration/api)；配置怎样叠加、怎样生成语言与导航见[技术细节](/getting-started/configuration/details)。

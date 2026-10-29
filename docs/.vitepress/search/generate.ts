@@ -5,7 +5,7 @@ import type {
   SearchIndexEntry,
   SearchIndexFile,
 } from "../theme/search/types";
-import { parseMarkdownPage } from "./parse";
+import { fileToRoute, parseMarkdownPage } from "./parse";
 
 const EXCLUDED_DIRECTORIES = new Set([
   ".vitepress",
@@ -34,8 +34,12 @@ async function collectMarkdownFiles(directory: string): Promise<string[]> {
   return files;
 }
 
+/** Where a page is served, from its path in the docs. */
+export type PageRoute = (relativePath: string) => string;
+
 export async function buildSearchIndex(
   docsDir: string,
+  route: PageRoute = fileToRoute,
 ): Promise<SearchIndexFile> {
   const files = await collectMarkdownFiles(docsDir);
   const entries: SearchIndexEntry[] = [];
@@ -43,7 +47,9 @@ export async function buildSearchIndex(
   for (const file of files) {
     const relative = path.relative(docsDir, file).split(path.sep).join("/");
     const source = await readFile(file, "utf8");
-    entries.push(...parseMarkdownPage(source, relative).entries);
+    entries.push(
+      ...parseMarkdownPage(source, relative, route(relative)).entries,
+    );
   }
 
   return {
@@ -57,12 +63,15 @@ export function searchIndexOutputPath(docsDir: string): string {
   return path.join(docsDir, "public", "search-index.json");
 }
 
-export async function writeSearchIndex(docsDir: string): Promise<void> {
+export async function writeSearchIndex(
+  docsDir: string,
+  route?: PageRoute,
+): Promise<void> {
   const output = searchIndexOutputPath(docsDir);
   await mkdir(path.dirname(output), { recursive: true });
   await writeFile(
     output,
-    JSON.stringify(await buildSearchIndex(docsDir)),
+    JSON.stringify(await buildSearchIndex(docsDir, route)),
     "utf8",
   );
 }

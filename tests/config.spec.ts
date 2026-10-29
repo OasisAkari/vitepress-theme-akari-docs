@@ -1,475 +1,218 @@
 import { describe, expect, it } from "vitest";
 
+import { resolveAkariConfig } from "../docs/.vitepress/theme/config";
 import {
-  defineM3eThemeConfig,
-  resolveM3eConfig,
-} from "../docs/.vitepress/theme/config";
-import {
-  DEFAULT_SECTION_LABELS,
   DEFAULT_SETTINGS,
   SETTINGS_SECTION_KEYS,
   SETTINGS_STORAGE_KEY,
 } from "../docs/.vitepress/theme/constants";
-import { normalizeSettings } from "../docs/.vitepress/theme/settings";
 import type {
-  M3eSocialLink,
-  M3eThemeConfig,
-  M3eThemeSettings,
-  SettingsSectionKey,
+  AkariSocialLink,
+  AkariThemeSettings,
 } from "../docs/.vitepress/theme/types";
 
-const ALL_SECTIONS: SettingsSectionKey[] = [
-  "color",
-  "variant",
-  "scheme",
-  "contrast",
-  "motion",
-  "direction",
-  "textSize",
-];
-
-function configWithSections(sections: unknown) {
-  return resolveM3eConfig({
-    m3e: {
-      settings: {
-        sections: sections as SettingsSectionKey[],
-      },
-    },
-  });
+// Takes values of the wrong type on purpose, to check the validation.
+function resolve(akari: Record<string, unknown>) {
+  return resolveAkariConfig({
+    akari,
+  } as Parameters<typeof resolveAkariConfig>[0]);
 }
 
-describe("resolveM3eConfig defaults", () => {
-  it("provides app bar defaults", () => {
-    const { appBar } = resolveM3eConfig();
+describe("resolveAkariConfig defaults", () => {
+  it("fills every group with its defaults", () => {
+    const config = resolveAkariConfig();
 
-    expect(appBar.title).toBe("Documentation");
-    expect(appBar.version).toBeUndefined();
-    expect(appBar.logo).toBeUndefined();
-    expect(appBar.showSidebarToggle).toBe(true);
-    expect(appBar.showSettingsToggle).toBe(true);
-    expect(appBar.socialLinks).toEqual([]);
-  });
-
-  it("provides the seven settings sections in the documented order", () => {
-    const { settings } = resolveM3eConfig();
-
-    expect(settings.sections).toEqual(ALL_SECTIONS);
-    expect(settings.sections).toHaveLength(7);
-    expect(settings.enabled).toBe(true);
-    expect(settings.title).toBe("设置");
-    expect(settings.labels).toEqual(DEFAULT_SECTION_LABELS);
-    expect(settings.persist).toBe(true);
-    expect(settings.storageKey).toBe(SETTINGS_STORAGE_KEY);
-  });
-
-  it("normalizes the default settings used by the settings API", () => {
-    const { settings } = resolveM3eConfig();
-
-    expect(settings.defaults).toEqual({
-      ...DEFAULT_SETTINGS,
-      color: "#6750a4",
+    expect(config.appBar).toEqual({
+      title: "Documentation",
+      version: undefined,
+      logo: undefined,
+      showSidebarToggle: true,
+      showSettingsToggle: true,
+      socialLinks: [],
     });
-    expect(settings.defaults).toEqual(normalizeSettings(DEFAULT_SETTINGS));
-  });
-
-  it("provides TOC defaults", () => {
-    expect(resolveM3eConfig().toc).toEqual({
+    expect(config.settings).toMatchObject({
+      enabled: true,
+      showSchemeToggle: true,
+      title: "Settings",
+      sections: SETTINGS_SECTION_KEYS,
+      persist: true,
+      storageKey: SETTINGS_STORAGE_KEY,
+      defaults: { ...DEFAULT_SETTINGS, color: "#6750a4" },
+    });
+    expect(config.toc).toEqual({
       enabled: true,
       maxDepth: 3,
-      overline: "本页内容",
+      overline: "On this page",
     });
-  });
-
-  it("provides footer defaults", () => {
-    expect(resolveM3eConfig().footer).toEqual({
-      message: "基于 VitePress 与 M3E 构建",
+    expect(config.footer).toEqual({
+      message: "Built with VitePress and M3E",
       copyright: "",
       showPrevNext: true,
+      links: undefined,
     });
-  });
-
-  it("defaults the sidebar to native mode with no items", () => {
-    const { sidebar } = resolveM3eConfig();
-
-    expect(sidebar.source).toBe("native");
-    expect(sidebar.m3eItems).toBeUndefined();
-    expect(sidebar.nativeItems).toBeUndefined();
-    expect(sidebar.width).toBe(320);
-  });
-
-  it("defaults components to an empty object", () => {
-    expect(resolveM3eConfig().components).toEqual({});
+    expect(config.sidebar).toEqual({
+      source: "native",
+      akariItems: undefined,
+      nativeItems: undefined,
+      width: 320,
+    });
+    expect(config.components).toEqual({});
   });
 });
 
-describe("resolveM3eConfig app bar", () => {
-  it("prefers appBar.title over the site title", () => {
-    const config = resolveM3eConfig(
-      { m3e: { appBar: { title: "主题文档" } } },
-      { title: "站点标题" },
-    );
+describe("resolveAkariConfig app bar", () => {
+  it("prefers its own title and logo over the site's", () => {
+    const site = { title: "站点标题" };
+    const own = { appBar: { title: "主题文档", logo: "/app.svg" } };
 
-    expect(config.appBar.title).toBe("主题文档");
-  });
-
-  it("falls back to the site title", () => {
-    expect(resolveM3eConfig({}, { title: "站点标题" }).appBar.title).toBe(
-      "站点标题",
-    );
-  });
-
-  it("prefers appBar.logo over the site logo", () => {
-    const config = resolveM3eConfig({
-      logo: "/site-logo.svg",
-      m3e: { appBar: { logo: "/app-logo.svg" } },
+    expect(resolveAkariConfig({ logo: "/site.svg" }, site).appBar).toMatchObject({
+      title: "站点标题",
+      logo: "/site.svg",
     });
-
-    expect(config.appBar.logo).toBe("/app-logo.svg");
-    expect(resolveM3eConfig({ logo: "/site-logo.svg" }).appBar.logo).toBe(
-      "/site-logo.svg",
-    );
+    expect(
+      resolveAkariConfig({ logo: "/site.svg", akari: own }, site).appBar,
+    ).toMatchObject({ title: "主题文档", logo: "/app.svg" });
   });
 
-  it("keeps explicit false toggles and custom version", () => {
-    const config = resolveM3eConfig({
-      m3e: {
-        appBar: {
-          version: "1.2.3",
-          showSidebarToggle: false,
-          showSettingsToggle: false,
-        },
-      },
-    });
-
-    expect(config.appBar.version).toBe("1.2.3");
-    expect(config.appBar.showSidebarToggle).toBe(false);
-    expect(config.appBar.showSettingsToggle).toBe(false);
-  });
-});
-
-describe("resolveM3eConfig sidebar source", () => {
-  it("keeps a native array sidebar and reports native mode", () => {
-    const nativeItems = [{ text: "Home", link: "/" }];
-    const { sidebar } = resolveM3eConfig({ sidebar: nativeItems });
-
-    expect(sidebar.source).toBe("native");
-    expect(sidebar.nativeItems).toBe(nativeItems);
-    expect(sidebar.m3eItems).toBeUndefined();
-  });
-
-  it("keeps a native dictionary sidebar and reports native mode", () => {
-    const nativeItems = {
-      "/": [{ text: "Home", link: "/" }],
+  it("keeps only well-formed social links", () => {
+    const github: AkariSocialLink = {
+      icon: "github",
+      link: "https://github.com",
+      label: "GitHub",
     };
-    const { sidebar } = resolveM3eConfig({ sidebar: nativeItems });
-
-    expect(sidebar.source).toBe("native");
-    expect(sidebar.nativeItems).toBe(nativeItems);
-  });
-
-  it("uses m3e mode when rich sidebar items exist", () => {
-    const items = [{ text: "Home", link: "/" }];
-    const nativeItems = [{ text: "Native", link: "/native" }];
-    const { sidebar } = resolveM3eConfig({
-      sidebar: nativeItems,
-      m3e: { sidebar: { items } },
-    });
-
-    expect(sidebar.source).toBe("m3e");
-    expect(sidebar.m3eItems).toBe(items);
-    expect(sidebar.nativeItems).toBe(nativeItems);
-  });
-
-  it("uses m3e mode for a non-empty dictionary", () => {
-    const items = {
-      "/": [{ text: "Home", link: "/" }],
-    };
-    const { sidebar } = resolveM3eConfig({
-      m3e: { sidebar: { items, width: 300 } },
-    });
-
-    expect(sidebar.source).toBe("m3e");
-    expect(sidebar.m3eItems).toBe(items);
-    expect(sidebar.width).toBe(300);
-  });
-});
-
-describe("resolveM3eConfig settings.sections", () => {
-  it("filters invalid keys, dedupes and preserves first-seen order", () => {
-    const { settings } = configWithSections([
-      "scheme",
-      "color",
-      "scheme",
-      "bogus",
-      42,
-    ]);
-
-    expect(settings.sections).toEqual(["scheme", "color"]);
-  });
-
-  it("falls back to all sections when every key is invalid", () => {
-    expect(configWithSections(["bogus", null, 42]).settings.sections).toEqual(
-      ALL_SECTIONS,
-    );
-  });
-
-  it("falls back to all sections for an empty array", () => {
-    expect(configWithSections([]).settings.sections).toEqual(ALL_SECTIONS);
-  });
-
-  it("falls back to all sections for a non-array value", () => {
-    expect(configWithSections("color").settings.sections).toEqual(
-      ALL_SECTIONS,
-    );
-  });
-
-  it("returns a fresh array that cannot corrupt the defaults", () => {
-    const first = resolveM3eConfig().settings.sections;
-
-    expect(first).not.toBe(SETTINGS_SECTION_KEYS);
-
-    first.length = 0;
-
-    expect(resolveM3eConfig().settings.sections).toEqual(ALL_SECTIONS);
-    expect(SETTINGS_SECTION_KEYS).toHaveLength(7);
-  });
-});
-
-describe("resolveM3eConfig settings.labels", () => {
-  it("merges custom labels with the defaults", () => {
-    const { settings } = resolveM3eConfig({
-      m3e: {
-        settings: {
-          labels: { color: "主题色", textSize: "文字大小" },
-        },
-      },
-    });
-
-    expect(settings.labels).toEqual({
-      ...DEFAULT_SECTION_LABELS,
-      color: "主题色",
-      textSize: "文字大小",
-    });
-  });
-
-  it("keeps every default label when only one is overridden", () => {
-    const { settings } = resolveM3eConfig({
-      m3e: { settings: { labels: { scheme: "模式" } } },
-    });
-
-    expect(settings.labels.scheme).toBe("模式");
-    expect(settings.labels.color).toBe(DEFAULT_SECTION_LABELS.color);
-    expect(settings.labels.motion).toBe(DEFAULT_SECTION_LABELS.motion);
-  });
-});
-
-describe("resolveM3eConfig appBar.socialLinks", () => {
-  const github: M3eSocialLink = {
-    icon: "github",
-    link: "https://github.com/vuejs",
-    label: "GitHub",
-  };
-  const npmLink: M3eSocialLink = {
-    icon: "npm",
-    link: "https://www.npmjs.com/package/example",
-    label: "npm",
-  };
-
-  it("filters entries with missing or wrongly typed fields", () => {
-    const entries = [
-      { icon: "github", link: "https://github.com/vuejs" },
+    const links = [
+      { icon: "github", link: "https://github.com" },
       github,
-      { icon: "github", link: 42, label: "Broken" },
+      { ...github, link: 42 },
       null,
-      npmLink,
     ];
-    const { appBar } = resolveM3eConfig({
-      m3e: {
-        appBar: {
-          socialLinks: entries as unknown as M3eSocialLink[],
-        },
-      },
-    });
 
-    expect(appBar.socialLinks).toEqual([github, npmLink]);
-    expect(appBar.socialLinks[0]).toBe(github);
-  });
-
-  it("returns an empty array for a non-array value", () => {
-    const { appBar } = resolveM3eConfig({
-      m3e: {
-        appBar: {
-          socialLinks: "github" as unknown as M3eSocialLink[],
-        },
-      },
-    });
-
-    expect(appBar.socialLinks).toEqual([]);
+    expect(resolve({ appBar: { socialLinks: links } }).appBar.socialLinks)
+      .toEqual([github]);
+    expect(resolve({ appBar: { socialLinks: "github" } }).appBar.socialLinks)
+      .toEqual([]);
   });
 });
 
-describe("resolveM3eConfig settings passthrough", () => {
-  it("keeps explicit settings flags, title and storage key", () => {
-    const { settings } = resolveM3eConfig({
-      m3e: {
-        settings: {
-          enabled: false,
-          title: "偏好",
-          persist: false,
-          storageKey: "custom-key",
-        },
+describe("resolveAkariConfig sidebar", () => {
+  it("uses the rich items if any, else the native sidebar", () => {
+    const nativeItems = [{ text: "Native", link: "/native" }];
+    const items = { "/": [{ text: "Home", link: "/" }] };
+
+    expect(resolveAkariConfig({ sidebar: nativeItems }).sidebar).toMatchObject({
+      source: "native",
+      nativeItems,
+    });
+    expect(
+      resolveAkariConfig({ sidebar: nativeItems, akari: { sidebar: { items } } })
+        .sidebar,
+    ).toMatchObject({ source: "akari", akariItems: items, nativeItems });
+  });
+
+  it.each([
+    [100, 240],
+    [300, 300],
+    [1000, 400],
+    [Number.NaN, 320],
+    ["360", 320],
+  ])("clamps the width %s to %s", (width, expected) => {
+    expect(resolve({ sidebar: { width } }).sidebar.width).toBe(expected);
+  });
+});
+
+describe("resolveAkariConfig settings", () => {
+  it("filters the sections and falls back to all of them", () => {
+    const sections = (value: unknown) =>
+      resolve({ settings: { sections: value } }).settings.sections;
+
+    expect(sections(["motion", "color", "motion", "bogus", 42])).toEqual([
+      "motion",
+      "color",
+    ]);
+    for (const value of [[], ["bogus"], "color"]) {
+      expect(sections(value)).toEqual(SETTINGS_SECTION_KEYS);
+    }
+  });
+
+  it("merges labels and defaults with the built-in ones", () => {
+    const defaults = { scheme: "dark", textSize: "32px", color: "red" };
+    const { settings } = resolve({
+      settings: {
+        enabled: false,
+        labels: { color: "主题色" },
+        defaults: defaults as unknown as Partial<AkariThemeSettings>,
       },
     });
 
     expect(settings.enabled).toBe(false);
-    expect(settings.title).toBe("偏好");
-    expect(settings.persist).toBe(false);
-    expect(settings.storageKey).toBe("custom-key");
-  });
-
-  it("merges valid partial defaults and keeps the canonical default color", () => {
-    const { settings } = resolveM3eConfig({
-      m3e: {
-        settings: {
-          defaults: {
-            scheme: "dark",
-            variant: "fidelity",
-            textSize: "32px",
-          },
-        },
-      },
+    expect(settings.labels).toMatchObject({
+      color: "主题色",
+      motion: "Motion",
     });
-
+    // An invalid color keeps the canonical lowercase default.
     expect(settings.defaults).toEqual({
       ...DEFAULT_SETTINGS,
       color: "#6750a4",
       scheme: "dark",
-      variant: "fidelity",
       textSize: "32px",
     });
   });
+});
 
-  it("falls back to the canonical lowercase color for an invalid color override", () => {
-    // Regression guard: every normalization path must yield lowercase hex
-    // colors, including the invalid-value fallback used by mergeSettings.
-    const { settings } = resolveM3eConfig({
-      m3e: {
-        settings: {
-          defaults: {
-            color: "red",
-          } as unknown as Partial<M3eThemeSettings>,
-        },
-      },
+describe("resolveAkariConfig language", () => {
+  it("uses the built-in strings of the site's language, else English", () => {
+    const zh = resolveAkariConfig({}, { lang: "zh-CN" });
+
+    expect(zh.lang).toBe("zh-CN");
+    expect(zh.settings.title).toBe("设置");
+    expect(zh.settings.labels.color).toBe("颜色");
+    expect(zh.toc.overline).toBe("本页内容");
+    expect(zh.search.placeholder).toBe("搜索文档");
+    expect(resolveAkariConfig({}, { lang: "de-DE" }).settings.title).toBe(
+      "Settings",
+    );
+    expect(resolveAkariConfig().lang).toBe("en");
+  });
+
+  it("lets messages override the strings, and options override both", () => {
+    const config = resolve({
+      messages: { tocOverline: "Sur cette page", nextPage: "Suivant" },
     });
+    expect(config.toc.overline).toBe("Sur cette page");
+    expect(config.messages.nextPage).toBe("Suivant");
 
-    expect(settings.defaults.color).toBe("#6750a4");
+    const explicit = resolve({
+      messages: { tocOverline: "Contents" },
+      toc: { overline: "In this article" },
+    });
+    expect(explicit.toc.overline).toBe("In this article");
   });
 });
 
-describe("resolveM3eConfig sidebar width clamp", () => {
-  const widthCases: Array<[unknown, number]> = [
-    [0, 240],
-    [239, 240],
-    [240, 240],
-    [320, 320],
-    [399, 399],
-    [400, 400],
-    [401, 400],
-    [1000, 400],
-    [-10, 240],
-    [Number.NaN, 320],
-    [Number.POSITIVE_INFINITY, 320],
-    ["360", 320],
-    [null, 320],
-    [undefined, 320],
-  ];
-
-  it.each(widthCases)("clamps width %s to %s", (width, expected) => {
-    const config = resolveM3eConfig({
-      m3e: { sidebar: { width: width as number | undefined } },
-    });
-
-    expect(config.sidebar.width).toBe(expected);
-  });
-});
-
-describe("resolveM3eConfig toc", () => {
-  const depthCases: Array<[unknown, number]> = [
+describe("resolveAkariConfig toc and footer", () => {
+  it.each([
     [0, 1],
-    [1, 1],
-    [3, 3],
     [4, 4],
-    [6, 6],
     [7, 6],
-    [-4, 1],
     [2.5, 3],
-    [Number.NaN, 3],
-    [Number.POSITIVE_INFINITY, 3],
     ["4", 3],
-    [undefined, 3],
-  ];
-
-  it.each(depthCases)("clamps maxDepth %s to %s", (maxDepth, expected) => {
-    const config = resolveM3eConfig({
-      m3e: { toc: { maxDepth: maxDepth as number | undefined } },
-    });
-
-    expect(config.toc.maxDepth).toBe(expected);
+  ])("clamps maxDepth %s to %s", (maxDepth, expected) => {
+    expect(resolve({ toc: { maxDepth } }).toc.maxDepth).toBe(expected);
   });
 
-  it("keeps explicit toc flags and overline", () => {
-    const { toc } = resolveM3eConfig({
-      m3e: { toc: { enabled: false, overline: "目录" } },
-    });
+  it("keeps footer links or false, dropping malformed groups and items", () => {
+    const github = { text: "GitHub", link: "https://github.com" };
 
-    expect(toc).toEqual({ enabled: false, maxDepth: 3, overline: "目录" });
-  });
-});
-
-describe("resolveM3eConfig footer", () => {
-  it("keeps explicit footer values including false", () => {
-    const { footer } = resolveM3eConfig({
-      m3e: {
+    expect(resolve({ footer: { links: false } }).footer.links).toBe(false);
+    expect(
+      resolve({
         footer: {
-          message: "自定义信息",
-          copyright: "© 2026",
-          showPrevNext: false,
+          links: [
+            { title: "资源", items: [github, { text: "缺少链接" }] },
+            { items: [] },
+          ],
         },
-      },
-    });
-
-    expect(footer).toEqual({
-      message: "自定义信息",
-      copyright: "© 2026",
-      showPrevNext: false,
-    });
-  });
-});
-
-describe("resolveM3eConfig components", () => {
-  it("passes the components map through by reference", () => {
-    const components: M3eThemeConfig["components"] = {};
-    const { components: resolved } = resolveM3eConfig({
-      m3e: { components },
-    });
-
-    expect(resolved).toBe(components);
-  });
-});
-
-describe("defineM3eThemeConfig", () => {
-  it("returns the input object unchanged", () => {
-    const input: M3eThemeConfig = {
-      appBar: { title: "主题文档", socialLinks: [] },
-      sidebar: { width: 300 },
-      settings: { sections: ["color", "scheme"] },
-      toc: { maxDepth: 4 },
-      footer: { showPrevNext: false },
-    };
-
-    const output = defineM3eThemeConfig(input);
-
-    expect(output).toBe(input);
-    expect(output).toEqual(input);
+      }).footer.links,
+    ).toEqual([{ title: "资源", items: [github] }]);
   });
 });

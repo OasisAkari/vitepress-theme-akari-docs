@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 860" fill="none">
+  <!-- Icon grid on soft shapes: a stand-in for a set of Material Symbols. -->
+  <circle cx="980" cy="160" r="130" fill="#ffdcc2" opacity=".7"/>
+  <rect x="60" y="560" width="260" height="260" rx="130" fill="#f7dfcc" opacity=".8"/>
+
+  <rect x="210" y="150" width="780" height="560" rx="48" fill="#fff8f5" stroke="#d8c2b5" stroke-width="3"/>
+
+  <!-- Row 1 -->
+  <rect x="270" y="210" width="140" height="140" rx="40" fill="#ffdcc2"/>
+  <path d="M340 245l40 32v48h-26v-30h-28v30h-26v-48z" fill="#8b4f24"/>
+  <rect x="440" y="210" width="140" height="140" rx="40" fill="#f4ded0"/>
+  <circle cx="500" cy="270" r="26" stroke="#52443b" stroke-width="10"/>
+  <path d="M519 289l24 24" stroke="#52443b" stroke-width="10" stroke-linecap="round"/>
+  <rect x="610" y="210" width="140" height="140" rx="70" fill="#8b4f24"/>
+  <path d="M680 236l11 23 25 3-18 17 5 25-23-12-23 12 5-25-18-17 25-3z" fill="#fff8f5"/>
+  <rect x="780" y="210" width="140" height="140" rx="40" fill="#f4ded0"/>
+  <circle cx="850" cy="280" r="30" stroke="#52443b" stroke-width="10"/>
+  <circle cx="850" cy="280" r="9" fill="#52443b"/>
+
+  <!-- Row 2 -->
+  <rect x="270" y="380" width="140" height="140" rx="40" fill="#f4ded0"/>
+  <path d="M310 450h60M340 420v60" stroke="#52443b" stroke-width="10" stroke-linecap="round"/>
+  <rect x="440" y="380" width="140" height="140" rx="40" fill="#ffdcc2"/>
+  <path d="M510 488s-38-22-38-48a20 20 0 0 1 38-9 20 20 0 0 1 38 9c0 26-38 48-38 48z" fill="#8b4f24"/>
+  <rect x="610" y="380" width="140" height="140" rx="40" fill="#f4ded0"/>
+  <rect x="648" y="420" width="64" height="60" rx="12" stroke="#52443b" stroke-width="10"/>
+  <path d="M648 440h64" stroke="#52443b" stroke-width="10"/>
+  <rect x="780" y="380" width="140" height="140" rx="40" fill="#ffdcc2"/>
+  <path d="M820 452l20 20 40-44" stroke="#8b4f24" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Row 3: weights from thin to bold -->
+  <rect x="270" y="550" width="650" height="110" rx="40" fill="#f4ded0"/>
+  <circle cx="340" cy="605" r="24" stroke="#52443b" stroke-width="3"/>
+  <circle cx="470" cy="605" r="24" stroke="#52443b" stroke-width="6"/>
+  <circle cx="600" cy="605" r="24" stroke="#52443b" stroke-width="9"/>
+  <circle cx="730" cy="605" r="24" stroke="#52443b" stroke-width="12"/>
+  <circle cx="860" cy="605" r="24" fill="#8b4f24"/>
+</svg>

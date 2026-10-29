@@ -2,9 +2,9 @@
 import { computed } from "vue";
 import { withBase } from "vitepress";
 
-import { useM3eConfig } from "../../composables/useM3eConfig";
+import { useAkariConfig } from "../../composables/useAkariConfig";
 
-const config = useM3eConfig();
+const config = useAkariConfig();
 
 const logo = computed(() => {
   const value = config.value.appBar.logo;
@@ -13,24 +13,24 @@ const logo = computed(() => {
 </script>
 
 <template>
-  <span class="m3e-title">
+  <span class="akari-title">
     <img
       v-if="logo"
-      class="m3e-title__logo"
+      class="akari-title__logo"
       :src="logo"
       alt=""
       aria-hidden="true"
       decoding="async"
     />
-    <span class="m3e-title__text">{{ config.appBar.title }}</span>
-    <m3e-chip v-if="config.appBar.version" class="m3e-title__version">
+    <span class="akari-title__text">{{ config.appBar.title }}</span>
+    <m3e-chip v-if="config.appBar.version" class="akari-title__version">
       {{ config.appBar.version }}
     </m3e-chip>
   </span>
 </template>
 
 <style scoped>
-.m3e-title {
+.akari-title {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -39,14 +39,18 @@ const logo = computed(() => {
   overflow: hidden;
 }
 
-.m3e-title__logo {
+.akari-title__logo {
   flex: none;
   width: 28px;
   height: 28px;
   object-fit: contain;
+  transition:
+    width var(--md-sys-motion-spring-default-spatial, 500ms cubic-bezier(0.27, 1.06, 0.18, 1)),
+    margin-inline-end var(--md-sys-motion-spring-default-spatial, 500ms cubic-bezier(0.27, 1.06, 0.18, 1)),
+    opacity var(--md-sys-motion-spring-default-effects, 200ms cubic-bezier(0.34, 0.8, 0.34, 1));
 }
 
-.m3e-title__text {
+.akari-title__text {
   flex: 0 1 auto;
   min-width: 0;
   overflow: hidden;
@@ -54,18 +58,24 @@ const logo = computed(() => {
   white-space: nowrap;
 }
 
-.m3e-title__version {
+.akari-title__version {
   flex: none;
 }
 
 @media (max-width: 600px) {
-  .m3e-title {
+  .akari-title {
     gap: 6px;
   }
 
-  .m3e-title__logo {
+  .akari-title__logo {
     width: 24px;
     height: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .akari-title__logo {
+    transition: none;
   }
 }
 </style>

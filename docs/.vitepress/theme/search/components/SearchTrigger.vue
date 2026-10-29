@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
 
-import { useM3eConfig } from "../../composables/useM3eConfig";
-import { useM3eSearch } from "../useSearch";
+import { useAkariI18n } from "../../composables/useI18n";
+import { useAkariConfig } from "../../composables/useAkariConfig";
+import { useAkariSearch } from "../useSearch";
 
-const config = useM3eConfig();
-const { isOpen, openSearch, setTrigger } = useM3eSearch();
+const config = useAkariConfig();
+const { t } = useAkariI18n();
+const { isOpen, openSearch, setTrigger } = useAkariSearch();
 const trigger = ref<HTMLButtonElement | null>(null);
 
 const shortcutLabel = ref("⌘K");
@@ -18,7 +20,10 @@ const shortcutKeys = computed(() =>
 
 const ariaLabel = computed(() =>
   config.value.search.shortcut
-    ? `${config.value.search.placeholder}，快捷键 ${shortcutLabel.value}`
+    ? t("searchShortcutLabel", {
+        label: config.value.search.placeholder,
+        shortcut: shortcutLabel.value,
+      })
     : config.value.search.placeholder,
 );
 
@@ -37,7 +42,7 @@ onUnmounted(() => setTrigger(null));
   <button
     ref="trigger"
     type="button"
-    class="m3e-search-trigger"
+    class="akari-search-trigger"
     :aria-label="ariaLabel"
     :aria-keyshortcuts="shortcutKeys"
     :aria-expanded="isOpen"
@@ -45,19 +50,24 @@ onUnmounted(() => setTrigger(null));
     @click="openSearch"
   >
     <m3e-icon name="search"></m3e-icon>
-    <span class="m3e-search-trigger__label">
+    <span class="akari-search-trigger__label">
       {{ config.search.placeholder }}
     </span>
-    <kbd v-if="config.search.shortcut" class="m3e-search-trigger__kbd">
+    <kbd v-if="config.search.shortcut" class="akari-search-trigger__kbd">
       {{ shortcutLabel }}
     </kbd>
   </button>
 </template>
 
 <style scoped>
-.m3e-search-trigger {
+.akari-search-trigger {
   display: inline-flex;
-  flex: 0 1 300px;
+  /*
+   * Its width is its own, never taken by the title: the app bar measures
+   * the title's room against the actions, and a search field giving way
+   * to the title would hand that room back and forth with it.
+   */
+  flex: none;
   align-items: center;
   gap: 8px;
   box-sizing: border-box;
@@ -71,46 +81,57 @@ onUnmounted(() => setTrigger(null));
   font: inherit;
   font-size: 0.875rem;
   text-align: start;
+  overflow: hidden;
   cursor: pointer;
+  /*
+   * Every size below is a length, so moving between breakpoints, down to
+   * the round icon button, eases instead of jumping.
+   */
   transition:
     background-color 160ms cubic-bezier(0.2, 0, 0, 1),
     border-color 160ms cubic-bezier(0.2, 0, 0, 1),
-    color 160ms cubic-bezier(0.2, 0, 0, 1);
+    color 160ms cubic-bezier(0.2, 0, 0, 1),
+    width var(--md-sys-motion-spring-default-spatial, 500ms cubic-bezier(0.27, 1.06, 0.18, 1)),
+    padding var(--md-sys-motion-spring-default-spatial, 500ms cubic-bezier(0.27, 1.06, 0.18, 1)),
+    gap var(--md-sys-motion-spring-default-spatial, 500ms cubic-bezier(0.27, 1.06, 0.18, 1));
 }
 
-.m3e-search-trigger:hover {
+.akari-search-trigger:hover {
   border-color: var(--md-sys-color-outline);
   background-color: var(--md-sys-color-surface-container-highest);
   color: var(--md-sys-color-on-surface);
 }
 
-.m3e-search-trigger:focus-visible {
+.akari-search-trigger:focus-visible {
   outline: 2px solid var(--md-sys-color-primary);
   outline-offset: 2px;
 }
 
-.m3e-search-trigger m3e-icon {
+.akari-search-trigger m3e-icon {
   flex: none;
   --m3e-icon-size: 20px;
 }
 
-.m3e-search-trigger__label {
+.akari-search-trigger__label {
   flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: opacity var(--md-sys-motion-spring-default-effects, 200ms cubic-bezier(0.34, 0.8, 0.34, 1));
 }
 
-.m3e-search-trigger__kbd {
+.akari-search-trigger__kbd {
   display: inline-flex;
   flex: none;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
   min-inline-size: var(--md-sys-measurement-space350, 28px);
+  max-inline-size: 6em;
   min-block-size: var(--md-sys-measurement-space250, 20px);
   padding-inline: var(--md-sys-measurement-space100, 8px);
+  overflow: hidden;
   border: 1px solid var(--md-sys-color-outline);
   border-radius: var(--md-sys-shape-corner-full);
   background-color: transparent;
@@ -123,50 +144,65 @@ onUnmounted(() => setTrigger(null));
   direction: ltr;
   unicode-bidi: isolate;
   white-space: nowrap;
-  transition: color 160ms cubic-bezier(0.2, 0, 0, 1);
+  transition:
+    color 160ms cubic-bezier(0.2, 0, 0, 1),
+    opacity var(--md-sys-motion-spring-default-effects, 200ms cubic-bezier(0.34, 0.8, 0.34, 1)),
+    min-inline-size var(--md-sys-motion-spring-default-spatial, 500ms cubic-bezier(0.27, 1.06, 0.18, 1)),
+    max-inline-size var(--md-sys-motion-spring-default-spatial, 500ms cubic-bezier(0.27, 1.06, 0.18, 1)),
+    padding var(--md-sys-motion-spring-default-spatial, 500ms cubic-bezier(0.27, 1.06, 0.18, 1)),
+    border-width var(--md-sys-motion-spring-default-spatial, 500ms cubic-bezier(0.27, 1.06, 0.18, 1));
 }
 
-.m3e-search-trigger:hover .m3e-search-trigger__kbd {
+.akari-search-trigger:hover .akari-search-trigger__kbd {
   color: var(--md-sys-color-on-surface);
 }
 
 @media (max-width: 1199px) {
-  .m3e-search-trigger {
+  .akari-search-trigger {
     width: clamp(200px, 20vw, 260px);
-    flex-basis: 260px;
   }
 }
 
 @media (max-width: 960px) {
-  .m3e-search-trigger {
+  .akari-search-trigger {
     width: clamp(150px, 20vw, 200px);
-    flex-basis: 200px;
   }
 
-  .m3e-search-trigger__kbd {
+  .akari-search-trigger__kbd {
     min-inline-size: var(--md-sys-measurement-space300, 24px);
     padding-inline: var(--md-sys-measurement-space75, 6px);
   }
 }
 
+/*
+ * A round icon button: the field narrows around its icon, the placeholder
+ * fades and the shortcut folds away. The padding centres the 20px icon in
+ * the 40px circle (inside its 1px border).
+ */
 @media (max-width: 767px) {
-  .m3e-search-trigger {
-    flex: none;
+  .akari-search-trigger {
     width: 40px;
-    height: 40px;
-    padding: 0;
-    border-radius: var(--md-sys-shape-corner-full);
-    justify-content: center;
+    gap: 0;
+    padding-inline: 9px;
   }
 
-  .m3e-search-trigger__label,
-  .m3e-search-trigger__kbd {
-    display: none;
+  .akari-search-trigger__label {
+    opacity: 0;
+  }
+
+  .akari-search-trigger__kbd {
+    min-inline-size: 0;
+    max-inline-size: 0;
+    padding-inline: 0;
+    border-width: 0;
+    opacity: 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .m3e-search-trigger {
+  .akari-search-trigger,
+  .akari-search-trigger__label,
+  .akari-search-trigger__kbd {
     transition: none;
   }
 }

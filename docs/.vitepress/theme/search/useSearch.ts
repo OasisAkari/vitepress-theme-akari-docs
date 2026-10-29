@@ -1,40 +1,45 @@
 import {
+  computed,
   inject,
   onMounted,
   onUnmounted,
   provide,
   ref,
   watch,
+  type ComputedRef,
   type InjectionKey,
   type Ref,
 } from "vue";
 import { useData, useRouter, withBase } from "vitepress";
 
 import type {
-  M3eSearchResult,
-  ResolvedM3eThemeConfig,
+  AkariSearchResult,
+  ResolvedAkariThemeConfig,
 } from "../types";
-import { createSearchBackend } from "./backends";
+import { createSearchBackend, describeSearchError } from "./backends";
+import type { AkariSearchBackend } from "./types";
 
-export interface M3eSearchApi {
+export interface AkariSearchApi {
   isOpen: Ref<boolean>;
   query: Ref<string>;
-  results: Ref<M3eSearchResult[]>;
+  results: Ref<AkariSearchResult[]>;
   loading: Ref<boolean>;
-  error: Ref<string | null>;
+  error: Readonly<Ref<string | null>>;
   activeIndex: Ref<number>;
   openSearch(): void;
   closeSearch(): void;
   finalizeClose(): void;
   setTrigger(element: HTMLElement | null): void;
+  /** The registered trigger, or the app bar's search button. */
+  getTrigger(): HTMLElement | null;
   getTriggerRect(): DOMRect | null;
   setQuery(value: string): void;
   retry(): void;
   handleInputKeydown(event: KeyboardEvent): void;
-  selectResult(result: M3eSearchResult): void;
+  selectResult(result: AkariSearchResult): void;
 }
 
-const searchKey: InjectionKey<M3eSearchApi> = Symbol("m3e-search");
+const searchKey: InjectionKey<AkariSearchApi> = Symbol("akari-search");
 
 function isAbortError(error: unknown): boolean {
   return error instanceof Error && error.name === "AbortError";
@@ -44,20 +49,43 @@ function isExternalHref(href: string): boolean {
   return /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(href);
 }
 
-export function provideM3eSearch(
-  config: ResolvedM3eThemeConfig,
-): M3eSearchApi {
-  const { site } = useData();
+export function provideAkariSearch(
+  config: ComputedRef<ResolvedAkariThemeConfig>,
+): AkariSearchApi {
+  const { site, lang, localeIndex } = useData();
   const router = useRouter();
-  const backend = createSearchBackend(config.search.backend, {
-    base: site.value.base ?? "/",
-  });
+
+  // Locales may configure their own backend. Each distinct configuration is
+  // created once, so a local index is fetched once for the whole site.
+  const backends = new Map<string, AkariSearchBackend>();
+
+  function currentBackend(): AkariSearchBackend {
+    const backendConfig = config.value.search.backend;
+    const key = JSON.stringify(backendConfig);
+    let backend = backends.get(key);
+
+    if (!backend) {
+      backend = createSearchBackend(backendConfig, {
+        base: site.value.base ?? "/",
+        locales: Object.keys(site.value.locales ?? {}),
+      });
+      backends.set(key, backend);
+    }
+
+    return backend;
+  }
 
   const isOpen = ref(false);
   const query = ref("");
-  const results = ref<M3eSearchResult[]>([]);
+  const results = ref<AkariSearchResult[]>([]);
   const loading = ref(false);
-  const error = ref<string | null>(null);
+  // Kept raw so the message follows the reader into another locale.
+  const failure = ref<unknown>(null);
+  const error = computed(() =>
+    failure.value === null
+      ? null
+      : describeSearchError(failure.value, config.value.messages),
+  );
   const activeIndex = ref(-1);
 
   let timer: ReturnType<typeof setTimeout> | undefined;
@@ -83,7 +111,7 @@ export function provideM3eSearch(
     results.value = [];
     activeIndex.value = -1;
     loading.value = false;
-    error.value = null;
+    failure.value = null;
   }
 
   async function search(value: string): Promise<void> {
@@ -99,12 +127,14 @@ export function provideM3eSearch(
     controller = currentController;
 
     loading.value = true;
-    error.value = null;
+    failure.value = null;
 
     try {
-      const nextResults = await backend.search(trimmed, {
-        limit: config.search.maxResults,
+      const nextResults = await currentBackend().search(trimmed, {
+        limit: config.value.search.maxResults,
         signal: currentController.signal,
+        lang: lang.value,
+        locale: localeIndex.value,
       });
 
       if (
@@ -127,10 +157,7 @@ export function provideM3eSearch(
 
       results.value = [];
       activeIndex.value = -1;
-      error.value =
-        cause instanceof Error
-          ? cause.message
-          : "搜索失败，请稍后重试。";
+      failure.value = cause;
     } finally {
       if (currentRequest === requestId) {
         loading.value = false;
@@ -139,13 +166,13 @@ export function provideM3eSearch(
   }
 
   function openSearch(): void {
-    if (!config.search.enabled || isOpen.value) return;
+    if (!config.value.search.enabled || isOpen.value) return;
 
     const active = document.activeElement;
     previousFocus =
       active instanceof HTMLElement &&
       active !== document.body &&
-      !active.closest(".m3e-search-dialog")
+      !active.closest(".akari-search-dialog")
         ? active
         : null;
     query.value = "";
@@ -175,13 +202,13 @@ export function provideM3eSearch(
     triggerElement = element;
   }
 
-  function getTriggerRect(): DOMRect | null {
-    if (triggerElement?.isConnected) {
-      return triggerElement.getBoundingClientRect();
-    }
+  function getTrigger(): HTMLElement | null {
+    if (triggerElement?.isConnected) return triggerElement;
+    return document.querySelector<HTMLElement>(".akari-search-trigger");
+  }
 
-    const fallback = document.querySelector<HTMLElement>(".m3e-search-trigger");
-    return fallback?.getBoundingClientRect() ?? null;
+  function getTriggerRect(): DOMRect | null {
+    return getTrigger()?.getBoundingClientRect() ?? null;
   }
 
   function setQuery(value: string): void {
@@ -206,7 +233,7 @@ export function provideM3eSearch(
     );
   }
 
-  function navigate(result: M3eSearchResult): void {
+  function navigate(result: AkariSearchResult): void {
     if (isExternalHref(result.href)) {
       window.open(result.href, "_blank", "noopener,noreferrer");
       return;
@@ -215,7 +242,7 @@ export function provideM3eSearch(
     void router.go(withBase(result.href));
   }
 
-  function selectResult(result: M3eSearchResult): void {
+  function selectResult(result: AkariSearchResult): void {
     closeSearch();
     navigate(result);
   }
@@ -260,9 +287,9 @@ export function provideM3eSearch(
   }
 
   function handleGlobalShortcut(event: KeyboardEvent): void {
-    const shortcut = config.search.shortcut;
+    const shortcut = config.value.search.shortcut;
     if (
-      !config.search.enabled ||
+      !config.value.search.enabled ||
       !shortcut ||
       event.defaultPrevented ||
       event.altKey ||
@@ -288,7 +315,8 @@ export function provideM3eSearch(
       return;
     }
 
-    if (config.search.debounce <= 0) {
+    const { debounce } = config.value.search;
+    if (debounce <= 0) {
       void search(value);
       return;
     }
@@ -296,7 +324,7 @@ export function provideM3eSearch(
     timer = setTimeout(() => {
       timer = undefined;
       if (isOpen.value) void search(value);
-    }, config.search.debounce);
+    }, debounce);
   });
 
   onMounted(() => window.addEventListener("keydown", handleGlobalShortcut));
@@ -306,7 +334,7 @@ export function provideM3eSearch(
     abortRequest();
   });
 
-  const api: M3eSearchApi = {
+  const api: AkariSearchApi = {
     isOpen,
     query,
     results,
@@ -317,6 +345,7 @@ export function provideM3eSearch(
     closeSearch,
     finalizeClose,
     setTrigger,
+    getTrigger,
     getTriggerRect,
     setQuery,
     retry,
@@ -328,12 +357,12 @@ export function provideM3eSearch(
   return api;
 }
 
-export function useM3eSearch(): M3eSearchApi {
+export function useAkariSearch(): AkariSearchApi {
   const api = inject(searchKey);
 
   if (!api) {
     throw new Error(
-      "[vitepress-theme-m3e] useM3eSearch() must be called inside M3eLayout.",
+      "[vitepress-akari-theme-docs] useAkariSearch() must be called inside AkariLayout.",
     );
   }
 

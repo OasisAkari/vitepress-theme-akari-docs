@@ -1,0 +1,84 @@
+/*
+ * Modal dialogs that grow out of their trigger with a container transform
+ * (search, language): a full-window native <dialog> holding a scrim, the
+ * panel and a layer for the trigger's copy. The panel is sized by each
+ * dialog.
+ */
+.akari-morph-dialog {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: hidden;
+  color: var(--md-sys-color-on-surface);
+}
+
+.akari-morph-dialog:not([open]) {
+  display: none;
+}
+
+.akari-morph-dialog:focus {
+  outline: none;
+}
+
+.akari-morph-dialog[open] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.akari-morph-dialog::backdrop {
+  background: transparent;
+}
+
+.akari-morph-dialog__scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-scrim) 42%,
+    transparent
+  );
+  opacity: 0;
+}
+
+.akari-morph-dialog__ghost {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.akari-morph-dialog__panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 28px;
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+  box-shadow:
+    0 8px 12px 6px color-mix(
+      in srgb,
+      var(--md-sys-color-shadow) 15%,
+      transparent
+    ),
+    0 1px 3px 0 color-mix(
+      in srgb,
+      var(--md-sys-color-shadow) 30%,
+      transparent
+    );
+}
+
+.akari-morph-dialog__panel:focus {
+  outline: none;
+}

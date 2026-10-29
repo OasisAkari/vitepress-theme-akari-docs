@@ -1,93 +1,17 @@
-.m3e-search-dialog {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  max-width: none;
-  height: 100dvh;
-  max-height: none;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  overflow: hidden;
-  color: var(--md-sys-color-on-surface);
-}
-
-.m3e-search-dialog:not([open]) {
-  display: none;
-}
-
-.m3e-search-dialog:focus {
-  outline: none;
-}
-
-.m3e-search-dialog[open] {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.m3e-search-dialog::backdrop {
-  background: transparent;
-}
-
-.m3e-search-dialog__scrim {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  background-color: color-mix(
-    in srgb,
-    var(--md-sys-color-scrim) 42%,
-    transparent
-  );
-  opacity: 0;
-}
-
-.m3e-search-dialog__ghost {
-  position: fixed;
-  inset: 0;
-  z-index: 2;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.m3e-search-dialog__panel {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
+.akari-search-dialog__panel {
   width: min(720px, calc(100vw - 32px));
   max-height: min(680px, calc(100dvh - 64px));
   min-height: 280px;
-  overflow: hidden;
-  border-radius: 28px;
-  background-color: var(--md-sys-color-surface-container-high);
-  color: var(--md-sys-color-on-surface);
-  box-shadow:
-    0 8px 12px 6px color-mix(
-      in srgb,
-      var(--md-sys-color-shadow) 15%,
-      transparent
-    ),
-    0 1px 3px 0 color-mix(
-      in srgb,
-      var(--md-sys-color-shadow) 30%,
-      transparent
-    );
 }
 
-.m3e-search-dialog__panel:focus {
-  outline: none;
-}
-
-.m3e-search-dialog__content {
+.akari-search-dialog__content {
   display: flex;
   flex: 1 1 auto;
   min-height: 0;
   flex-direction: column;
 }
 
-.m3e-search-dialog__header {
+.akari-search-dialog__header {
   display: flex;
   flex: none;
   align-items: center;
@@ -95,26 +19,47 @@
   padding: 24px 24px 16px;
 }
 
-.m3e-search-dialog__bar {
+.akari-search-dialog__bar {
   flex: 1 1 auto;
   width: auto;
   min-width: 0;
-  --m3e-search-bar-container-color: var(
-    --md-sys-color-surface-container-lowest
-  );
+  /*
+   * Same look as the app bar's search button: tonal fill with a hairline
+   * outline that strengthens on hover. m3e-search-bar has no border token,
+   * so the host draws fill and outline and its container stays clear.
+   */
+  box-sizing: border-box;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-full, 9999px);
+  background-color: var(--md-sys-color-surface-container-high);
+  transition:
+    background-color 160ms cubic-bezier(0.2, 0, 0, 1),
+    border-color 160ms cubic-bezier(0.2, 0, 0, 1);
+  --m3e-search-bar-container-color: transparent;
   --m3e-search-bar-container-height: 56px;
-  --m3e-search-bar-container-shape: 28px;
+  --m3e-search-bar-container-shape: var(--md-sys-shape-corner-full, 9999px);
   --m3e-search-bar-input-text-font-size: 1rem;
   --m3e-search-bar-input-color: var(--md-sys-color-on-surface);
   --m3e-search-bar-leading-icon-color: var(--md-sys-color-on-surface-variant);
   --m3e-search-bar-trailing-icon-color: var(--md-sys-color-on-surface-variant);
 }
 
-.m3e-search-dialog__close {
+.akari-search-dialog__bar:hover {
+  border-color: var(--md-sys-color-outline);
+  background-color: var(--md-sys-color-surface-container-highest);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .akari-search-dialog__bar {
+    transition: none;
+  }
+}
+
+.akari-search-dialog__close {
   flex: none;
 }
 
-.m3e-search-dialog__input {
+.akari-search-dialog__input {
   width: 100%;
   border: 0;
   outline: none;
@@ -123,16 +68,16 @@
   font: inherit;
 }
 
-.m3e-search-dialog__input::placeholder {
+.akari-search-dialog__input::placeholder {
   color: var(--md-sys-color-on-surface-variant);
 }
 
-.m3e-search-dialog__input::-webkit-search-cancel-button,
-.m3e-search-dialog__input::-webkit-search-decoration {
+.akari-search-dialog__input::-webkit-search-cancel-button,
+.akari-search-dialog__input::-webkit-search-decoration {
   display: none;
 }
 
-.m3e-search-dialog__body {
+.akari-search-dialog__body {
   display: flex;
   flex: 1 1 auto;
   min-height: 0;
@@ -141,13 +86,13 @@
   padding: 0 24px 24px;
 }
 
-.m3e-search-dialog__summary {
+.akari-search-dialog__summary {
   color: var(--md-sys-color-on-surface-variant);
   font-size: 0.75rem;
   line-height: 1.4;
 }
 
-.m3e-search-dialog__results {
+.akari-search-dialog__results {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
@@ -162,7 +107,7 @@
   margin-inline: -4px;
 }
 
-.m3e-search-result {
+.akari-search-result {
   --m3e-list-item-container-shape: 16px;
   --m3e-list-item-hover-container-shape: 16px;
   --m3e-list-item-focus-container-shape: 16px;
@@ -171,7 +116,7 @@
     color 160ms cubic-bezier(0.2, 0, 0, 1);
 }
 
-.m3e-search-result.is-active {
+.akari-search-result.is-active {
   --m3e-list-item-container-color: var(
     --md-sys-color-secondary-container
   );
@@ -185,18 +130,18 @@
   --m3e-list-item-leading-color: var(--md-sys-color-on-secondary-container);
 }
 
-.m3e-search-result__overline {
+.akari-search-result__overline {
   letter-spacing: 0.02em;
 }
 
-.m3e-search-result__title {
+.akari-search-result__title {
   display: block;
   font-weight: 500;
   line-height: 1.35;
   overflow-wrap: anywhere;
 }
 
-.m3e-search-result__excerpt {
+.akari-search-result__excerpt {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -204,14 +149,14 @@
   overflow-wrap: anywhere;
 }
 
-.m3e-search-result mark {
+.akari-search-result mark {
   border-radius: 3px;
   padding: 0 1px;
   background-color: var(--md-sys-color-primary-container);
   color: var(--md-sys-color-on-primary-container);
 }
 
-.m3e-search-dialog__footer {
+.akari-search-dialog__footer {
   display: flex;
   flex: none;
   align-items: center;
@@ -223,22 +168,22 @@
   font-size: 0.75rem;
 }
 
-.m3e-search-dialog__hints {
+.akari-search-dialog__hints {
   display: inline-flex;
   align-items: center;
   gap: 4px;
 }
 
-.m3e-search-dialog__hints span {
+.akari-search-dialog__hints span {
   margin-inline-end: 6px;
 }
 
-.m3e-search-dialog__hints span:last-child {
+.akari-search-dialog__hints span:last-child {
   margin-inline-end: 0;
 }
 
-.m3e-search-dialog__hints kbd,
-.m3e-search-state__hint kbd {
+.akari-search-dialog__hints kbd,
+.akari-search-state__hint kbd {
   display: inline-flex;
   min-inline-size: var(--md-sys-measurement-space250, 20px);
   block-size: var(--md-sys-measurement-space250, 20px);
@@ -259,7 +204,7 @@
   unicode-bidi: isolate;
 }
 
-.m3e-search-state {
+.akari-search-state {
   display: flex;
   flex: 1 1 auto;
   min-height: 144px;
@@ -272,7 +217,7 @@
   color: var(--md-sys-color-on-surface-variant);
 }
 
-.m3e-search-state h2 {
+.akari-search-state h2 {
   margin: 0;
   color: var(--md-sys-color-on-surface);
   font-size: 1.25rem;
@@ -280,67 +225,67 @@
   line-height: 1.3;
 }
 
-.m3e-search-state p {
+.akari-search-state p {
   max-width: 40ch;
   margin: 0;
   font-size: 0.875rem;
   line-height: 1.5;
 }
 
-.m3e-search-state__icon {
+.akari-search-state__icon {
   --m3e-icon-size: 40px;
   color: var(--md-sys-color-primary);
 }
 
-.m3e-search-state__hint {
+.akari-search-state__hint {
   color: var(--md-sys-color-on-surface-variant);
   font-size: 0.75rem !important;
 }
 
-.m3e-search-state m3e-loading-indicator {
+.akari-search-state m3e-loading-indicator {
   --m3e-loading-indicator-container-size: 40px;
   color: var(--md-sys-color-primary);
 }
 
-.m3e-search-state m3e-button {
+.akari-search-state m3e-button {
   margin-block-start: 8px;
 }
 
-.m3e-search-state--error .m3e-search-state__icon {
+.akari-search-state--error .akari-search-state__icon {
   color: var(--md-sys-color-error);
 }
 
 @media (max-width: 600px) {
-  .m3e-search-dialog__panel {
+  .akari-search-dialog__panel {
     width: calc(100vw - 16px);
     max-height: calc(100dvh - 16px);
     border-radius: 24px;
   }
 
-  .m3e-search-dialog__header {
+  .akari-search-dialog__header {
     gap: 6px;
     padding: 16px 16px 12px;
   }
 
-  .m3e-search-dialog__body {
+  .akari-search-dialog__body {
     padding: 0 16px 16px;
   }
 
-  .m3e-search-dialog__hints {
+  .akari-search-dialog__hints {
     display: none;
   }
 
-  .m3e-search-dialog__footer {
+  .akari-search-dialog__footer {
     justify-content: flex-end;
   }
 
-  .m3e-search-state {
+  .akari-search-state {
     padding: 16px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .m3e-search-result {
+  .akari-search-result {
     transition: none;
   }
 }

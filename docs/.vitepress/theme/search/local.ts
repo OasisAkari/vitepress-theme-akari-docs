@@ -1,9 +1,9 @@
-import type { M3eSearchResult } from "../types";
+import type { AkariSearchResult } from "../types";
 import type { SearchIndexEntry } from "./types";
 
 const EXCERPT_LENGTH = 160;
 
-interface ScoredSearchResult extends M3eSearchResult {
+interface ScoredSearchResult extends AkariSearchResult {
   score: number;
 }
 
@@ -49,7 +49,7 @@ export function searchLocal(
   entries: SearchIndexEntry[],
   query: string,
   limit: number,
-): M3eSearchResult[] {
+): AkariSearchResult[] {
   const normalizedQuery = normalizeText(query.trim());
   const tokens = queryTokens(query);
 
@@ -57,7 +57,9 @@ export function searchLocal(
 
   const scored: ScoredSearchResult[] = entries
     .flatMap((entry): ScoredSearchResult[] => {
-      const title = normalizeText(`${entry.title} ${entry.pageTitle}`);
+      // The entry's own title: the page's for a page, the heading's for a
+      // section. The page title has its own, smaller weight.
+      const title = normalizeText(entry.title);
       const pageTitle = normalizeText(entry.pageTitle);
       const content = normalizeText(entry.content);
 
@@ -86,7 +88,8 @@ export function searchLocal(
         if (content.includes(token)) score += 6;
       }
 
-      score += entry.level === 2 ? 3 : entry.level === 3 ? 1 : 2;
+      // On a tie a page comes first, then its sections, deeper ones last.
+      score += entry.level === 0 ? 3 : entry.level === 2 ? 2 : 1;
 
       const result: ScoredSearchResult = {
         id: entry.id,

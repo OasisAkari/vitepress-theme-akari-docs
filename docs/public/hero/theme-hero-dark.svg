@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 860" fill="none">
+  <!-- Dark-scheme version: the same scene on dark surfaces. -->
+  <!-- Decorative shapes behind the devices. -->
+  <circle cx="1040" cy="150" r="110" fill="#1c5f5f" opacity=".5"/>
+  <rect x="40" y="610" width="200" height="200" rx="100" fill="#2b4a4a" opacity=".45"/>
+
+  <!-- Desktop window: rail, app bar, document surface with a hero. -->
+  <rect x="100" y="140" width="720" height="540" rx="36" fill="#0e1514" stroke="#3f4948" stroke-width="3"/>
+  <rect x="136" y="176" width="40" height="40" rx="12" fill="#4cdada"/>
+  <rect x="132" y="250" width="48" height="28" rx="14" fill="#324b4b"/>
+  <rect x="142" y="290" width="28" height="7" rx="3.5" fill="#899392"/>
+  <circle cx="156" cy="336" r="12" fill="#3f4948"/>
+  <rect x="142" y="356" width="28" height="7" rx="3.5" fill="#3f4948"/>
+  <circle cx="156" cy="402" r="12" fill="#3f4948"/>
+  <rect x="142" y="422" width="28" height="7" rx="3.5" fill="#3f4948"/>
+  <circle cx="156" cy="630" r="18" stroke="#3f4948" stroke-width="3"/>
+  <rect x="212" y="186" width="190" height="20" rx="10" fill="#dde4e3" opacity=".85"/>
+  <rect x="604" y="178" width="180" height="36" rx="18" fill="#1d2524" stroke="#3f4948" stroke-width="2"/>
+  <rect x="200" y="238" width="590" height="412" rx="26" fill="#161d1d" stroke="#2b3332" stroke-width="2"/>
+  <rect x="226" y="264" width="266" height="164" rx="20" fill="#1d2524"/>
+  <rect x="500" y="264" width="264" height="164" rx="20" fill="#004f4f"/>
+  <rect x="252" y="300" width="70" height="9" rx="4.5" fill="#bec9c8"/>
+  <rect x="252" y="324" width="186" height="20" rx="10" fill="#dde4e3" opacity=".85"/>
+  <rect x="252" y="354" width="132" height="20" rx="10" fill="#dde4e3" opacity=".85"/>
+  <rect x="252" y="392" width="164" height="8" rx="4" fill="#899392" opacity=".7"/>
+  <circle cx="598" cy="346" r="46" fill="#4cdada" opacity=".9"/>
+  <path d="M676 300l22 40h-44z" fill="#b3c8e8" opacity=".85"/>
+  <rect x="650" y="362" width="70" height="40" rx="20" fill="#b1cccb" opacity=".8"/>
+  <rect x="226" y="460" width="380" height="12" rx="6" fill="#bec9c8" opacity=".8"/>
+  <rect x="226" y="488" width="420" height="8" rx="4" fill="#3f4948"/>
+  <rect x="226" y="508" width="400" height="8" rx="4" fill="#3f4948"/>
+  <rect x="226" y="528" width="300" height="8" rx="4" fill="#3f4948"/>
+  <rect x="226" y="562" width="250" height="12" rx="6" fill="#bec9c8" opacity=".8"/>
+  <rect x="226" y="590" width="410" height="8" rx="4" fill="#3f4948"/>
+  <rect x="226" y="610" width="360" height="8" rx="4" fill="#3f4948"/>
+  <rect x="664" y="462" width="100" height="28" rx="14" stroke="#899392" stroke-width="2"/>
+  <rect x="676" y="506" width="76" height="7" rx="3.5" fill="#3f4948"/>
+  <rect x="676" y="526" width="64" height="7" rx="3.5" fill="#3f4948"/>
+  <rect x="676" y="546" width="70" height="7" rx="3.5" fill="#3f4948"/>
+
+  <!-- Phone: app bar, stacked hero cards, text and a navigation bar. -->
+  <rect x="860" y="230" width="270" height="520" rx="44" fill="#0e1514" stroke="#3f4948" stroke-width="3"/>
+  <rect x="890" y="266" width="24" height="24" rx="6" fill="#4cdada"/>
+  <rect x="924" y="270" width="110" height="16" rx="8" fill="#dde4e3" opacity=".85"/>
+  <circle cx="1090" cy="278" r="14" fill="#1d2524" stroke="#3f4948" stroke-width="2"/>
+  <rect x="884" y="312" width="222" height="112" rx="20" fill="#1d2524"/>
+  <rect x="904" y="340" width="150" height="16" rx="8" fill="#dde4e3" opacity=".85"/>
+  <rect x="904" y="366" width="104" height="16" rx="8" fill="#dde4e3" opacity=".85"/>
+  <rect x="904" y="396" width="130" height="7" rx="3.5" fill="#899392" opacity=".7"/>
+  <rect x="884" y="432" width="222" height="130" rx="20" fill="#004f4f"/>
+  <circle cx="964" cy="497" r="34" fill="#4cdada" opacity=".9"/>
+  <rect x="1012" y="478" width="62" height="38" rx="19" fill="#b1cccb" opacity=".8"/>
+  <rect x="884" y="584" width="196" height="8" rx="4" fill="#3f4948"/>
+  <rect x="884" y="604" width="210" height="8" rx="4" fill="#3f4948"/>
+  <rect x="884" y="624" width="160" height="8" rx="4" fill="#3f4948"/>
+  <rect x="862" y="668" width="266" height="1.5" fill="#2b3332"/>
+  <rect x="902" y="690" width="44" height="26" rx="13" fill="#324b4b"/>
+  <circle cx="995" cy="703" r="11" fill="#3f4948"/>
+  <circle cx="1065" cy="703" r="11" fill="#3f4948"/>
+</svg>

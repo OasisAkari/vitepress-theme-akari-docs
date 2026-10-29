@@ -6,10 +6,13 @@ import type { Plugin } from "vite";
 import {
   searchIndexOutputPath,
   writeSearchIndex,
+  type PageRoute,
 } from "./generate";
 
 export interface SearchIndexPluginOptions {
   docsDir: string;
+  /** Where a page is served, when rewrites move it from its path in the docs. */
+  route?: PageRoute;
 }
 
 export function searchIndexPlugin(options: SearchIndexPluginOptions): Plugin {
@@ -18,9 +21,9 @@ export function searchIndexPlugin(options: SearchIndexPluginOptions): Plugin {
 
   async function generate(): Promise<void> {
     try {
-      await writeSearchIndex(options.docsDir);
+      await writeSearchIndex(options.docsDir, options.route);
     } catch (error) {
-      console.error("[m3e-search] failed to build search index", error);
+      console.error("[akari-search] failed to build search index", error);
     }
   }
 
@@ -34,7 +37,7 @@ export function searchIndexPlugin(options: SearchIndexPluginOptions): Plugin {
   }
 
   return {
-    name: "m3e-search-index",
+    name: "akari-search-index",
     async configResolved(config) {
       outDir = path.resolve(config.root, config.build.outDir);
       await generate();

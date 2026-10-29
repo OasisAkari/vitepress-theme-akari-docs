@@ -1,56 +1,64 @@
 import type {
-  M3eColorScheme,
-  M3eContrastLevel,
-  M3eDirection,
-  M3eMotionScheme,
-  M3eTextSize,
-  M3eThemeSettings,
-  M3eThemeVariant,
+  AkariColorScheme,
+  AkariContrastLevel,
+  AkariDirection,
+  AkariMessages,
+  AkariMotionScheme,
+  AkariTextSize,
+  AkariThemeSettings,
+  AkariThemeVariant,
   SettingsSectionKey,
 } from "./types";
 
-export const M3E_CONTENT_ID = "m3e-doc-content";
-export const M3E_SIDEBAR_ID = "m3e-sidebar";
-export const M3E_SETTINGS_ID = "m3e-settings";
-export const SETTINGS_STORAGE_KEY = "m3e-docs-settings";
+export const AKARI_CONTENT_ID = "akari-doc-content";
+export const AKARI_SIDEBAR_ID = "akari-sidebar";
+export const AKARI_SETTINGS_ID = "akari-settings";
+export const SETTINGS_STORAGE_KEY = "akari-docs-settings";
+
+// Navigation layout breakpoints, aligned with the M3 window size classes
+// used by m3.material.io. Keep in sync with the media queries in base.css.
+export const AKARI_NAV_RAIL_QUERY = "(min-width: 960px)";
+export const AKARI_NAV_DRAWER_PINNED_QUERY = "(min-width: 1600px)";
 
 export const DEFAULT_SEARCH_ENDPOINT = "/search-index.json";
-export const DEFAULT_SEARCH_PLACEHOLDER = "搜索文档";
 export const DEFAULT_SEARCH_SHORTCUT = "k";
 export const DEFAULT_SEARCH_MAX_RESULTS = 8;
 export const DEFAULT_SEARCH_DEBOUNCE = 180;
 
+// Appearance has a button of its own and is not a section of the dialog.
 export const SETTINGS_SECTION_KEYS: SettingsSectionKey[] = [
   "color",
   "variant",
-  "scheme",
   "contrast",
   "motion",
   "direction",
   "textSize",
 ];
 
-export const DEFAULT_SECTION_LABELS: Record<SettingsSectionKey, string> = {
-  color: "颜色",
-  variant: "色调变体",
-  scheme: "明暗模式",
-  contrast: "对比度",
-  motion: "动效",
-  direction: "文字方向",
-  textSize: "字号",
+/** Message holding the default heading of each settings section. */
+export const SECTION_LABEL_MESSAGES: Record<
+  SettingsSectionKey,
+  keyof AkariMessages
+> = {
+  color: "settingsColor",
+  variant: "settingsVariant",
+  contrast: "settingsContrast",
+  motion: "settingsMotion",
+  direction: "settingsDirection",
+  textSize: "settingsTextSize",
 };
 
-export const DEFAULT_SETTINGS: M3eThemeSettings = {
+export const DEFAULT_SETTINGS: AkariThemeSettings = {
   color: "#6750a4",
   variant: "tonal-spot",
   scheme: "auto",
   contrast: "standard",
   motion: "expressive",
-  direction: "ltr",
+  direction: "auto",
   textSize: "16px",
 };
 
-export const VARIANT_VALUES: M3eThemeVariant[] = [
+export const VARIANT_VALUES: AkariThemeVariant[] = [
   "tonal-spot",
   "vibrant",
   "fidelity",
@@ -62,7 +70,7 @@ export const VARIANT_VALUES: M3eThemeVariant[] = [
 ];
 
 export const VARIANT_OPTIONS: ReadonlyArray<{
-  value: M3eThemeVariant;
+  value: AkariThemeVariant;
   label: string;
 }> = [
   { value: "tonal-spot", label: "Tonal Spot" },
@@ -75,58 +83,76 @@ export const VARIANT_OPTIONS: ReadonlyArray<{
   { value: "fruit-salad", label: "Fruit Salad" },
 ];
 
-export const SCHEME_VALUES: M3eColorScheme[] = ["light", "auto", "dark"];
-
-export const SCHEME_OPTIONS: ReadonlyArray<{
-  value: M3eColorScheme;
-  label: string;
-  icon: string;
-}> = [
-  { value: "light", label: "浅色", icon: "light_mode" },
-  { value: "auto", label: "跟随系统", icon: "settings_brightness" },
-  { value: "dark", label: "深色", icon: "dark_mode" },
+export const SCHEME_VALUES: AkariColorScheme[] = [
+  "light",
+  "auto",
+  "dark",
+  "time",
 ];
 
-export const CONTRAST_VALUES: M3eContrastLevel[] = [
+/** Name and icon of each appearance mode, for the appearance button. */
+export const SCHEME_OPTIONS: Readonly<
+  Record<AkariColorScheme, { message: keyof AkariMessages; icon: string }>
+> = {
+  auto: { message: "schemeAuto", icon: "brightness_auto" },
+  light: { message: "schemeLight", icon: "light_mode" },
+  dark: { message: "schemeDark", icon: "dark_mode" },
+  time: { message: "schemeTime", icon: "schedule" },
+};
+
+export const CONTRAST_VALUES: AkariContrastLevel[] = [
   "standard",
   "medium",
   "high",
 ];
 
 export const CONTRAST_OPTIONS: ReadonlyArray<{
-  value: M3eContrastLevel;
-  label: string;
+  value: AkariContrastLevel;
+  message: keyof AkariMessages;
 }> = [
-  { value: "standard", label: "默认" },
-  { value: "medium", label: "中等" },
-  { value: "high", label: "高" },
+  { value: "standard", message: "contrastStandard" },
+  { value: "medium", message: "contrastMedium" },
+  { value: "high", message: "contrastHigh" },
 ];
 
-export const MOTION_VALUES: M3eMotionScheme[] = ["standard", "expressive"];
+export const MOTION_VALUES: AkariMotionScheme[] = ["standard", "expressive"];
 
 export const MOTION_OPTIONS: ReadonlyArray<{
-  value: M3eMotionScheme;
-  label: string;
+  value: AkariMotionScheme;
+  message: keyof AkariMessages;
 }> = [
-  { value: "standard", label: "标准" },
-  { value: "expressive", label: "表现力" },
+  { value: "standard", message: "motionStandard" },
+  { value: "expressive", message: "motionExpressive" },
 ];
 
-export const DIRECTION_VALUES: M3eDirection[] = ["ltr", "rtl"];
+export const DIRECTION_VALUES: AkariDirection[] = ["auto", "ltr", "rtl"];
 
 export const DIRECTION_OPTIONS: ReadonlyArray<{
-  value: M3eDirection;
-  label: string;
+  value: AkariDirection;
+  message: keyof AkariMessages;
   icon: string;
 }> = [
-  { value: "ltr", label: "从左到右", icon: "format_textdirection_l_to_r" },
-  { value: "rtl", label: "从右到左", icon: "format_textdirection_r_to_l" },
+  {
+    value: "auto",
+    message: "directionAuto",
+    icon: "translate",
+  },
+  {
+    value: "ltr",
+    message: "directionLtr",
+    icon: "format_textdirection_l_to_r",
+  },
+  {
+    value: "rtl",
+    message: "directionRtl",
+    icon: "format_textdirection_r_to_l",
+  },
 ];
 
-export const TEXT_SIZE_VALUES: M3eTextSize[] = ["16px", "24px", "32px"];
+export const TEXT_SIZE_VALUES: AkariTextSize[] = ["16px", "24px", "32px"];
 
 export const TEXT_SIZE_OPTIONS: ReadonlyArray<{
-  value: M3eTextSize;
+  value: AkariTextSize;
   label: string;
 }> = [
   { value: "16px", label: "100%" },

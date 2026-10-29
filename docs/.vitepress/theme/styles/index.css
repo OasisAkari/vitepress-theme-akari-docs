@@ -2,5 +2,8 @@
 @import "./base.css";
 @import "./shell.css";
 @import "./prose.css";
+@import "./pattern.css";
 @import "./settings.css";
+@import "./dialog.css";
+@import "./tabs.css";
 @import "./search.css";

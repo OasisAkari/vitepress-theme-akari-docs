@@ -9,6 +9,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["node", "vite/client"]
   },
@@ -16,6 +17,8 @@
     "docs/.vitepress/**/*.ts",
     "docs/.vitepress/**/*.d.ts",
     "docs/.vitepress/**/*.vue",
+    "docs/config.ts",
+    "docs/*/config.ts",
     "tests/**/*.ts"
   ],
   "exclude": ["node_modules", "docs/.vitepress/dist", "docs/.vitepress/cache"]

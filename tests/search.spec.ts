@@ -1,13 +1,18 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-import { resolveM3eConfig } from "../docs/.vitepress/theme/config";
+import { resolveAkariConfig } from "../docs/.vitepress/theme/config";
+import { resolveMessages } from "../docs/.vitepress/theme/i18n";
 import {
-  computeMorphTransform,
+  computeRevealMorph,
+  fullClipPath,
   getSearchMotionPreset,
+  insetClipPath,
 } from "../docs/.vitepress/theme/search/animation";
 import {
   buildHttpRequest,
   createSearchBackend,
+  describeSearchError,
+  AkariSearchError,
   normalizeSearchResults,
   resolveSearchEndpoint,
 } from "../docs/.vitepress/theme/search/backends";
@@ -45,16 +50,16 @@ const entries: SearchIndexEntry[] = [
     title: "配置",
     heading: "配置",
     href: "/theme/sidebar#配置",
-    content: "使用 themeConfig.m3e.sidebar 配置导航。",
+    content: "在 sidebar.categories 中配置导航的分类。",
     level: 2,
   },
 ];
 
-describe("resolveM3eConfig search", () => {
+describe("resolveAkariConfig search", () => {
   it("uses local defaults", () => {
-    expect(resolveM3eConfig().search).toEqual({
+    expect(resolveAkariConfig().search).toEqual({
       enabled: true,
-      placeholder: "搜索文档",
+      placeholder: "Search docs",
       shortcut: "k",
       maxResults: 8,
       debounce: 180,
@@ -63,8 +68,8 @@ describe("resolveM3eConfig search", () => {
   });
 
   it("clamps numbers and rejects invalid backends", () => {
-    const { search } = resolveM3eConfig({
-      m3e: {
+    const { search } = resolveAkariConfig({
+      akari: {
         search: {
           maxResults: 100,
           debounce: -10,
@@ -77,49 +82,32 @@ describe("resolveM3eConfig search", () => {
     expect(search.maxResults).toBe(20);
     expect(search.debounce).toBe(0);
     expect(search.shortcut).toBe("k");
+    expect(
+      resolveAkariConfig({ akari: { search: { shortcut: "" } } }).search.shortcut,
+    ).toBe("");
     expect(search.backend).toEqual({
       type: "local",
       endpoint: "/search-index.json",
     });
   });
 
-  it("keeps a valid http backend and applies defaults", () => {
-    const { search } = resolveM3eConfig({
-      m3e: {
-        search: {
-          backend: {
-            type: "http",
-            endpoint: " /api/search ",
-            method: "POST",
-            headers: { Authorization: "Bearer x" },
-          },
-        },
-      },
-    });
+  it("keeps valid http and registered backends, trimmed", () => {
+    const backend = (value: unknown) =>
+      resolveAkariConfig({ akari: { search: { backend: value as never } } })
+        .search.backend;
 
-    expect(search.backend).toMatchObject({
+    expect(
+      backend({ type: "http", endpoint: " /api/search ", method: "POST" }),
+    ).toEqual({
       type: "http",
       endpoint: "/api/search",
       method: "POST",
-      headers: { Authorization: "Bearer x" },
+      headers: {},
       credentials: "same-origin",
       queryParam: "q",
       limitParam: "limit",
     });
-  });
-
-  it("accepts a registered backend and allows disabling the shortcut", () => {
-    const { search } = resolveM3eConfig({
-      m3e: {
-        search: {
-          shortcut: "",
-          backend: { type: "registered", id: " my-search " },
-        },
-      },
-    });
-
-    expect(search.shortcut).toBe("");
-    expect(search.backend).toEqual({
+    expect(backend({ type: "registered", id: " my-search " })).toEqual({
       type: "registered",
       id: "my-search",
     });
@@ -165,9 +153,6 @@ describe("search index parsing", () => {
     expect(page.entries.some((entry) => entry.href === "/components/button#变体")).toBe(true);
     expect(page.entries.some((entry) => entry.href === "/components/button#尺寸")).toBe(true);
     expect(page.entries.some((entry) => entry.content.includes("hidden"))).toBe(false);
-  });
-
-  it("maps index files to clean routes", () => {
     expect(parseMarkdownPage("# 首页\n", "index.md").route).toBe("/");
     expect(parseMarkdownPage("# 指南\n", "guide/index.md").route).toBe("/guide");
   });
@@ -180,6 +165,17 @@ describe("search index parsing", () => {
     expect(slugifyHeading("变体", used)).toBe("变体");
     expect(slugifyHeading("变体", used)).toBe("变体-1");
   });
+
+  it("keeps the anchor a heading names", () => {
+    const page = parseMarkdownPage(
+      "# ページ\n\n## 平行ページ {#parallel-pages}\n\n本文\n",
+      "ja-JP/guide.md",
+    );
+    expect(page.entries[1]).toMatchObject({
+      title: "平行ページ",
+      href: "/ja-JP/guide#parallel-pages",
+    });
+  });
 });
 
 describe("local search", () => {
@@ -188,31 +184,53 @@ describe("local search", () => {
     expect(results[0].href).toBe("/components/button#变体");
   });
 
-  it("requires every whitespace token", () => {
+  it("requires every whitespace token and respects the limit", () => {
     expect(searchLocal(entries, "按钮 不存在的词", 5)).toHaveLength(0);
-    expect(searchLocal(entries, "配置 导航", 5)).toHaveLength(1);
-    expect(searchLocal(entries, "配置 导航", 5)[0].href).toBe(
+    expect(searchLocal(entries, "配置 导航", 5).map((r) => r.href)).toEqual([
       "/theme/sidebar#配置",
-    );
+    ]);
+    const [result, ...rest] = searchLocal(entries, "按钮", 1);
+    expect(rest).toHaveLength(0);
+    expect(result!.excerpt).toBeTruthy();
   });
 
-  it("returns excerpts with context and respects the limit", () => {
-    const results = searchLocal(entries, "filled", 1);
-    expect(results).toHaveLength(1);
-    expect(results[0].excerpt).toContain("filled");
+  it("puts the page whose title is the query first", () => {
+    const entry = (
+      href: string,
+      pageTitle: string,
+      heading = "",
+    ): SearchIndexEntry => ({
+      id: href,
+      pageTitle,
+      title: heading || pageTitle,
+      heading,
+      href,
+      content: "",
+      level: heading ? 2 : 0,
+    });
+    const index = [
+      entry("/config/details#what", "配置：技术细节", "配置文件中能写什么"),
+      entry("/search/api#search", "Search: API", "search"),
+      entry("/config", "配置"),
+      entry("/search", "Search"),
+    ];
+
+    // Over a section that starts with the query, and one that matches it.
+    expect(searchLocal(index, "配置", 2)[0]?.href).toBe("/config");
+    expect(searchLocal(index, "Search", 2).map((r) => r.href)).toEqual([
+      "/search",
+      "/search/api#search",
+    ]);
   });
 });
 
 describe("highlight splitting", () => {
-  it("splits case-insensitive highlights", () => {
+  it("splits case-insensitive highlights, none for an empty query", () => {
     expect(splitHighlight("Filled 和 filled", "filled")).toEqual([
       { text: "Filled", match: true },
       { text: " 和 ", match: false },
       { text: "filled", match: true },
     ]);
-  });
-
-  it("returns a single non-match part for an empty query", () => {
     expect(splitHighlight("文档搜索", "   ")).toEqual([
       { text: "文档搜索", match: false },
     ]);
@@ -220,41 +238,45 @@ describe("highlight splitting", () => {
 });
 
 describe("search morph animation", () => {
-  it("maps the trigger rect onto the dialog rect", () => {
-    const morph = computeMorphTransform(
-      { left: 100, top: 20, width: 300, height: 40 },
-      { left: 360, top: 160, width: 720, height: 300 },
-    );
+  const trigger = { left: 900, top: 12, width: 300, height: 40 };
+  const panel = { left: 280, top: 200, width: 720, height: 400 };
+  const bar = { left: 304, top: 224, width: 616, height: 56 };
 
-    expect(morph.scaleX).toBeCloseTo(300 / 720);
-    expect(morph.scaleY).toBeCloseTo(40 / 300);
-    expect(morph.translateX).toBe(-260);
-    expect(morph.translateY).toBe(-140);
-    expect(morph.transform).toBe(
-      "translate(-260px, -140px) scale(0.4166666666666667, 0.13333333333333333)",
-    );
+  it("opens a trigger-sized window that lands exactly on the trigger", () => {
+    const morph = computeRevealMorph(trigger, panel, bar);
+
+    // Window: 300×40 at the bar's start, vertically centred on the bar.
+    expect(morph.clip).toEqual({ top: 32, right: 396, bottom: 328, left: 24 });
+    expect(morph.radius).toBe(20);
+    expect(panel.left + morph.clip.left + morph.translateX).toBe(trigger.left);
+    expect(panel.top + morph.clip.top + morph.translateY).toBe(trigger.top);
   });
 
-  it("keeps a minimum scale for tiny triggers", () => {
-    const morph = computeMorphTransform(
-      { left: 0, top: 0, width: 0, height: 0 },
-      { left: 0, top: 0, width: 720, height: 600 },
-    );
+  it("aligns to the inline end in right-to-left, inside the panel", () => {
+    const rtl = computeRevealMorph(trigger, panel, bar, true);
+    const barEnd = bar.left + bar.width;
+    expect(rtl.clip.left).toBe(barEnd - 300 - panel.left);
+    expect(rtl.clip.right).toBe(panel.left + panel.width - barEnd);
 
-    expect(morph.scaleX).toBe(0.02);
-    expect(morph.scaleY).toBe(0.02);
+    const wide = computeRevealMorph({ ...trigger, width: 900 }, panel, bar);
+    expect([wide.clip.left, wide.clip.right]).toEqual([0, 0]);
   });
 
-  it("provides distinct standard and expressive MD3 presets", () => {
+  it("serializes the window and the fully open clip", () => {
+    expect(insetClipPath({ top: 1, right: 2, bottom: 3, left: 4 }, 20)).toBe(
+      "inset(1px 2px 3px 4px round 20px)",
+    );
+    expect(fullClipPath(28, 32)).toBe("inset(-32px round 60px)");
+  });
+
+  it("takes longer when expressive, and exits faster than it enters", () => {
     const standard = getSearchMotionPreset("standard");
     const expressive = getSearchMotionPreset("expressive");
 
-    expect(standard.easing).toBe("cubic-bezier(0.2, 0, 0, 1)");
-    expect(expressive.easing).toBe("cubic-bezier(0.38, 1.21, 0.22, 1)");
     expect(expressive.duration).toBeGreaterThan(standard.duration);
-    expect(expressive.contentDuration).toBeGreaterThan(
-      standard.contentDuration,
-    );
+    for (const preset of [standard, expressive]) {
+      expect(preset.exitDuration).toBeLessThan(preset.duration);
+    }
   });
 });
 
@@ -324,7 +346,7 @@ describe("search backend adapters", () => {
   });
 
   it("calls registered backends and reports missing IDs", async () => {
-    registerSearchBackend("test-search", async (query, { limit }) => [
+    registerSearchBackend("test-search", async (query) => [
       {
         id: "test",
         title: query,
@@ -350,6 +372,80 @@ describe("search backend adapters", () => {
     });
     await expect(
       missing.search("x", { limit: 5 }),
-    ).rejects.toThrow('未找到搜索后端 "does-not-exist"');
+    ).rejects.toMatchObject({
+      code: "backend-missing",
+      params: { id: "does-not-exist" },
+    });
+  });
+
+  it("passes the locale being read to registered backends", async () => {
+    let received: unknown;
+    registerSearchBackend("locale-search", (_query, context) => {
+      received = context;
+      return [];
+    });
+
+    await createSearchBackend({ type: "registered", id: "locale-search" })
+      .search("x", { limit: 3, lang: "en-US", locale: "en-US" });
+
+    expect(received).toMatchObject({ lang: "en-US", locale: "en-US" });
+  });
+
+  it("keeps local results inside the locale being read", async () => {
+    const page = (id: string, href: string): SearchIndexEntry => ({
+      id,
+      pageTitle: "Theme",
+      title: "Theme",
+      heading: "",
+      href,
+      content: "",
+      level: 0,
+    });
+    const index = [
+      page("zh", "/guide"),
+      page("en", "/en-US/guide"),
+      page("en-home", "/en-US/"),
+    ];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => Response.json({ version: 1, entries: index })),
+    );
+
+    try {
+      const backend = createSearchBackend(
+        { type: "local", endpoint: "/index.json" },
+        { locales: ["root", "en-US"] },
+      );
+      const ids = async (locale: string) =>
+        (await backend.search("theme", { limit: 10, locale })).map(
+          (result) => result.id,
+        );
+
+      expect(await ids("root")).toEqual(["zh"]);
+      expect((await ids("en-US")).sort()).toEqual(["en", "en-home"]);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it("describes built-in failures in the reader's language", () => {
+    const zh = resolveMessages("zh-CN");
+    const en = resolveMessages("en");
+
+    const unavailable = new AkariSearchError("index-unavailable", {
+      status: 404,
+    });
+    const missing = new AkariSearchError("backend-missing", { id: "x" });
+
+    expect(describeSearchError(unavailable, zh)).toBe(
+      "无法加载本地搜索索引（HTTP 404）。",
+    );
+    expect(describeSearchError(missing, en)).toBe(
+      'No search backend is registered as "x".',
+    );
+    expect(describeSearchError(new Error("Custom failure"), zh)).toBe(
+      "Custom failure",
+    );
+    expect(describeSearchError("unknown", zh)).toBe("搜索失败，请稍后重试。");
   });
 });

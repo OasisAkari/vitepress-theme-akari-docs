@@ -72,11 +72,11 @@ export function markdownToText(value: string): string {
     .trim();
 }
 
-function stripFencedCode(value: string): string {
+export function stripFencedCode(value: string): string {
   return value.replace(/(?:```|~~~)[\s\S]*?(?:```|~~~)/g, " ");
 }
 
-function extractFirstH1(value: string): string | undefined {
+export function extractFirstH1(value: string): string | undefined {
   const match = /^#\s+(.+?)\s*#*\s*$/m.exec(value);
   return match ? markdownToText(match[1]) : undefined;
 }
@@ -108,23 +108,27 @@ function splitSections(value: string): {
   return { intro, sections };
 }
 
-function fallbackTitle(relativePath: string): string {
-  const route = fileToRoute(relativePath);
+function fallbackTitle(route: string): string {
   const segment = route.split("/").filter(Boolean).pop();
   return segment ? segment.replace(/[-_]/g, " ") : "Documentation";
 }
 
+/**
+ * The search entries of a page: the page itself and its `##` and `###`
+ * sections. `route` is where the page is served, by default where its
+ * path in the docs puts it.
+ */
 export function parseMarkdownPage(
   source: string,
   relativePath: string,
+  route = fileToRoute(relativePath),
 ): ParsedSearchPage {
   const { data, content } = matter(source);
-  const route = fileToRoute(relativePath);
   const sourceText = stripFencedCode(content);
   const title =
     (typeof data.title === "string" && data.title.trim()) ||
     extractFirstH1(sourceText) ||
-    fallbackTitle(relativePath);
+    fallbackTitle(route);
   const withoutTitle = sourceText.replace(/^#\s+.*$/m, "");
   const { intro, sections } = splitSections(withoutTitle);
   const usedSlugs = new Map<string, number>();
@@ -141,10 +145,12 @@ export function parseMarkdownPage(
   ];
 
   for (const section of sections) {
-    const heading = section.heading.trim();
+    // A heading may name its anchor: `## Heading {#anchor}`.
+    const custom = /\s*\{#([^\s{}]+)\}$/.exec(section.heading.trim());
+    const heading = section.heading.trim().slice(0, custom?.index).trim();
     if (!heading) continue;
 
-    const slug = slugifyHeading(heading, usedSlugs);
+    const slug = custom?.[1] ?? slugifyHeading(heading, usedSlugs);
     entries.push({
       id: `${route}::${slug}`,
       pageTitle: title,

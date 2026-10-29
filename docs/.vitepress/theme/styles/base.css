@@ -1,31 +1,89 @@
-html,
-body {
-  margin: 0;
-  height: 100%;
-}
-
 html {
-  background: var(--m3e-doc-page-background, Canvas);
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-  height: 100dvh;
-  overflow: hidden;
-  background: var(--m3e-doc-page-background, Canvas);
-  color: var(--m3e-doc-page-foreground, CanvasText);
+  /*
+   * The window scrolls the document. Declaring a scrolling overflow on the
+   * root is what lets m3e's scroll observers (the table of contents) watch
+   * the document; the viewport still owns the scrollbar.
+   */
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  /* Anchor jumps land below the sticky app bar. */
+  scroll-padding-top: calc(var(--akari-doc-app-bar-height) + var(--akari-doc-gap));
+  background: var(--akari-doc-page-background, Canvas);
   scrollbar-color: var(
       --m3e-scrollbar-thumb-color,
       var(--md-sys-color-outline)
     )
     transparent;
-  font-family:
-    "Roboto Variable", Roboto, "PingFang SC", "Microsoft YaHei", system-ui,
-    sans-serif;
+}
+
+/*
+ * A page whose tab bar is held under the app bar (no room for it in the
+ * app bar, see DocTabs) keeps anchor jumps and the table of contents clear
+ * of the bar and its shelf too.
+ */
+html.akari-tabs-pinned {
+  --_shelf: calc(56px + 2 * var(--akari-doc-hero-inset, 8px));
+  --akari-doc-toc-offset: calc(var(--akari-doc-app-bar-height) + var(--_shelf) + 32px);
+  scroll-padding-top: calc(
+    var(--akari-doc-app-bar-height) + var(--_shelf) + var(--akari-doc-gap)
+  );
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--akari-doc-page-background, Canvas);
+  color: var(--akari-doc-page-foreground, CanvasText);
+  /* The page language's fonts (fonts.ts), set from its config. */
+  font-family: var(
+    --akari-font-family,
+    Roboto,
+    "Noto Sans SC",
+    "PingFang SC",
+    "Microsoft YaHei",
+    system-ui,
+    sans-serif
+  );
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+/*
+ * Text marked as another language than the page's (a name in the language
+ * menu) takes the fonts of its script, as far as the device has them: the
+ * page loads only its own language's.
+ */
+html:not(:lang(zh)) [lang|="zh"] {
+  font-family:
+    Roboto, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui,
+    sans-serif;
+}
+
+html:not(:lang(ja)) [lang|="ja"] {
+  font-family:
+    Roboto, "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
+}
+
+html:not(:lang(ko)) [lang|="ko"] {
+  font-family:
+    Roboto, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui,
+    sans-serif;
+}
+
+html:not(:lang(ar)) [lang|="ar"] {
+  font-family:
+    Roboto, "Noto Sans Arabic", "Geeza Pro", Tahoma, system-ui, sans-serif;
+}
+
+/*
+ * m3e's hidden holder of screen reader descriptions sits 1px beyond the
+ * window's left edge, which right to left is the side the page scrolls to:
+ * kept inside the window, it adds no horizontal scrollbar.
+ */
+.m3e-describedby-message-container {
+  margin-inline: 0 !important;
 }
 
 #app,
@@ -34,111 +92,484 @@ m3e-theme {
 }
 
 m3e-app-bar {
-  flex: none;
-  z-index: 4;
   --m3e-app-bar-container-color: var(--md-sys-color-surface-container-low);
+}
+
+/*
+ * Edge of the document and footer surfaces. At rest they have none; once the
+ * content slides under the app bar a faint outline fades in. The strength is
+ * a registered percentage so one transition here drives every edge in step;
+ * each surface mixes it into an opaque color (see --_edge), so where two edge
+ * layers overlap they land on the same pixel instead of darkening.
+ */
+@property --akari-doc-edge-strength {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 0%;
+}
+
+html {
+  transition: --akari-doc-edge-strength
+    var(--md-sys-motion-duration-medium-1, 250ms)
+    var(--md-sys-motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+}
+
+html[data-akari-scrolled] {
+  --akari-doc-edge-strength: var(--akari-doc-divider-strength);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    transition: none;
+  }
 }
 
 m3e-app-bar:not(:defined) {
   display: block;
-  height: var(--m3e-doc-app-bar-height);
+  height: var(--akari-doc-app-bar-height);
 }
 
-html:not([data-m3e-ready]) m3e-app-bar {
+/*
+ * Until the m3e components register, every component that has not upgraded
+ * yet stays hidden. m3e-theme wraps the whole app, so the page shows only
+ * the background and then appears in its finished layout in a single frame.
+ * If the components never load (no JavaScript, failed request), the content
+ * is revealed as plain HTML after a few seconds.
+ */
+html:not([data-akari-ready]) :not(:defined) {
   visibility: hidden;
+  animation: akari-doc-reveal 0s linear 3s forwards;
 }
 
-html:not([data-m3e-ready]) .m3e-sidebar-slot,
-html:not([data-m3e-ready]) .m3e-settings-slot {
+@keyframes akari-doc-reveal {
+  to {
+    visibility: visible;
+  }
+}
+
+/* Navigation that only works once upgraded never shows in the fallback. */
+html:not([data-akari-ready]) .akari-desktop-nav,
+html:not([data-akari-ready]) .akari-sidebar-slot {
   display: none;
 }
 
-html:not([data-m3e-ready]) body,
-html:not([data-m3e-ready]) .m3e-main,
-html:not([data-m3e-ready]) .m3e-panes {
-  overflow: auto;
-  height: auto;
+/*
+ * Page grid. Columns: rail, pinned drawer, document; rows: app bar, the
+ * rest. Sticky children span every row they need to stay in view across:
+ * the app bar and the rail span the full height, the pinned drawer the area
+ * below the app bar. Without the desktop navigation the first two columns
+ * collapse to nothing.
+ */
+.akari-frame {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  grid-template-rows: var(--akari-doc-app-bar-height) auto;
+  min-height: 100dvh;
 }
 
-.m3e-shell {
-  flex: 1 1 auto;
-  min-height: 0;
+.akari-frame__bar {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  grid-column: 2 / -1;
+  grid-row: 1 / -1;
+  align-self: start;
+  min-width: 0;
+}
+
+/*
+ * No gap between the navigation and the content: rail items already leave
+ * 20px around their indicator, so the content sits flush against the rail.
+ * The pinned drawer brings its own trailing gap.
+ */
+.akari-main {
+  display: flex;
+  grid-column: 3;
+  grid-row: 2;
+  flex-direction: column;
+  min-width: 0;
+  padding-block-start: var(--akari-doc-top-space);
+  padding-inline-end: var(--akari-doc-gap);
+  box-sizing: border-box;
+  /* Window size classes change the spacing; it eases into place. */
+  transition: padding var(--md-sys-motion-spring-default-spatial, 500ms cubic-bezier(0.27, 1.06, 0.18, 1));
+}
+
+/*
+ * The document surface: a rounded card as long as the article, holding the
+ * article, the table of contents hanging at its side and the page pager. It
+ * takes every pixel the navigation leaves free, fills at least the first
+ * screen and never scrolls on its own. The page footer is a separate region
+ * below it.
+ *
+ * Between pages the whole surface fades (see usePageTransition): the old
+ * page fades out, the new one fades in while lifting into place.
+ */
+.akari-doc {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  min-width: 0;
+  min-height: calc(
+    100dvh - var(--akari-doc-app-bar-height) - var(--akari-doc-top-space)
+  );
+  padding: var(--akari-doc-padding);
+  border-radius: var(--akari-doc-radius);
+  /*
+   * M3 surface: a faintly tinted near-white (near-black in dark), rather than
+   * surface-container-lowest, which is pure white / pure black. Override with
+   * --akari-doc-surface-color; the palette only resolves inside m3e-theme, so
+   * the token is read here with the M3 role as its fallback.
+   */
+  background-color: var(--akari-doc-surface-color, var(--md-sys-color-surface));
+  box-shadow: inset 0 0 0 1px var(--_edge);
+  box-sizing: border-box;
+  transition:
+    opacity var(--md-sys-motion-duration-long-1, 450ms)
+      var(--md-sys-motion-easing-emphasized-decelerate, cubic-bezier(0.05, 0.7, 0.1, 1)),
+    transform var(--md-sys-motion-spring-slow-spatial, 750ms cubic-bezier(0.27, 1.06, 0.18, 1)),
+    padding var(--md-sys-motion-spring-default-spatial, 500ms cubic-bezier(0.27, 1.06, 0.18, 1));
+}
+
+.akari-doc.is-leaving {
+  opacity: 0;
+  transition: opacity var(--md-sys-motion-duration-medium-1, 250ms)
+    var(--md-sys-motion-easing-emphasized-accelerate, cubic-bezier(0.3, 0, 0.8, 0.15));
+}
+
+.akari-doc.is-entering {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: none;
+}
+
+/*
+ * Between pages of one tab group (data-axis) the surface stays and its
+ * content moves along the tabs, M3's shared axis X: the outgoing page
+ * slides a short way against the direction of travel as it fades, the
+ * incoming one follows from the other side. The tab bar is the navigation
+ * itself and stays; the surface cap belongs to the surface.
+ */
+/* The content sliding in must not widen the page while it is off to the side. */
+.akari-doc[data-axis] {
+  --_axis-shift: 30px;
+  overflow-x: clip;
+}
+
+.akari-doc[data-axis="backward"] {
+  --_axis-shift: -30px;
+}
+
+:root[dir="rtl"] .akari-doc[data-axis] {
+  --_axis-shift: -30px;
+}
+
+:root[dir="rtl"] .akari-doc[data-axis="backward"] {
+  --_axis-shift: 30px;
+}
+
+.akari-doc[data-axis].is-leaving,
+.akari-doc[data-axis].is-entering {
+  opacity: 1;
+  transform: none;
+}
+
+.akari-doc[data-axis] > :not(.akari-surface-cap, .akari-tabs-shelf) {
+  transition:
+    opacity var(--md-sys-motion-duration-medium-2, 300ms)
+      var(--md-sys-motion-easing-emphasized-decelerate, cubic-bezier(0.05, 0.7, 0.1, 1)),
+    transform var(--md-sys-motion-spring-default-spatial, 500ms cubic-bezier(0.27, 1.06, 0.18, 1));
+}
+
+.akari-doc[data-axis].is-leaving > :not(.akari-surface-cap, .akari-tabs-shelf) {
+  opacity: 0;
+  transform: translateX(calc(-1 * var(--_axis-shift)));
+  transition:
+    opacity var(--md-sys-motion-duration-short-4, 200ms)
+      var(--md-sys-motion-easing-emphasized-accelerate, cubic-bezier(0.3, 0, 0.8, 0.15)),
+    transform var(--md-sys-motion-duration-short-4, 200ms)
+      var(--md-sys-motion-easing-emphasized-accelerate, cubic-bezier(0.3, 0, 0.8, 0.15));
+}
+
+.akari-doc[data-axis].is-entering > :not(.akari-surface-cap, .akari-tabs-shelf) {
+  opacity: 0;
+  transform: translateX(var(--_axis-shift));
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .akari-main,
+  .akari-doc__layout,
+  .akari-doc,
+  .akari-doc.is-leaving,
+  .akari-doc[data-axis] > :not(.akari-surface-cap, .akari-tabs-shelf),
+  .akari-doc[data-axis].is-leaving > :not(.akari-surface-cap, .akari-tabs-shelf) {
+    transition: none;
+  }
+
+  .akari-doc.is-entering,
+  .akari-doc[data-axis].is-leaving > :not(.akari-surface-cap, .akari-tabs-shelf),
+  .akari-doc[data-axis].is-entering > :not(.akari-surface-cap, .akari-tabs-shelf) {
+    transform: none;
+  }
+}
+
+/*
+ * The window cuts the surfaces off flat where they slide under the app bar.
+ * This zero-height strip sticks to the app bar's bottom edge across the
+ * document column and paints the page background around a quarter circle at
+ * either end, so that cut keeps the surface's rounded corners. At rest it
+ * sits exactly on the surface's own corners and changes nothing.
+ */
+/* Zero-height marker at the surface's top edge for the scrolled state. */
+.akari-doc-sentinel {
+  flex: none;
+  height: 0;
+}
+
+/* Opaque edge color of a surface: outline-variant mixed into its fill. */
+.akari-doc,
+.akari-site-footer {
+  --_edge: color-mix(
+    in srgb,
+    var(--md-sys-color-outline-variant) var(--akari-doc-edge-strength),
+    var(--akari-doc-surface-color, var(--md-sys-color-surface))
+  );
+}
+
+/*
+ * The window cuts a surface off flat where it slides under the app bar. Each
+ * surface's first child is this cap: it sits on the surface's top edge and
+ * sticks to the app bar's bottom edge while the surface scrolls under it,
+ * never leaving its own surface. It paints the page background around a
+ * quarter circle at either end and draws the edge along the arcs and the top
+ * between them, so the cut keeps the surface's rounded, outlined shape. At
+ * rest it lies exactly on the surface's own corners and changes nothing.
+ * Surfaces set --_cap-top / --_cap-bottom / --_cap-inline to their padding.
+ *
+ * A sticky box keeps its margin box inside the surface's content box. The
+ * cap's bottom margin cancels the bottom padding, so it stays stuck until its
+ * own box reaches the surface's bottom edge; the next sibling's top margin
+ * restores the space the cap's margins take out of the flow.
+ */
+.akari-surface-cap {
+  --_r: var(--akari-doc-radius);
+  position: sticky;
+  top: var(--akari-doc-app-bar-height);
+  z-index: 3;
+  flex: none;
+  height: var(--_r);
+  margin-block: calc(0px - var(--_cap-top, var(--akari-doc-padding)))
+    calc(0px - var(--_cap-bottom, var(--akari-doc-padding)));
+  margin-inline: calc(0px - var(--_cap-inline, var(--akari-doc-padding)));
+  background: linear-gradient(var(--_edge), var(--_edge)) var(--_r) 0 /
+    calc(100% - 2 * var(--_r)) 1px no-repeat;
+  pointer-events: none;
+}
+
+.akari-surface-cap + * {
+  margin-block-start: calc(
+    var(--_cap-top, var(--akari-doc-padding)) +
+      var(--_cap-bottom, var(--akari-doc-padding)) - var(--akari-doc-radius)
+  );
+}
+
+.akari-surface-cap::before,
+.akari-surface-cap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: var(--_r);
+  height: var(--_r);
+}
+
+.akari-surface-cap::before {
+  left: 0;
+  background: radial-gradient(
+    circle at 100% 100%,
+    transparent calc(var(--_r) - 1.5px),
+    var(--_edge) calc(var(--_r) - 1px),
+    var(--_edge) calc(var(--_r) - 0.25px),
+    var(--akari-doc-page-background) calc(var(--_r) + 0.5px)
+  );
+}
+
+.akari-surface-cap::after {
+  right: 0;
+  background: radial-gradient(
+    circle at 0 100%,
+    transparent calc(var(--_r) - 1.5px),
+    var(--_edge) calc(var(--_r) - 1px),
+    var(--_edge) calc(var(--_r) - 0.25px),
+    var(--akari-doc-page-background) calc(var(--_r) + 0.5px)
+  );
+}
+
+/*
+ * Between the surface and its content: caps the article and its table of
+ * contents so very wide screens keep a comfortable reading area.
+ */
+/*
+ * The hero and the article stack on their own: whatever z-index their
+ * content uses (code block buttons, components) stays below the tab bar
+ * held under the app bar and the surface cap.
+ */
+.akari-doc__inner,
+.akari-doc .akari-doc-hero {
+  isolation: isolate;
+}
+
+.akari-doc__inner {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--akari-doc-max-width);
+  margin-inline: auto;
+}
+
+.akari-doc__layout {
+  display: grid;
+  flex: 1 0 auto;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--akari-doc-padding);
+  align-items: start;
+  transition: column-gap var(--md-sys-motion-spring-default-spatial, 500ms cubic-bezier(0.27, 1.06, 0.18, 1));
+}
+
+.akari-content {
+  min-width: 0;
+}
+
+/* A hero right under the tab bar sits one inset below it (the shelf's padding). */
+.akari-doc .akari-tabs-shelf:has(+ .akari-doc-hero) {
+  margin-block-end: 0;
+}
+
+.akari-doc .akari-tabs-shelf + .akari-doc-hero {
+  margin-block-start: 0;
+}
+
+/*
+ * The hero shows the page title; the Markdown copy of it, the page's
+ * leading h1, steps aside. VitePress nests the page in wrappers of its own,
+ * so the h1 is matched at any depth.
+ */
+.akari-doc__layout[data-hero] .akari-prose h1:first-child {
+  display: none;
+}
+
+/*
+ * Mobile navigation and settings drawers live in a layer fixed below the
+ * app bar, independent of the scrolling document. The layer lets pointer
+ * events through to the page unless a modal drawer (and its scrim) is open.
+ */
+.akari-drawers {
+  position: fixed;
+  inset: var(--akari-doc-app-bar-height) 0 0;
+  z-index: 3;
+  pointer-events: none;
   --m3e-drawer-container-color: var(--md-sys-color-surface-container-low);
   --m3e-modal-drawer-container-color: var(--md-sys-color-surface-container);
-  --m3e-drawer-container-width: 320px;
 }
 
-.m3e-main {
-  height: 100%;
-  min-height: 0;
+.akari-drawers > [slot],
+.akari-drawers[start] {
+  pointer-events: auto;
 }
 
-.m3e-panes {
-  display: flex;
-  gap: var(--m3e-doc-gap);
-  height: 100%;
-  min-height: 0;
-  padding: 0 var(--m3e-doc-gap) var(--m3e-doc-gap);
-  box-sizing: border-box;
+/* A modal drawer holds the page still behind its scrim. */
+html:has(.akari-drawers[start]) {
+  overflow: hidden;
 }
 
-.m3e-content-pane {
-  flex: 1 1 auto;
-  min-width: 0;
-  height: 100%;
-  --m3e-content-pane-container-color: var(
-    --md-sys-color-surface-container-lowest
-  );
-  --m3e-content-pane-container-shape: var(--m3e-doc-radius);
-  --m3e-content-pane-container-padding: 32px;
-}
-
-.m3e-toc {
-  flex: none;
-  height: 100%;
-  --m3e-toc-width: 208px;
-  --m3e-toc-container-color: var(--md-sys-color-surface-container-lowest);
-  --m3e-toc-container-shape: var(--m3e-doc-radius);
-  --m3e-toc-container-padding-inline: 8px;
-  --m3e-toc-container-padding-block: 8px;
-}
-
-.m3e-sidebar-slot,
-.m3e-settings-slot {
-  box-sizing: border-box;
-  min-height: 0;
-}
-
-.m3e-sidebar-slot {
+.akari-sidebar-slot {
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
   height: 100%;
-  padding: 8px;
+  min-height: 0;
 }
 
-.m3e-settings-slot {
-  display: flex;
-  height: 100%;
+/* M3 navigation drawer items, shared by the desktop and mobile drawers. */
+.akari-drawer-menu {
+  --m3e-nav-menu-item-height: 48px;
+  --m3e-nav-menu-item-padding: 16px;
 }
 
-@media (max-width: 959px) {
-  .m3e-toc {
-    display: none;
+/*
+ * m3e plays its selection "grow" animation whenever an already selected
+ * item (re)connects, so remounted lists would replay it on every switch.
+ * Items marked settled zero the two motion tokens that animation reads —
+ * nothing else in the navigation components uses them — and animate again
+ * once the selection has moved away.
+ */
+[data-akari-settled] {
+  --md-sys-motion-spring-fast-spatial: 0s linear;
+  --md-sys-motion-spring-fast-effects: 0s linear;
+}
+
+/*
+ * m3e-badge pads only labels longer than two characters, so two CJK glyphs
+ * overflow its circle. Padding shorter numeric labels is harmless: they stay
+ * within the badge's min-width.
+ */
+m3e-badge {
+  --_badge-padding: 0 4px;
+}
+
+/* From medium windows up, the rail and its drawer replace the start drawer. */
+@media (min-width: 960px) {
+  /*
+   * The rail's top cell carries the site mark; the app bar keeps the name.
+   * The app bar's logo folds away (cancelling the gap after it) rather than
+   * disappearing, so it grows back in on compact windows.
+   */
+  .akari-frame:has(.akari-rail__logo) .akari-title__logo {
+    width: 0;
+    margin-inline-end: -8px;
+    opacity: 0;
+  }
+}
+
+/* Compact windows: no rail, navigation moves into a modal drawer. */
+@media (max-width: 959.98px) {
+  .akari-main {
+    padding: var(--akari-doc-top-space) 8px 0;
+    --akari-doc-top-space: 8px;
   }
 
-  .m3e-panes {
-    gap: 8px;
-    padding: 0 8px 8px;
+  /* The table of contents folds away; its gap closes with it. */
+  .akari-doc__layout {
+    column-gap: 0;
+  }
+
+  /*
+   * m3e-drawer-container rounds both end corners of a modal start drawer
+   * with one token. The navigation drawer hangs from the app bar, so it
+   * paints its own surface: square at the top end, rounded at the bottom
+   * end.
+   */
+  .akari-drawers {
+    --m3e-modal-drawer-container-color: transparent;
+    --m3e-modal-drawer-elevation: none;
+    --m3e-modal-drawer-end-shape: 0px;
+  }
+
+  .akari-sidebar-slot {
+    background-color: var(--md-sys-color-surface-container-low);
+    border-end-end-radius: var(--md-sys-shape-corner-large, 16px);
   }
 }
 
+/* The surfaces meet the screen edges. */
 @media (max-width: 600px) {
-  .m3e-panes {
-    padding: 0;
+  .akari-main {
+    padding-inline: 0;
+    --akari-doc-top-space: 0px;
   }
 
-  .m3e-content-pane {
-    --m3e-content-pane-container-shape: 28px 28px 0 0;
-    --m3e-content-pane-container-padding: 20px;
+  .akari-frame {
+    --akari-doc-padding: 20px;
   }
 }

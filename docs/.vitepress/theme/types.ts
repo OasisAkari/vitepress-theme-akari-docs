@@ -1,6 +1,7 @@
+import type { HeadConfig, MarkdownLocaleOptions } from "vitepress";
 import type { Component } from "vue";
 
-export type M3eThemeVariant =
+export type AkariThemeVariant =
   | "tonal-spot"
   | "vibrant"
   | "fidelity"
@@ -10,95 +11,192 @@ export type M3eThemeVariant =
   | "rainbow"
   | "fruit-salad";
 
-export type M3eColorScheme = "light" | "dark" | "auto";
-export type M3eContrastLevel = "standard" | "medium" | "high";
-export type M3eMotionScheme = "standard" | "expressive";
-export type M3eDirection = "ltr" | "rtl";
-export type M3eTextSize = "16px" | "24px" | "32px";
+/**
+ * Appearance: light, dark, the system's preference (`auto`, which falls back
+ * to the time of day when the system cannot say), or the time of day.
+ */
+export type AkariColorScheme = "light" | "dark" | "auto" | "time";
+export type AkariContrastLevel = "standard" | "medium" | "high";
+export type AkariMotionScheme = "standard" | "expressive";
+/** Text direction: the page language's own (`auto`), or forced one way. */
+export type AkariDirection = "auto" | "ltr" | "rtl";
+export type AkariTextSize = "16px" | "24px" | "32px";
 
 export type SettingsSectionKey =
   | "color"
   | "variant"
-  | "scheme"
   | "contrast"
   | "motion"
   | "direction"
   | "textSize";
 
-export interface M3eThemeSettings {
+export interface AkariThemeSettings {
   color: string;
-  variant: M3eThemeVariant;
-  scheme: M3eColorScheme;
-  contrast: M3eContrastLevel;
-  motion: M3eMotionScheme;
-  direction: M3eDirection;
-  textSize: M3eTextSize;
+  variant: AkariThemeVariant;
+  scheme: AkariColorScheme;
+  contrast: AkariContrastLevel;
+  motion: AkariMotionScheme;
+  direction: AkariDirection;
+  textSize: AkariTextSize;
 }
 
-export interface M3eSidebarItem {
+export interface AkariSidebarItem {
   text: string;
   link?: string;
   icon?: string;
   badge?: string;
   collapsed?: boolean;
-  items?: M3eSidebarItem[];
+  items?: AkariSidebarItem[];
+  /**
+   * Parallel pages shown as one navigation entry and switched with a tab
+   * bar on each page, like Overview / Guidelines / Specs. The entry links
+   * to the first tab and is selected on any of them.
+   */
+  tabs?: AkariSidebarItem[];
 }
 
-export type M3eSidebarItems =
-  | M3eSidebarItem[]
-  | Record<string, M3eSidebarItem[]>;
+export type AkariSidebarItems =
+  | AkariSidebarItem[]
+  | Record<string, AkariSidebarItem[]>;
 
-export interface M3eSocialLink {
+export interface AkariSocialLink {
   icon: string;
   link: string;
   label: string;
 }
 
-export interface M3eAppBarConfig {
+export interface AkariAppBarConfig {
   title?: string;
   version?: string;
   logo?: string;
   showSidebarToggle?: boolean;
   showSettingsToggle?: boolean;
-  socialLinks?: M3eSocialLink[];
+  socialLinks?: AkariSocialLink[];
 }
 
-export interface M3eSidebarConfig {
-  items?: M3eSidebarItems;
+/**
+ * A rail category when the navigation comes from the docs' folders: the
+ * folder of articles it stands for is named by its key in `categories`.
+ */
+export interface AkariSidebarCategory {
+  /** Its name in the rail. Defaults to the folder's name. */
+  text?: string;
+  icon?: string;
+  collapsed?: boolean;
+}
+
+export interface AkariSidebarConfig {
+  /** Navigation written out by hand, in place of the one from the folders. */
+  items?: AkariSidebarItems;
+  /**
+   * The rail categories of the navigation from the docs' folders, by
+   * folder name. The order of the keys is the order in the rail; folders
+   * left out follow in alphabetical order.
+   */
+  categories?: Record<string, AkariSidebarCategory>;
   width?: number;
 }
 
-export interface M3eSettingsConfig {
+export interface AkariSettingsConfig {
+  /** Whether the settings dialog exists at all. */
   enabled?: boolean;
+  /** Show the appearance (light / dark) button. Defaults to true. */
+  showSchemeToggle?: boolean;
   title?: string;
   sections?: SettingsSectionKey[];
   labels?: Partial<Record<SettingsSectionKey, string>>;
-  defaults?: Partial<M3eThemeSettings>;
+  defaults?: Partial<AkariThemeSettings>;
   persist?: boolean;
   storageKey?: string;
 }
 
-export interface M3eTocConfig {
+export interface AkariTocConfig {
   enabled?: boolean;
   maxDepth?: number;
   overline?: string;
 }
 
-export interface M3eFooterConfig {
+export interface AkariFooterLink {
+  text: string;
+  link: string;
+}
+
+export interface AkariFooterLinkGroup {
+  title: string;
+  items: AkariFooterLink[];
+}
+
+export interface AkariFooterConfig {
   message?: string;
   copyright?: string;
   showPrevNext?: boolean;
+  /**
+   * Link columns of the page footer. Defaults to the sidebar's categories;
+   * `false` hides the columns.
+   */
+  links?: AkariFooterLinkGroup[] | false;
 }
 
-export type M3eComponentSlot =
+export type AkariComponentSlot =
   | "AppBar"
+  | "DesktopNav"
   | "Sidebar"
   | "Settings"
+  | "Hero"
   | "Toc"
+  | "Pager"
   | "Footer"
   | "Content";
 
-export interface M3eSearchResult {
+/** How the hero image fills its card. */
+export type AkariHeroFit = "cover" | "contain";
+
+/** The faint pattern on the hero's title card, or none. */
+export type AkariHeroPattern =
+  | "dots"
+  | "grid"
+  | "plus"
+  | "diagonal"
+  | "waves"
+  | "none";
+
+/**
+ * The `hero` frontmatter of a page: a header image shown beside the page
+ * title. A plain string is the image path.
+ */
+export type AkariHeroFrontmatter =
+  | string
+  | {
+      /**
+       * The image: a path, `{ src, alt }`, or `{ light, dark, alt }` with a
+       * separate image for the dark scheme.
+       */
+      image:
+        | string
+        | { src: string; alt?: string }
+        | { light: string; dark: string; alt?: string };
+      alt?: string;
+      /** Shown above the title; a date such as `2026-10-28` is formatted. */
+      date?: string | Date;
+      /** Line under the title. Defaults to the page's `description`. */
+      tagline?: string;
+      /** CSS color behind the image. Defaults to the primary container. */
+      background?: string;
+      /** `cover` (default) fills the card; `contain` shows the whole image. */
+      fit?: AkariHeroFit;
+      /**
+       * Theme seed color for the page. By default it is sampled from the
+       * image; a `#rrggbb` value fixes it, `false` keeps the reader's color.
+       */
+      color?: string | false;
+      /**
+       * The faint pattern on the title card, brought out around the pointer.
+       * By default (`auto`) one is picked at random each time the page loads.
+       */
+      pattern?: AkariHeroPattern | "auto";
+    };
+
+export interface AkariSearchResult {
   id: string;
   title: string;
   href: string;
@@ -107,7 +205,7 @@ export interface M3eSearchResult {
   excerpt?: string;
 }
 
-export type M3eSearchBackendConfig =
+export type AkariSearchBackendConfig =
   | { type: "local"; endpoint?: string }
   | {
       type: "http";
@@ -120,57 +218,260 @@ export type M3eSearchBackendConfig =
     }
   | { type: "registered"; id: string };
 
-export interface M3eSearchConfig {
+export interface AkariSearchConfig {
   enabled?: boolean;
   placeholder?: string;
   shortcut?: string;
   maxResults?: number;
   debounce?: number;
-  backend?: M3eSearchBackendConfig;
+  backend?: AkariSearchBackendConfig;
 }
 
-export interface ResolvedM3eSearchConfig {
+export interface ResolvedAkariSearchConfig {
   enabled: boolean;
   placeholder: string;
   shortcut: string;
   maxResults: number;
   debounce: number;
-  backend: M3eSearchBackendConfig;
+  backend: AkariSearchBackendConfig;
 }
 
-export interface M3eThemeConfig {
-  appBar?: M3eAppBarConfig;
-  sidebar?: M3eSidebarConfig;
-  settings?: M3eSettingsConfig;
-  toc?: M3eTocConfig;
-  footer?: M3eFooterConfig;
-  search?: M3eSearchConfig;
-  components?: Partial<Record<M3eComponentSlot, Component>>;
+/**
+ * Interface strings of the theme. `{name}` placeholders are filled in at
+ * runtime. Built-in translations cover Chinese (`zh`), English (`en`),
+ * Japanese (`ja`), Korean (`ko`), French (`fr`) and Arabic (`ar`);
+ * other languages fall back to English.
+ */
+export interface AkariMessages {
+  navigationToggle: string;
+  navigationLabel: string;
+  railLabel: string;
+  /** Placeholders: `{category}`. */
+  categoryNavigation: string;
+  /** Placeholders: `{category}`. */
+  categoryPages: string;
+  /** Placeholders: `{title}`. */
+  homeLink: string;
+  /** The app bar's overflow menu button, when its actions do not fit. */
+  moreActions: string;
+  /** The floating button that scrolls back to the top, and its label. */
+  backToTop: string;
+  /** The floating button that opens the table of contents on compact windows. */
+  tocButton: string;
+  languageLabel: string;
+  languageDialogTitle: string;
+  languageDialogClose: string;
+  /** Placeholders: `{mode}`. Label of the appearance button. */
+  schemeToggle: string;
+  settingsClose: string;
+  tocOverline: string;
+  pagerLabel: string;
+  previousPage: string;
+  nextPage: string;
+  footerMessage: string;
+  footerLinks: string;
+  notFoundTitle: string;
+  notFoundText: string;
+  notFoundLink: string;
+  settingsTitle: string;
+  settingsColor: string;
+  settingsVariant: string;
+  settingsContrast: string;
+  settingsMotion: string;
+  settingsDirection: string;
+  settingsTextSize: string;
+  schemeLight: string;
+  schemeAuto: string;
+  schemeDark: string;
+  schemeTime: string;
+  /** The snackbar after a switch of mode. Placeholders: `{mode}`. */
+  schemeChanged: string;
+  /**
+   * The snackbar after a switch to a mode that follows something, with
+   * what it comes to now. Placeholders: `{mode}`, `{scheme}`.
+   */
+  schemeChangedFollowing: string;
+  contrastStandard: string;
+  contrastMedium: string;
+  contrastHigh: string;
+  motionStandard: string;
+  motionExpressive: string;
+  /** The text direction option that follows the page's language. */
+  directionAuto: string;
+  directionLtr: string;
+  directionRtl: string;
+  searchPlaceholder: string;
+  searchLabel: string;
+  /** Placeholders: `{label}`, `{shortcut}`. */
+  searchShortcutLabel: string;
+  searchClose: string;
+  searchIntroTitle: string;
+  searchIntroText: string;
+  /** Placeholders: `{keys}`, rendered as keyboard keys. */
+  searchIntroShortcut: string;
+  searchLoading: string;
+  searchErrorTitle: string;
+  searchRetry: string;
+  searchEmptyTitle: string;
+  searchEmptyText: string;
+  /** Placeholders: `{count}`. Used for counts in the plural category "one". */
+  searchResultCountOne: string;
+  /** Placeholders: `{count}`. */
+  searchResultCount: string;
+  searchResultsLabel: string;
+  searchResultPage: string;
+  searchHintSelect: string;
+  searchHintOpen: string;
+  searchHintClose: string;
+  searchFailed: string;
+  /** Placeholders: `{status}`. */
+  searchIndexUnavailable: string;
+  searchIndexInvalid: string;
+  /** Placeholders: `{status}`. */
+  searchRequestFailed: string;
+  /** Placeholders: `{id}`. */
+  searchBackendMissing: string;
+}
+
+/**
+ * The text's fonts. Unset fields take the language's defaults: Roboto and
+ * the Noto Sans of its script from Google Fonts, then the system's fonts.
+ */
+export interface AkariFontsConfig {
+  /**
+   * Families to load from Google Fonts, each as the css2 API's `family`
+   * value (`"Noto Sans JP:wght@100..900"`). `false` loads none, so the text
+   * uses the fonts installed on the reader's device; `true` the defaults.
+   */
+  google?: boolean | string[];
+  /**
+   * The text's `font-family`, in order: each character takes the first
+   * family that has it. Name the Google Fonts families here too.
+   */
+  family?: string[];
+}
+
+export interface ResolvedAkariFonts {
+  /** The Google Fonts stylesheet, if anything is loaded from it. */
+  stylesheet?: string;
+  /** The `font-family` value. */
+  family: string;
+}
+
+export interface AkariThemeConfig {
+  appBar?: AkariAppBarConfig;
+  sidebar?: AkariSidebarConfig;
+  settings?: AkariSettingsConfig;
+  toc?: AkariTocConfig;
+  footer?: AkariFooterConfig;
+  search?: AkariSearchConfig;
+  fonts?: AkariFontsConfig;
+  /** Overrides for the interface strings of the current locale. */
+  messages?: Partial<AkariMessages>;
+  components?: Partial<Record<AkariComponentSlot, Component>>;
+}
+
+/**
+ * A config file of the docs, written with `defineAkariConfig`:
+ * `docs/config.ts` holds what every language shares, and the `config.ts`
+ * in a language folder (`docs/zh-CN/config.ts`) what that language changes.
+ * Each field of the language's file replaces the shared one; objects are
+ * merged field by field.
+ */
+export interface AkariSiteConfig extends Omit<AkariThemeConfig, "components"> {
+  /**
+   * Shared config only: the language folder served at the site root. The
+   * other languages are under `/<folder>/`. Defaults to the first folder
+   * in alphabetical order.
+   */
+  rootLanguage?: string;
+  /**
+   * The language, e.g. `zh-CN`; it also picks the theme's built-in strings.
+   * Defaults to the name of the language folder.
+   */
+  lang?: string;
+  /** The language's name in the language menu. Defaults to `lang`. */
+  label?: string;
+  dir?: "ltr" | "rtl" | "auto";
+  title?: string;
+  titleTemplate?: string | boolean;
+  description?: string;
+  head?: HeadConfig[];
+  /** The brand image of the app bar. */
+  logo?: string;
+  /** The language's strings in rendered markdown, such as code blocks' copy button. */
+  markdown?: MarkdownLocaleOptions;
+}
+
+/**
+ * The same config in the shape VitePress reads from a directory's
+ * `config.ts`: its own fields as they are, the theme's under
+ * `themeConfig.akari`.
+ */
+export interface AkariDirectoryConfig {
+  rootLanguage?: string;
+  lang?: string;
+  label?: string;
+  dir?: "ltr" | "rtl" | "auto";
+  title?: string;
+  titleTemplate?: string | boolean;
+  description?: string;
+  head?: HeadConfig[];
+  markdown?: MarkdownLocaleOptions;
+  themeConfig?: { logo?: string; akari?: AkariThemeConfig };
+}
+
+/**
+ * Frontmatter that places a page in the navigation from the docs'
+ * folders. An article is `<category>/<article>/index.md` in a language
+ * folder; its folder's name is its path.
+ */
+export interface AkariPageFrontmatter {
+  /** Its name in the navigation and its page title. Defaults to the first heading. */
+  title?: string;
+  icon?: string;
+  badge?: string;
+  /** Its place in the category, lowest first; articles without one follow, by folder name. */
+  order?: number;
+  /**
+   * Parallel pages: names of other markdown files in the article's folder,
+   * in the order of the tab bar, after the article itself. They are not
+   * in the sidebar.
+   */
+  parallel?: string[];
+  /** The page's label in the tab bar. Defaults to its title. */
+  tab?: string;
+  /** The language's home page only: the category it shows in. */
+  category?: string;
 }
 
 export interface ResolvedSidebarConfig {
-  source: "m3e" | "native";
-  m3eItems?: M3eSidebarItems;
+  source: "akari" | "native";
+  akariItems?: AkariSidebarItems;
   nativeItems?: unknown;
   width: number;
 }
 
-export interface ResolvedM3eThemeConfig {
+export interface ResolvedAkariThemeConfig {
+  /** Language the interface strings resolved for, e.g. `zh-CN`. */
+  lang: string;
+  messages: AkariMessages;
   appBar: {
     title: string;
     version?: string;
     logo?: string;
     showSidebarToggle: boolean;
     showSettingsToggle: boolean;
-    socialLinks: M3eSocialLink[];
+    socialLinks: AkariSocialLink[];
   };
   sidebar: ResolvedSidebarConfig;
   settings: {
     enabled: boolean;
+    showSchemeToggle: boolean;
     title: string;
     sections: SettingsSectionKey[];
     labels: Record<SettingsSectionKey, string>;
-    defaults: M3eThemeSettings;
+    defaults: AkariThemeSettings;
     persist: boolean;
     storageKey: string;
   };
@@ -183,19 +484,22 @@ export interface ResolvedM3eThemeConfig {
     message: string;
     copyright: string;
     showPrevNext: boolean;
+    /** Undefined derives the columns from the sidebar. */
+    links?: AkariFooterLinkGroup[] | false;
   };
-  search: ResolvedM3eSearchConfig;
-  components: Partial<Record<M3eComponentSlot, Component>>;
+  search: ResolvedAkariSearchConfig;
+  fonts: ResolvedAkariFonts;
+  components: Partial<Record<AkariComponentSlot, Component>>;
 }
 
-export interface M3eSettingsApi {
-  settings: M3eThemeSettings;
+export interface AkariSettingsApi {
+  settings: AkariThemeSettings;
   sections: SettingsSectionKey[];
   labels: Record<SettingsSectionKey, string>;
-  defaults: M3eThemeSettings;
-  setSetting<K extends keyof M3eThemeSettings>(
+  defaults: AkariThemeSettings;
+  setSetting<K extends keyof AkariThemeSettings>(
     key: K,
-    value: M3eThemeSettings[K],
+    value: AkariThemeSettings[K],
   ): void;
   reset(): void;
   isDefault(): boolean;

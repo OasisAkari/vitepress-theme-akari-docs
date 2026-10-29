@@ -1,0 +1,132 @@
+/*
+ * Tab bar for parallel pages (a sidebar entry with `tabs`), after the M3
+ * site: a pill holding equal tabs, the current one filled. It appears in the
+ * page and, once that copy scrolls under the app bar, docked in the app
+ * bar's free space; a copy flies between the two. All three share these
+ * rules, so their tab sizes are tied to the font size (em) and the flight
+ * only has to move the box and change the font size.
+ */
+.akari-page-tabs {
+  position: relative;
+  display: grid;
+  /* Explicit columns, so the indicator can be placed on them. */
+  grid-template-columns: repeat(
+    var(--akari-page-tabs-count, 1),
+    minmax(max-content, 1fr)
+  );
+  grid-auto-columns: minmax(max-content, 1fr);
+  grid-auto-flow: column;
+  box-sizing: border-box;
+  height: 56px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: var(--md-sys-shape-corner-full, 9999px);
+  background-color: var(--md-sys-color-surface-container);
+  font-size: var(--md-sys-typescale-title-medium-font-size, 1rem);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0.00625em;
+}
+
+/*
+ * The filled pill behind the current tab. Placed on the current tab's grid
+ * column (an absolutely positioned grid child takes that grid area), it
+ * needs no measuring to be in place; on a change it slides over from the
+ * previous tab (see useTabIndicator).
+ */
+.akari-page-tabs__indicator {
+  position: absolute;
+  inset: 0;
+  grid-row: 1;
+  border-radius: inherit;
+  background-color: var(--md-sys-color-secondary-container);
+  transform-origin: left center;
+  pointer-events: none;
+  transition: transform
+    var(--md-sys-motion-spring-fast-spatial, 350ms cubic-bezier(0.27, 1.06, 0.18, 1));
+}
+
+.akari-page-tabs__tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding-inline: 1.25em;
+  border-radius: inherit;
+  color: var(--md-sys-color-on-surface-variant);
+  text-decoration: none;
+  white-space: nowrap;
+  outline: none;
+  transition: color var(--md-sys-motion-duration-short-4, 200ms)
+    var(--md-sys-motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+}
+
+/* State layer. */
+.akari-page-tabs__tab::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: currentColor;
+  opacity: 0;
+  transition: opacity var(--md-sys-motion-duration-short-3, 150ms) linear;
+}
+
+.akari-page-tabs__tab:hover::before {
+  opacity: 0.08;
+}
+
+.akari-page-tabs__tab:active::before {
+  opacity: 0.1;
+}
+
+.akari-page-tabs__tab:focus-visible {
+  outline: 3px solid var(--md-sys-color-secondary);
+  outline-offset: -3px;
+}
+
+.akari-page-tabs__tab[aria-current] {
+  color: var(--md-sys-color-on-secondary-container);
+}
+
+/*
+ * Docked in the app bar: a compact pill filling the free space next to the
+ * title, never narrower than its tabs (the app bar only docks it when they
+ * fit). `--akari-page-tabs-docked-max-width` caps it; it is centered then.
+ */
+.akari-page-tabs--docked {
+  flex: 1 1 auto;
+  min-width: max-content;
+  max-width: var(--akari-page-tabs-docked-max-width, none);
+  height: 40px;
+  background-color: var(--md-sys-color-surface-container-high);
+  font-size: var(--md-sys-typescale-title-small-font-size, 0.875rem);
+}
+
+/* The copy that flies between the two; geometry is set inline. */
+.akari-page-tabs--flight {
+  position: fixed;
+  z-index: 6;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .akari-page-tabs__indicator,
+  .akari-page-tabs__tab,
+  .akari-page-tabs__tab::before {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .akari-page-tabs {
+    border: 1px solid CanvasText;
+  }
+
+  .akari-page-tabs__tab[aria-current] {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+}

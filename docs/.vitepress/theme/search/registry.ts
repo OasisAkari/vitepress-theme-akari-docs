@@ -1,20 +1,20 @@
-import type { M3eSearchHandler } from "./types";
+import type { AkariSearchHandler } from "./types";
 
-const backends = new Map<string, M3eSearchHandler>();
+const backends = new Map<string, AkariSearchHandler>();
 
 export function registerSearchBackend(
   id: string,
-  handler: M3eSearchHandler,
+  handler: AkariSearchHandler,
 ): void {
   const normalized = id.trim();
 
   if (!normalized) {
-    throw new Error("[vitepress-theme-m3e] search backend id cannot be empty.");
+    throw new Error("[vitepress-akari-theme-docs] search backend id cannot be empty.");
   }
 
   if (typeof handler !== "function") {
     throw new Error(
-      `[vitepress-theme-m3e] search backend "${normalized}" must be a function.`,
+      `[vitepress-akari-theme-docs] search backend "${normalized}" must be a function.`,
     );
   }
 
@@ -23,6 +23,6 @@ export function registerSearchBackend(
 
 export function getSearchBackend(
   id: string,
-): M3eSearchHandler | undefined {
+): AkariSearchHandler | undefined {
   return backends.get(id);
 }

@@ -1,0 +1,265 @@
+/*
+ * The page's hidden pattern. One of five tiles, drawn at random each time
+ * content loads (or named by the page's hero), set on the surface as
+ * `data-pattern` and taken up by every surface that carries a background:
+ * the hero's two cards and, in the article, code blocks, tables, custom
+ * blocks, quotes and demo surfaces. At rest the pattern is barely there,
+ * strongest in one corner; the pointer on such a surface lights it up: a
+ * faint glow of the primary colour and the pattern a little clearer
+ * around it, both falling off in steps and easing in and out. The surface
+ * stacks on its own, so all of it sits below its content.
+ */
+/*
+ * How strong the light is at its centre, for every patterned surface: the
+ * primary colour's share in the glow, and the ink of the pattern it brings
+ * out. Both fall off from there in steps.
+ */
+.akari-doc[data-pattern] {
+  --akari-pattern-glow: 4%;
+  --akari-pattern-spot: 0.1;
+}
+
+.akari-doc[data-pattern="dots"] {
+  --akari-pattern-tile: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='18'%20height='18'%3E%3Ccircle%20cx='9'%20cy='9'%20r='1.25'/%3E%3C/svg%3E");
+  --akari-pattern-size: 18px;
+}
+
+.akari-doc[data-pattern="grid"] {
+  --akari-pattern-tile: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='24'%20height='24'%20fill='none'%20stroke='black'%3E%3Cpath%20d='M0%20.5H24M.5%200V24'/%3E%3C/svg%3E");
+  --akari-pattern-size: 24px;
+}
+
+.akari-doc[data-pattern="plus"] {
+  --akari-pattern-tile: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='28'%20height='28'%20fill='none'%20stroke='black'%20stroke-linecap='round'%3E%3Cpath%20d='M14%2010v8M10%2014h8'/%3E%3C/svg%3E");
+  --akari-pattern-size: 28px;
+}
+
+.akari-doc[data-pattern="diagonal"] {
+  --akari-pattern-tile: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='14'%20height='14'%20fill='none'%20stroke='black'%3E%3Cpath%20d='M-1%2015%2015-1M-1%201l2-2M13%2015l2-2'/%3E%3C/svg%3E");
+  --akari-pattern-size: 14px;
+}
+
+.akari-doc[data-pattern="waves"] {
+  --akari-pattern-tile: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='32'%20height='16'%20fill='none'%20stroke='black'%20stroke-linecap='round'%3E%3Cpath%20d='M0%208q4-5%208%200t8%200%208%200%208%200'/%3E%3C/svg%3E");
+  --akari-pattern-size: 32px 16px;
+}
+
+/* The strength of the light on a pattern, eased as it comes and goes. */
+@property --akari-spot {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+.akari-doc[data-pattern] .akari-prose :is(
+    div[class*="language-"],
+    .vp-code-group .tabs,
+    .akari-table,
+    .custom-block,
+    blockquote,
+    .demo-surface
+  ) {
+  --_x: 50%;
+  --_y: 50%;
+  position: relative;
+  isolation: isolate;
+}
+
+.akari-doc[data-pattern] .akari-prose :is(
+    div[class*="language-"],
+    .vp-code-group .tabs,
+    .akari-table,
+    .custom-block,
+    blockquote,
+    .demo-surface
+  )::before,
+.akari-doc[data-pattern] .akari-prose :is(
+    div[class*="language-"],
+    .vp-code-group .tabs,
+    .akari-table,
+    .custom-block,
+    blockquote,
+    .demo-surface
+  )::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* The pattern: the tile, within the corner's reach or the light's. */
+.akari-doc[data-pattern] .akari-prose :is(
+    div[class*="language-"],
+    .vp-code-group .tabs,
+    .akari-table,
+    .custom-block,
+    blockquote,
+    .demo-surface
+  )::before {
+  --akari-spot: 0;
+  background-color: var(--md-sys-color-on-surface);
+  -webkit-mask-image:
+    var(--akari-pattern-tile),
+    var(--_corner),
+    var(--_spot);
+  mask-image:
+    var(--akari-pattern-tile),
+    var(--_corner),
+    var(--_spot);
+  -webkit-mask-size: var(--akari-pattern-size), 100% 100%, 100% 100%;
+  mask-size: var(--akari-pattern-size), 100% 100%, 100% 100%;
+  -webkit-mask-repeat: repeat, no-repeat, no-repeat;
+  mask-repeat: repeat, no-repeat, no-repeat;
+  -webkit-mask-composite: source-in, source-over, source-over;
+  mask-composite: intersect, add, add;
+  --_corner: radial-gradient(
+    circle at 100% 0%,
+    rgb(0 0 0 / 0.06),
+    transparent 70%
+  );
+  --_spot: radial-gradient(
+    circle 200px at var(--_x) var(--_y),
+    rgb(0 0 0 / calc(var(--akari-pattern-spot) * var(--akari-spot))) 0%,
+    rgb(0 0 0 / calc(var(--akari-pattern-spot) * 0.7 * var(--akari-spot))) 25%,
+    rgb(0 0 0 / calc(var(--akari-pattern-spot) * 0.35 * var(--akari-spot))) 55%,
+    rgb(0 0 0 / calc(var(--akari-pattern-spot) * 0.1 * var(--akari-spot))) 80%,
+    transparent 100%
+  );
+  transition: --akari-spot var(--md-sys-motion-duration-medium-2, 300ms)
+    var(--md-sys-motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+  /* The pattern arrives after the page has hydrated; it fades in. */
+  animation: akari-pattern-in var(--md-sys-motion-duration-long-2, 500ms)
+    var(--md-sys-motion-easing-standard, cubic-bezier(0.2, 0, 0, 1)) both;
+}
+
+@keyframes akari-pattern-in {
+  from {
+    opacity: 0;
+  }
+}
+
+:root[dir="rtl"] .akari-doc[data-pattern] .akari-prose :is(
+    div[class*="language-"],
+    .vp-code-group .tabs,
+    .akari-table,
+    .custom-block,
+    blockquote,
+    .demo-surface
+  )::before {
+  --_corner: radial-gradient(
+    circle at 0% 0%,
+    rgb(0 0 0 / 0.06),
+    transparent 70%
+  );
+}
+
+/* The glow. */
+.akari-doc[data-pattern] .akari-prose :is(
+    div[class*="language-"],
+    .vp-code-group .tabs,
+    .akari-table,
+    .custom-block,
+    blockquote,
+    .demo-surface
+  )::after {
+  background: radial-gradient(
+    circle 300px at var(--_x) var(--_y),
+    color-mix(
+        in srgb,
+        var(--md-sys-color-primary) var(--akari-pattern-glow),
+        transparent
+      )
+      0%,
+    color-mix(
+        in srgb,
+        var(--md-sys-color-primary) calc(var(--akari-pattern-glow) * 0.75),
+        transparent
+      )
+      25%,
+    color-mix(
+        in srgb,
+        var(--md-sys-color-primary) calc(var(--akari-pattern-glow) * 0.35),
+        transparent
+      )
+      55%,
+    color-mix(
+        in srgb,
+        var(--md-sys-color-primary) calc(var(--akari-pattern-glow) * 0.12),
+        transparent
+      )
+      80%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity var(--md-sys-motion-duration-medium-2, 300ms)
+    var(--md-sys-motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+}
+
+@media (hover: hover) {
+  .akari-doc[data-pattern] .akari-prose :is(
+    div[class*="language-"],
+    .vp-code-group .tabs,
+    .akari-table,
+    .custom-block,
+    blockquote,
+    .demo-surface
+  ):hover::before {
+    --akari-spot: 1;
+  }
+
+  .akari-doc[data-pattern] .akari-prose :is(
+    div[class*="language-"],
+    .vp-code-group .tabs,
+    .akari-table,
+    .custom-block,
+    blockquote,
+    .demo-surface
+  ):hover::after {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .akari-doc[data-pattern] .akari-prose :is(
+    div[class*="language-"],
+    .vp-code-group .tabs,
+    .akari-table,
+    .custom-block,
+    blockquote,
+    .demo-surface
+  )::before,
+  .akari-doc[data-pattern] .akari-prose :is(
+    div[class*="language-"],
+    .vp-code-group .tabs,
+    .akari-table,
+    .custom-block,
+    blockquote,
+    .demo-surface
+  )::after {
+    transition: none;
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .akari-doc[data-pattern] .akari-prose :is(
+    div[class*="language-"],
+    .vp-code-group .tabs,
+    .akari-table,
+    .custom-block,
+    blockquote,
+    .demo-surface
+  )::before,
+  .akari-doc[data-pattern] .akari-prose :is(
+    div[class*="language-"],
+    .vp-code-group .tabs,
+    .akari-table,
+    .custom-block,
+    blockquote,
+    .demo-surface
+  )::after {
+    display: none;
+  }
+}

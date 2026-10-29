@@ -1,45 +1,30 @@
 <script setup lang="ts">
-import type { M3eSocialLink } from "../../types";
+import type { AkariSocialLink } from "../../types";
+import SocialIcon from "./SocialIcon.vue";
 
-defineProps<{ links: M3eSocialLink[] }>();
+withDefaults(
+  defineProps<{
+    links: AkariSocialLink[];
+    // Keeps button/tooltip ids unique when the actions render twice.
+    idPrefix?: string;
+  }>(),
+  { idPrefix: "akari-social" },
+);
 </script>
 
 <template>
-  <span v-if="links.length" class="m3e-social">
+  <span v-if="links.length" class="akari-social">
     <template v-for="(link, index) in links" :key="`${link.icon}-${index}`">
       <m3e-icon-button
-        :id="`m3e-social-${index}`"
+        :id="`${idPrefix}-${index}`"
         :href="link.link"
         target="_blank"
         rel="noreferrer"
         :aria-label="link.label || link.icon"
       >
-        <!-- GitHub and npm use inline brand marks: @m3e/icons has no brand icons. -->
-        <svg
-          v-if="link.icon === 'github'"
-          viewBox="0 0 512 512"
-          fill="currentColor"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <path
-            d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5l0 52C323 491.5 335.5 500 350.5 494 441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5l0-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21z"
-          />
-        </svg>
-        <svg
-          v-else-if="link.icon === 'npm'"
-          viewBox="0 0 576 512"
-          fill="currentColor"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <path
-            d="M288 288l-32 0 0-64 32 0 0 64zM576 160l0 192-288 0 0 32-128 0 0-32-160 0 0-192 576 0zM160 192l-128 0 0 128 64 0 0-96 32 0 0 96 32 0 0-128zm160 0l-128 0 0 160 64 0 0-32 64 0 0-128zm224 0l-192 0 0 128 64 0 0-96 32 0 0 96 32 0 0-96 32 0 0 96 32 0 0-128z"
-          />
-        </svg>
-        <m3e-icon v-else :name="link.icon"></m3e-icon>
+        <SocialIcon :icon="link.icon" />
       </m3e-icon-button>
-      <m3e-tooltip :for="`m3e-social-${index}`">
+      <m3e-tooltip :for="`${idPrefix}-${index}`">
         {{ link.label || link.icon }}
       </m3e-tooltip>
     </template>
@@ -47,14 +32,14 @@ defineProps<{ links: M3eSocialLink[] }>();
 </template>
 
 <style scoped>
-.m3e-social {
+.akari-social {
   display: inline-flex;
   align-items: center;
   gap: 4px;
 }
 
 @media (max-width: 600px) {
-  .m3e-social {
+  .akari-social {
     gap: 0;
   }
 }

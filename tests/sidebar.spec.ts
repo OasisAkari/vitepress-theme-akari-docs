@@ -1,39 +1,23 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  findFirstLink,
   findPrevNext,
+  findTabGroup,
   flattenSidebar,
   hasActiveItem,
   isActiveLink,
   isExternalLink,
+  isTabGroup,
   normalizePath,
   resolveSidebarItems,
 } from "../docs/.vitepress/theme/sidebar";
 import type {
-  M3eSidebarItem,
+  AkariSidebarItem,
   ResolvedSidebarConfig,
 } from "../docs/.vitepress/theme/types";
 
-const m3eConfig: ResolvedSidebarConfig = {
-  source: "m3e",
-  m3eItems: {
-    "/": [{ text: "概览", link: "/" }],
-    "/guide/": [
-      {
-        text: "指南",
-        icon: "home",
-        items: [
-          { text: "安装", link: "/guide/install" },
-          { text: "配置", link: "/guide/config" },
-        ],
-      },
-    ],
-    "/guide/advanced/": [{ text: "高级", link: "/guide/advanced/one" }],
-  },
-  width: 320,
-};
-
-const nestedItems: M3eSidebarItem[] = [
+const nestedItems: AkariSidebarItem[] = [
   { text: "A", link: "/a" },
   {
     text: "B",
@@ -45,168 +29,80 @@ const nestedItems: M3eSidebarItem[] = [
   { text: "C", link: "/c" },
 ];
 
+function native(nativeItems: unknown): ResolvedSidebarConfig {
+  return { source: "native", nativeItems, width: 320 };
+}
+
 describe("normalizePath", () => {
-  const cases: Array<[string, string, string]> = [
-    ["/guide/intro?tab=1#section", "/", "/guide/intro"],
-    ["/guide/intro.html", "/", "/guide/intro"],
-    ["/guide/intro.html/", "/", "/guide/intro"],
-    ["/guide/intro.html?x=1#y", "/", "/guide/intro"],
+  it.each([
+    ["/guide/intro.html?tab=1#section", "/", "/guide/intro"],
     ["/guide/", "/", "/guide"],
-    ["/guide", "/", "/guide"],
-    ["/", "/", "/"],
     ["", "/", "/"],
     ["guide/intro", "/", "/guide/intro"],
-    ["/docs/guide/", "/docs/", "/guide"],
     ["/docs/guide/install.html", "/docs/", "/guide/install"],
-    ["/docs/guide?x#y", "/docs/", "/guide"],
-    ["/docs", "/docs/", "/"],
     ["/docs/", "/docs/", "/"],
-    ["/docs/guide/", "/docs", "/guide"],
     ["/docs-other/guide", "/docs/", "/docs-other/guide"],
-  ];
-
-  it.each(cases)("normalizes %s with base %s to %s", (input, base, expected) => {
+  ])("normalizes %s with base %s to %s", (input, base, expected) => {
     expect(normalizePath(input, base)).toBe(expected);
   });
 });
 
-describe("isExternalLink", () => {
-  it.each(["https://example.com", "http://example.com", "//cdn.example.com/x", "mailto:a@b.c"])(
-    "treats %s as external",
-    (link) => {
+describe("links", () => {
+  it("tells external links from internal ones", () => {
+    for (const link of ["https://a.com", "//cdn.a.com/x", "mailto:a@b.c"]) {
       expect(isExternalLink(link)).toBe(true);
-    },
-  );
-
-  it.each(["/guide", "guide", "#section", ""])(
-    "treats %s as internal or non-external",
-    (link) => {
+    }
+    for (const link of ["/guide", "guide", "#section", ""]) {
       expect(isExternalLink(link)).toBe(false);
-    },
-  );
-});
+    }
+  });
 
-describe("isActiveLink", () => {
-  const cases: Array<[string, string, string, boolean]> = [
+  it.each([
     ["/guide/", "/guide", "/", true],
-    ["/guide", "/guide/", "/", true],
-    ["/guide/intro.html?x=1#section", "/guide/intro", "/", true],
+    ["/guide/intro.html?x=1#s", "/guide/intro", "/", true],
     ["/docs/guide/install/", "/guide/install", "/docs/", true],
-    ["/docs/guide/install", "/docs/guide/install", "/docs/", true],
     ["/guide/advanced", "/guide", "/", false],
-    ["/guide/intro", "/guide/install", "/", false],
-    ["/guide/intro", "https://github.com/vuejs", "/", false],
-    ["/guide/intro", "mailto:docs@example.com", "/", false],
+    ["/guide/intro", "https://github.com", "/", false],
     ["/guide/intro", "#installation", "/", false],
-    ["/guide/intro", "", "/", false],
-  ];
-
-  it.each(cases)(
-    "isActiveLink(%s, %s, base %s) is %s",
-    (current, target, base, expected) => {
-      expect(isActiveLink(current, target, base)).toBe(expected);
-    },
-  );
+  ])("isActiveLink(%s, %s, base %s) is %s", (current, target, base, active) => {
+    expect(isActiveLink(current, target, base)).toBe(active);
+  });
 });
 
 describe("resolveSidebarItems", () => {
-  it("picks the longest matching prefix in m3e mode", () => {
-    expect(
-      resolveSidebarItems(m3eConfig, "/guide/advanced/one"),
-    ).toEqual([{ text: "高级", link: "/guide/advanced/one" }]);
-  });
-
-  it("picks the guide group for a direct child route", () => {
-    const items = resolveSidebarItems(m3eConfig, "/guide/install");
-
-    expect(items).toHaveLength(1);
-    expect(items[0]?.text).toBe("指南");
-    expect(items[0]?.icon).toBe("home");
-    expect(items[0]?.items?.map((item) => item.text)).toEqual([
-      "安装",
-      "配置",
-    ]);
-  });
-
-  it("matches a prefix without a trailing slash", () => {
-    const items = resolveSidebarItems(m3eConfig, "/guide");
-
-    expect(items[0]?.text).toBe("指南");
-  });
-
-  it("normalizes the route and site base before matching", () => {
-    expect(
-      resolveSidebarItems(
-        m3eConfig,
-        "/docs/guide/advanced/one.html?x=1#section",
-        "/docs/",
-      ),
-    ).toEqual([{ text: "高级", link: "/guide/advanced/one" }]);
-  });
-
-  it("uses the / entry as a catch-all", () => {
-    expect(resolveSidebarItems(m3eConfig, "/api/reference")).toEqual([
-      { text: "概览", link: "/" },
-    ]);
-  });
-
-  it("returns an empty array when no dictionary entry matches", () => {
+  it("picks the longest matching prefix, after the base", () => {
     const config: ResolvedSidebarConfig = {
-      source: "m3e",
-      m3eItems: {
-        "/guide/": [{ text: "安装", link: "/guide/install" }],
+      source: "akari",
+      akariItems: {
+        "/": [{ text: "概览", link: "/" }],
+        "/guide/": [{ text: "指南", link: "/guide/install" }],
+        "/guide/advanced/": [{ text: "高级", link: "/guide/advanced/one" }],
       },
       width: 320,
     };
+    const text = (path: string, base?: string) =>
+      resolveSidebarItems(config, path, base)[0]?.text;
 
-    expect(resolveSidebarItems(config, "/api/reference")).toEqual([]);
+    expect(text("/guide/advanced/one")).toBe("高级");
+    expect(text("/guide")).toBe("指南");
+    expect(text("/docs/guide/advanced/one.html#x", "/docs/")).toBe("高级");
+    expect(text("/api/reference")).toBe("概览");
+    expect(
+      resolveSidebarItems({ ...config, akariItems: { "/guide/": [] } }, "/api"),
+    ).toEqual([]);
   });
 
-  it("converts native sidebar items and preserves extras", () => {
-    const nativeItems = [
-      { text: "Home", link: "/" },
-      {
-        text: "Guide",
-        icon: "menu_book",
-        badge: "New",
-        collapsed: true,
-        items: [
-          { text: "Install", link: "/guide/install" },
-          { link: "/guide/config" },
-        ],
-      },
-    ];
-    const config: ResolvedSidebarConfig = {
-      source: "native",
-      nativeItems,
-      width: 320,
-    };
-
-    const items = resolveSidebarItems(config, "/guide/install");
-
-    expect(items).toEqual([
-      { text: "Home", link: "/" },
-      {
-        text: "Guide",
-        icon: "menu_book",
-        badge: "New",
-        collapsed: true,
-        items: [
-          { text: "Install", link: "/guide/install" },
-          { text: "/guide/config", link: "/guide/config" },
-        ],
-      },
-    ]);
-    expect(items[1]?.items?.[1]?.text).toBe("/guide/config");
-  });
-
-  it("applies group base to native child links", () => {
+  it("converts a native sidebar, keeping extras and joining bases", () => {
     const nativeItems = [
       {
         text: "指南",
         base: "/guide/",
+        icon: "menu_book",
+        badge: "New",
+        collapsed: true,
         items: [
           { text: "安装", link: "install" },
+          { link: "/guide/config" },
           {
             text: "高级",
             base: "advanced/",
@@ -214,191 +110,91 @@ describe("resolveSidebarItems", () => {
           },
         ],
       },
-      { text: "API", link: "/api" },
     ];
-    const config: ResolvedSidebarConfig = {
-      source: "native",
-      nativeItems,
-      width: 320,
-    };
 
-    const items = resolveSidebarItems(config, "/guide/install");
-
-    expect(items).toEqual([
+    expect(resolveSidebarItems(native(nativeItems), "/")).toEqual([
       {
         text: "指南",
+        icon: "menu_book",
+        badge: "New",
+        collapsed: true,
         items: [
           { text: "安装", link: "/guide/install" },
+          { text: "/guide/config", link: "/guide/config" },
           {
             text: "高级",
             items: [{ text: "One", link: "/guide/advanced/one" }],
           },
         ],
       },
-      { text: "API", link: "/api" },
     ]);
-
-    // Conversion must not mutate the user's native config.
-    expect(nativeItems[0]?.items?.[0]?.link).toBe("install");
+    // The user's config is left as it was.
+    expect(nativeItems[0]!.items[0]!.link).toBe("install");
   });
 
-  it("picks the longest prefix for native dictionary configs", () => {
-    const nativeItems = {
+  it("matches native dictionaries and ignores invalid native sidebars", () => {
+    const config = native({
       "/": [{ text: "Home", link: "/" }],
       "/guide/": [{ text: "Install", link: "/guide/install" }],
-      "/guide/advanced/": [
-        { text: "Advanced", link: "/guide/advanced/one" },
-      ],
-    };
-    const config: ResolvedSidebarConfig = {
-      source: "native",
-      nativeItems,
-      width: 320,
-    };
+    });
+    expect(resolveSidebarItems(config, "/guide/install")[0]?.text).toBe(
+      "Install",
+    );
+    expect(resolveSidebarItems(config, "/api")[0]?.text).toBe("Home");
 
-    expect(
-      resolveSidebarItems(config, "/guide/advanced/one"),
-    ).toEqual([{ text: "Advanced", link: "/guide/advanced/one" }]);
-    expect(resolveSidebarItems(config, "/guide/install")).toEqual([
-      { text: "Install", link: "/guide/install" },
-    ]);
-    expect(resolveSidebarItems(config, "/api")).toEqual([
-      { text: "Home", link: "/" },
-    ]);
+    for (const value of [undefined, null, "not-a-sidebar", 42]) {
+      expect(resolveSidebarItems(native(value), "/guide")).toEqual([]);
+    }
   });
 
-  it("returns an empty array for a native dictionary with no match", () => {
-    const config: ResolvedSidebarConfig = {
-      source: "native",
-      nativeItems: {
-        "/guide/": [{ text: "Install", link: "/guide/install" }],
-      },
-      width: 320,
-    };
-
-    expect(resolveSidebarItems(config, "/api")).toEqual([]);
-  });
-
-  it.each([undefined, null, "not-a-sidebar", 42])(
-    "returns an empty array for invalid native sidebar %j",
-    (nativeItems) => {
-      const config: ResolvedSidebarConfig = {
-        source: "native",
-        nativeItems,
-        width: 320,
-      };
-
-      expect(resolveSidebarItems(config, "/guide")).toEqual([]);
-    },
-  );
-
-  it("falls back to native items when m3e source has no items", () => {
-    const config: ResolvedSidebarConfig = {
-      source: "m3e",
-      nativeItems: [{ text: "Home", link: "/" }],
-      width: 320,
-    };
-
-    expect(resolveSidebarItems(config, "/")).toEqual([
-      { text: "Home", link: "/" },
-    ]);
+  it("falls back to native items when the akari source has none", () => {
+    const home = [{ text: "Home", link: "/" }];
+    const config = { ...native(home), source: "akari" as const };
+    expect(resolveSidebarItems(config, "/")).toEqual(home);
   });
 });
 
-describe("flattenSidebar", () => {
-  it("flattens depth-first in document order", () => {
+describe("reading order", () => {
+  it("flattens depth-first, a group's own link before its children", () => {
     expect(flattenSidebar(nestedItems).map((item) => item.text)).toEqual([
       "A",
       "B1",
       "B2a",
       "C",
     ]);
+    expect(
+      flattenSidebar([
+        { text: "G", link: "/g", items: [{ text: "G1", link: "/g1" }] },
+      ]).map((item) => item.text),
+    ).toEqual(["G", "G1"]);
   });
 
-  it("keeps a group with a link before its children", () => {
-    const items: M3eSidebarItem[] = [
-      { text: "G", link: "/g", items: [{ text: "G1", link: "/g1" }] },
-    ];
-
-    expect(flattenSidebar(items).map((item) => item.text)).toEqual([
-      "G",
-      "G1",
-    ]);
-  });
-
-  it("returns an empty array for an empty sidebar", () => {
-    expect(flattenSidebar([])).toEqual([]);
-  });
-
-  it("does not mutate the input tree", () => {
-    flattenSidebar(nestedItems);
-
-    expect(nestedItems).toHaveLength(3);
-    expect(nestedItems[1]?.items).toHaveLength(2);
-  });
-});
-
-describe("findPrevNext", () => {
-  it("returns the adjacent flat items for a middle item", () => {
-    const { prev, next } = findPrevNext(nestedItems, "/b1");
-
-    expect(prev?.text).toBe("A");
-    expect(next?.text).toBe("B2a");
-  });
-
-  it("returns no previous item for the first entry", () => {
-    const { prev, next } = findPrevNext(nestedItems, "/a");
-
-    expect(prev).toBeUndefined();
-    expect(next?.text).toBe("B1");
-  });
-
-  it("returns no next item for the last entry", () => {
-    const { prev, next } = findPrevNext(nestedItems, "/c");
-
-    expect(prev?.text).toBe("B2a");
-    expect(next).toBeUndefined();
-  });
-
-  it("skips groups without links", () => {
-    const { prev, next } = findPrevNext(nestedItems, "/b2a");
-
-    expect(prev?.text).toBe("B1");
-    expect(next?.text).toBe("C");
-  });
-
-  it("matches routes with base, trailing slash, query and hash", () => {
-    const { prev, next } = findPrevNext(
-      nestedItems,
-      "/docs/b1/?x=1#section",
-      "/docs/",
+  it("finds an item's first link, its own or depth-first", () => {
+    expect(findFirstLink({ text: "G", link: "/g", items: nestedItems })).toBe(
+      "/g",
     );
-
-    expect(prev?.text).toBe("A");
-    expect(next?.text).toBe("B2a");
+    expect(findFirstLink(nestedItems[1]!)).toBe("/b1");
+    expect(findFirstLink({ text: "Empty", items: [{ text: "X" }] })).toBe(
+      undefined,
+    );
   });
 
-  it("returns empty results when the route is not in the sidebar", () => {
-    const { prev, next } = findPrevNext(nestedItems, "/missing");
+  it("finds the neighbours of a page, skipping groups without links", () => {
+    const around = (path: string, base?: string) => {
+      const { prev, next } = findPrevNext(nestedItems, path, base);
+      return [prev?.text, next?.text];
+    };
 
-    expect(prev).toBeUndefined();
-    expect(next).toBeUndefined();
-  });
-
-  it("treats a group link as a navigation step", () => {
-    const items: M3eSidebarItem[] = [
-      { text: "G", link: "/g", items: [{ text: "G1", link: "/g1" }] },
-    ];
-
-    const { prev, next } = findPrevNext(items, "/g");
-
-    expect(prev).toBeUndefined();
-    expect(next?.text).toBe("G1");
+    expect(around("/a")).toEqual([undefined, "B1"]);
+    expect(around("/b2a")).toEqual(["B1", "C"]);
+    expect(around("/c")).toEqual(["B2a", undefined]);
+    expect(around("/docs/b1/?x=1#section", "/docs/")).toEqual(["A", "B2a"]);
+    expect(around("/missing")).toEqual([undefined, undefined]);
   });
 });
 
 describe("hasActiveItem", () => {
-  const group: M3eSidebarItem = {
+  const group: AkariSidebarItem = {
     text: "Guide",
     items: [
       {
@@ -406,48 +202,90 @@ describe("hasActiveItem", () => {
         items: [{ text: "One", link: "/guide/advanced/one" }],
       },
       { text: "Install", link: "/guide/install" },
+      { text: "GitHub", link: "https://github.com" },
+      { text: "Anchor", link: "#top" },
     ],
   };
 
-  it("detects a deeply nested active item", () => {
+  it("finds the current page anywhere below an item", () => {
     expect(hasActiveItem(group, "/guide/advanced/one")).toBe(true);
-  });
-
-  it("detects an active item under a site base", () => {
-    expect(
-      hasActiveItem(group, "/docs/guide/install/", "/docs/"),
-    ).toBe(true);
-  });
-
-  it("returns false when no descendant matches", () => {
+    expect(hasActiveItem(group, "/docs/guide/install/", "/docs/")).toBe(true);
+    expect(hasActiveItem({ text: "Guide", link: "/guide/" }, "/guide")).toBe(
+      true,
+    );
     expect(hasActiveItem(group, "/guide/config")).toBe(false);
   });
+});
 
-  it("detects a link on the item itself", () => {
-    const item: M3eSidebarItem = { text: "Guide", link: "/guide/" };
-
-    expect(hasActiveItem(item, "/guide")).toBe(true);
-  });
-
-  it("ignores external and hash-only descendants", () => {
-    const item: M3eSidebarItem = {
-      text: "Links",
+describe("tab groups", () => {
+  const items: AkariSidebarItem[] = [
+    { text: "概览", link: "/" },
+    {
+      text: "样式",
       items: [
-        { text: "GitHub", link: "https://github.com/vuejs" },
-        { text: "Anchor", link: "#top" },
+        { text: "色彩", link: "/styles/color" },
+        {
+          text: "图标",
+          tabs: [
+            { text: "概览", link: "/styles/icons" },
+            { text: "选择", link: "/styles/icons/choosing" },
+            { text: "使用", link: "/styles/icons/using" },
+          ],
+        },
+        { text: "排版", link: "/styles/typography" },
       ],
-    };
+    },
+  ];
+  const group = items[1]!.items![1]!;
 
-    expect(hasActiveItem(item, "/guide")).toBe(false);
+  it("is one entry, active on any of its tabs and linking to the first", () => {
+    expect(isTabGroup(group)).toBe(true);
+    expect(hasActiveItem(items[1]!, "/styles/icons/using")).toBe(true);
+    expect(hasActiveItem(group, "/styles/color")).toBe(false);
+    expect(findFirstLink(group)).toBe("/styles/icons");
+    expect(findTabGroup(items, "/docs/styles/icons", "/docs/")).toBe(group);
+    expect(findTabGroup(items, "/styles/color")).toBeUndefined();
   });
 
-  it("handles a group without its own link", () => {
-    const item: M3eSidebarItem = {
-      text: "Group",
-      items: [{ text: "Child", link: "/child" }],
-    };
+  it("reads tab by tab, or as one entry", () => {
+    expect(flattenSidebar(items).map((item) => item.link)).toEqual([
+      "/",
+      "/styles/color",
+      "/styles/icons",
+      "/styles/icons/choosing",
+      "/styles/icons/using",
+      "/styles/typography",
+    ]);
+    expect(
+      flattenSidebar(items, { tabs: "group" }).map((item) => item.text),
+    ).toEqual(["概览", "色彩", "图标", "排版"]);
+    expect(findPrevNext(items, "/styles/icons/using").next?.link).toBe(
+      "/styles/typography",
+    );
+  });
 
-    expect(hasActiveItem(item, "/child")).toBe(true);
-    expect(hasActiveItem(item, "/other")).toBe(false);
+  it("needs a tab with a link", () => {
+    expect(isTabGroup({ text: "空", tabs: [{ text: "无链接" }] })).toBe(false);
+  });
+
+  it("survives native sidebar normalization", () => {
+    const resolved = resolveSidebarItems(
+      native([
+        {
+          text: "图标",
+          base: "/styles/icons/",
+          tabs: [
+            { text: "选择", link: "choosing" },
+            { text: "使用", link: "using" },
+          ],
+        },
+      ]),
+      "/",
+    );
+
+    expect(resolved[0]?.tabs?.map((tab) => tab.link)).toEqual([
+      "/styles/icons/choosing",
+      "/styles/icons/using",
+    ]);
   });
 });

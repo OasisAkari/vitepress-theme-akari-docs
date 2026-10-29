@@ -1,0 +1,77 @@
+---
+tab: Détails
+---
+
+# Navigation latérale : détails
+
+## Rail et tiroir de navigation
+
+- **Rail** : une bande qui occupe toute la hauteur du côté gauche de la page ; la barre d'application commence à sa droite. Dans `m3e-nav-rail`, chaque catégorie est un `m3e-nav-item`. Une catégorie qui a des éléments enfants pointe vers sa première page, et un élément de premier niveau sans enfants est lui-même un lien. Le séparateur à sa droite n'apparaît que lorsqu'un tiroir de navigation s'affiche à côté.
+- **Contenu du tiroir** : `m3e-nav-menu` liste les pages de la catégorie. Le nom de la catégorie s'affiche déjà dans le rail : le tiroir ne le répète donc pas. Les éléments du tiroir n'affichent que du texte ; les badges et les groupes imbriqués sont conservés.
+- **1600px et plus** : quand la page courante appartient à une catégorie, le tiroir reste ouvert à droite du rail et prend de la largeur au contenu. Son maintien ouvert dépend à la fois de la route courante et d'une requête média CSS : le rendu côté serveur et le premier écran sont donc déjà dans l'état final, et aucune animation de déploiement ne se joue au rechargement. Ensuite, quand la fenêtre s'élargit ou que vous entrez dans une catégorie depuis une page sans sous-menu, la largeur s'étend à partir de 0 avec un ressort spatial et la zone de contenu fait de la place ; l'inverse le replie de la même façon. Quand vous survolez une autre catégorie, la liste courante disparaît en fondu, puis la liste de cette catégorie apparaît en fondu. Quand le pointeur quitte la zone de navigation, la catégorie courante revient.
+- **960–1599px** : quand le pointeur s'arrête sur une catégorie pendant environ 100ms, le tiroir glisse de sous le rail. Il occupe toute la hauteur de la page et recouvre la barre d'application et le contenu (ombre de niveau 3, niveau 5 tant que le pointeur est dans le tiroir ; coins arrondis de 16px du côté de fin). Passer d'une catégorie à l'autre fait disparaître puis réapparaître la liste en fondu. Environ 200ms après que le pointeur a quitté le rail et le tiroir, le tiroir se rétracte.
+- **Moins de 960px** : le rail et le tiroir sont masqués, et le bouton de menu de la barre d'application ouvre le tiroir de navigation complet. Son menu de premier niveau correspond au rail et affiche les mêmes icônes ; les éléments enfants n'affichent que du texte. Le haut du tiroir est collé à la barre d'application, sans coins arrondis, et le bas de son côté de fin a un coin arrondi de 16px.
+- **Clic** : un clic de souris sur une catégorie mène à sa première page. Un clic avec une touche de modification est laissé au navigateur, qui ouvre un nouvel onglet. Les écrans tactiles n'ont pas de survol : toucher une catégorie ouvre ou ferme donc plutôt le tiroir, et toucher à l'extérieur le ferme. Les liens du tiroir utilisent la navigation SPA de VitePress, et le tiroir se ferme après un clic.
+
+Toutes les transitions utilisent les jetons d'animation M3 Expressive de `m3e-theme` (`--md-sys-motion-spring-*`), et passent de standard à expressif selon le paramètre « Animations ». Quand l'option « réduire les animations » est activée dans le système, tout change instantanément.
+
+## Trouver la page courante
+
+- La comparaison des routes ignore `base`, les barres obliques finales, les paramètres de requête et le hash, et traite `.html` comme le même chemin : `/guide/intro/`, `/guide/intro.html` et `/guide/intro?from=nav` correspondent tous au même élément. Les liens externes et les liens limités à une ancre ne deviennent jamais l'élément courant.
+- Une fois l'élément courant trouvé, ses groupes ancêtres reçoivent `open` et l'élément lui-même reçoit `selected` ; `m3e-nav-menu-item` traduit `selected` en `aria-current`. Un groupe de pages parallèles est sélectionné sur n'importe quelle page du groupe.
+- Une navigation écrite sous forme d'objet est d'abord triée par longueur de chemin, du plus long au plus court, et la première clé qui correspond au chemin courant est utilisée.
+
+## Page précédente et page suivante
+
+Les cartes de pagination à la fin du texte utilisent le même arbre de navigation : chaque élément qui a un lien est parcouru en profondeur d'abord, un groupe de pages parallèles se développe en chacune de ses pages, et les éléments situés juste avant et juste après la page courante sont retenus. Les colonnes de liens du pied de page viennent aussi de cet arbre, où un groupe de pages parallèles compte pour un seul élément.
+
+## La barre d'onglets des pages parallèles
+
+### Position et apparence
+
+- Chaque page du groupe a une barre d'onglets en haut de sa surface, avec les mêmes marges latérales que le hero. Quand il y a un hero, il se place sous la barre d'onglets : la barre d'onglets occupe ainsi la même place sur chaque page du groupe.
+- Chaque onglet est un lien ordinaire, et un clic dessus utilise la navigation SPA. L'onglet de la page courante porte `aria-current="page"` et est marqué par un indicateur au fond `secondary-container`. Après un clic, l'indicateur glisse aussitôt vers le nouvel onglet, sans attendre le chargement de la nouvelle page. Le glissement vers le premier ou le dernier onglet utilise une courbe sans rebond : l'indicateur ne dépasse donc pas l'extrémité arrondie.
+- La barre d'onglets est un repère `<nav>` nommé, par exemple « Pages : Icônes ». Une seule copie de la barre d'onglets est visible pour les technologies d'assistance à un instant donné, et la copie en vol ne peut pas recevoir le focus.
+- Cliquer sur l'onglet de la page courante ne fait rien. Cela ne fait pas remonter en haut de la page.
+
+### Défilement horizontal
+
+Quand la fenêtre est trop étroite pour tous les onglets, les onglets gardent leur largeur, la barre d'onglets défile horizontalement, et une fine barre de défilement de 4px apparaît en bas. Tant que le lecteur ne l'a pas fait défiler, la barre d'onglets défile d'elle-même pour que l'onglet courant soit entièrement visible, et se réaligne après un changement de page ou de largeur de fenêtre. Dès que le lecteur l'a fait défiler à la molette, par glissement, au toucher ou avec les flèches du clavier, elle n'intervient plus jusqu'au prochain changement de page. Le défilement n'est permis que lorsque les onglets eux-mêmes sont trop larges ; le dépassement de l'animation de l'indicateur au-delà de l'extrémité ne fait jamais apparaître de barre de défilement.
+
+### Ancrage dans la barre d'application
+
+- Quand vous faites défiler vers le bas et que la barre d'onglets arrive à moins de 24px de la barre d'application, elle se réduit en une barre d'onglets compacte de 40px de haut, qui remplit l'espace libre entre le titre de la barre d'application et le premier bouton de droite, avec `--akari-app-bar-tabs-gap` de chaque côté. Quand sa position d'origine est de nouveau à plus de 24px de la barre d'application, elle revient dans la page.
+- Entre les deux positions, une copie de la barre d'onglets se déplace, et sa position, sa taille, la taille de son texte et sa couleur de fond changent ensemble. Les directions horizontale et verticale sont chacune animées par un ressort spatial M3 par défaut : taux d'amortissement de 0,8 et raideur de 380 pour l'animation expressive, 0,9 et 700 pour l'animation standard. Les ressorts partent du repos, et avec l'animation expressive la fin a un léger rebond.
+- Les deux directions démarrent l'une après l'autre et se chevauchent en partie. À l'ancrage, la copie se rétrécit d'abord sous la barre d'application, et franchit le bord inférieur de la barre d'application juste au moment où elle devient assez étroite pour tenir dans l'espace libre. Au retour dans la page, elle descend d'abord à la largeur compacte, puis s'élargit une fois sortie de la barre d'application. L'instant de départ de la seconde direction est calculé à partir des trajectoires des deux ressorts : dans la barre d'application, la copie reste donc toujours dans l'espace libre. Elle ne passe jamais par-dessus le titre ou le champ de recherche, et n'est jamais coupée.
+- Le point d'arrivée de la copie est de nouveau mesuré à chaque image : elle atterrit donc avec précision même si la page défile encore. Si le sens du défilement change en cours d'animation, la copie fait demi-tour depuis l'endroit où elle se trouve.
+- Si un défilement rapide a déjà fait glisser la barre d'onglets en partie sous le bord inférieur de la barre d'application, la copie ressort d'abord par ce bord inférieur et revient sous la barre d'application, puis s'ancre dans l'ordre décrit ci-dessus. Si la barre d'onglets ne revient qu'après que la surface qui la contient est entièrement sortie de la zone d'affichage (par exemple lors d'un saut du pied de page vers une ancre), il n'y a pas de point de départ d'où voler, et la barre d'onglets de la barre d'application apparaît simplement en fondu.
+
+### Partage de l'espace avec le titre
+
+- Le thème mesure le titre de la barre d'application (le nom du site, ou le titre de page qui le remplace) à sa largeur non tronquée, et le mesure de nouveau quand le titre change, quand la fenêtre est redimensionnée ou quand les polices se chargent.
+- À l'ancrage, la barre d'onglets reçoit d'abord la largeur de son contenu plus les espaces des deux côtés. Le titre utilise au plus la largeur restante, et ce qui dépasse est tronqué par des points de suspension. La barre d'onglets remplit ensuite le reste de l'espace.
+- Tant que la barre d'onglets est ancrée dans la barre d'application, les changements de largeur du titre (alternance entre le nom du site et le titre de la page, ou passage à une autre page dont le titre a une autre longueur) se font en douceur, et la barre d'onglets s'agrandit et rétrécit avec eux. Pendant la transition, le titre est rogné sans points de suspension ; ceux-ci réapparaissent à la fin. Les différences de moins de 2px ne déclenchent pas de nouvelle transition.
+
+### Quand elle reste sous la barre d'application
+
+- La barre d'onglets ne s'ancre dans la barre d'application que si le titre peut garder au moins le logo, la version et environ six caractères (les titres plus courts sont gardés en entier). Le nom du site et le titre de la page doivent tous deux passer ce test, car l'un ou l'autre peut s'afficher une fois la barre d'onglets ancrée. L'ancrage ne dépend donc que de la largeur de la fenêtre, et ne bascule pas sans cesse pendant le défilement quand la barre d'application change de titre.
+- Quand le test échoue, la barre d'onglets s'arrête en arrivant contre la barre d'application et reste sous celle-ci, légèrement surélevée avec une ombre de niveau 2, flottant au-dessus du texte qui défile. Le texte autour reste visible et cliquable. L'ombre apparaît en fondu quand la barre d'onglets se fixe et disparaît quand elle se détache. Tant qu'elle reste sous la barre d'application, `html` porte la classe `akari-tabs-pinned` : les sauts vers les ancres et la position collante de la table des matières lui laissent de la place, et quand le titre de l'article passe derrière elle, la barre d'application affiche de même le titre de la page.
+- Quand la fenêtre devient assez large pour que la barre d'application puisse l'accueillir, la barre d'onglets vole de sous la barre d'application jusque dans la barre d'application. Quand la fenêtre se rétrécit et qu'elle n'y tient plus, elle vole de la même façon jusque sous la barre d'application : la copie part de la partie encore visible dans la barre d'application (ou, si elle en a été complètement chassée, de la position de l'espace libre à largeur nulle), descend d'abord sous la barre d'application, puis s'élargit, et n'est jamais comprimée en chemin.
+- Pendant que vous redimensionnez la fenêtre, le champ de recherche et les boutons sont encore en transition de largeur, et l'espace dans la barre d'application n'est pas définitif. Le thème attend donc environ 200ms que tout se stabilise avant de décider de l'ancrage. La barre d'onglets ne quitte immédiatement la barre d'application que lorsqu'elle n'y tient plus et serait coupée.
+- Le texte et le hero forment chacun leur propre contexte d'empilement : le contenu qu'ils renferment (comme le bouton de copie d'un bloc de code) ne flotte donc pas au-dessus de la barre d'onglets maintenue sous la barre d'application lorsqu'il défile dessous.
+
+## Changer de page {#switching-pages}
+
+Quand vous changez de page au sein d'un groupe, la surface du document reste immobile et seul le contenu se déplace vers la gauche ou vers la droite, dans la direction de l'onglet (axe partagé X de M3). Quand vous passez à un onglet situé à droite, le contenu courant disparaît en fondu vers la gauche et le nouveau contenu glisse depuis 30px sur la droite ; l'autre direction est l'inverse, et les mises en page de droite à gauche inversent le sens. La barre d'onglets elle-même ne bouge pas :
+
+- Quand la barre d'onglets est ancrée dans la barre d'application ou reste sous celle-ci, elle garde sa place après le changement, et la nouvelle page est positionnée directement au début du texte. Le titre de l'article (le hero ou le h1 d'ouverture) est déjà passé sous la barre d'application (ou sous la barre d'onglets maintenue), et la barre d'application affiche le titre de la nouvelle page. Si la nouvelle page est trop courte pour défiler aussi loin, la barre d'onglets revient dans la page. Si le lien comporte une ancre, l'ancre est prioritaire. Avec les boutons précédent et suivant du navigateur, la position de défilement antérieure est restaurée.
+- Quand la barre d'onglets est dans la page, la nouvelle page commence en haut comme d'habitude, et la barre d'onglets garde sa place. Si la page avait un peu défilé avant le changement, la barre d'onglets revient en douceur à sa place en haut.
+
+Quand vous quittez le groupe, toute la surface disparaît puis réapparaît en fondu, comme d'habitude. Quand l'option « réduire les animations » est activée dans le système, la barre d'onglets et le contenu changent tous deux instantanément.
+
+## Accessibilité
+
+- L'élément racine `m3e-nav-menu` a un `aria-label` (« Documentation ») et constitue le repère de navigation principal de la page. Le rail a son propre nom (« Rubriques de la documentation »).
+- Dans le rail, les touches fléchées déplacent le focus entre les catégories, et les éléments de catégorie portent `aria-haspopup`, `aria-expanded` et `aria-controls`. Entre 960 et 1599px, `Enter` ou Espace ouvre le tiroir et place le focus dans le menu, et `Escape` le ferme et rend le focus à la catégorie. À partir de 1600px, `Enter` sur la catégorie courante place directement le focus dans le tiroir ouvert.
+- Un tiroir fermé porte `inert` : il est donc hors de l'ordre de tabulation et de l'arbre d'accessibilité.
+- Les icônes sont masquées pour les technologies d'assistance ; le nom vient du texte de l'emplacement `label`. Quand vous personnalisez la navigation, gardez la structure « élément racine du menu + lien dans le label + état `selected` », et n'imitez pas un lien avec un `div`.

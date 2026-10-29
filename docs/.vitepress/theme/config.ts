@@ -2,29 +2,34 @@ import {
   DEFAULT_SEARCH_DEBOUNCE,
   DEFAULT_SEARCH_ENDPOINT,
   DEFAULT_SEARCH_MAX_RESULTS,
-  DEFAULT_SEARCH_PLACEHOLDER,
   DEFAULT_SEARCH_SHORTCUT,
-  DEFAULT_SECTION_LABELS,
   DEFAULT_SETTINGS,
+  SECTION_LABEL_MESSAGES,
   SETTINGS_SECTION_KEYS,
   SETTINGS_STORAGE_KEY,
 } from "./constants";
+import { resolveFonts } from "./fonts";
+import { resolveMessages, resolveMessagesLang } from "./i18n";
 import { mergeSettings } from "./settings";
 import type {
-  M3eSearchBackendConfig,
-  M3eSocialLink,
-  M3eThemeConfig,
-  ResolvedM3eThemeConfig,
+  AkariFooterLink,
+  AkariFooterLinkGroup,
+  AkariSearchBackendConfig,
+  AkariSocialLink,
+  AkariThemeConfig,
+  ResolvedAkariThemeConfig,
   SettingsSectionKey,
 } from "./types";
 
 interface ThemeConfigLike {
   logo?: string;
   sidebar?: unknown;
-  m3e?: M3eThemeConfig;
+  akari?: AkariThemeConfig;
 }
 
-export function defineM3eThemeConfig(config: M3eThemeConfig): M3eThemeConfig {
+export { defineAkariConfig } from "./define";
+
+export function defineAkariThemeConfig(config: AkariThemeConfig): AkariThemeConfig {
   return config;
 }
 
@@ -41,17 +46,39 @@ function normalizeSections(
 }
 
 function normalizeSocialLinks(
-  value: M3eSocialLink[] | undefined,
-): M3eSocialLink[] {
+  value: AkariSocialLink[] | undefined,
+): AkariSocialLink[] {
   if (!Array.isArray(value)) return [];
 
   return value.filter(
-    (item): item is M3eSocialLink =>
+    (item): item is AkariSocialLink =>
       !!item &&
       typeof item.icon === "string" &&
       typeof item.link === "string" &&
       typeof item.label === "string",
   );
+}
+
+function normalizeFooterLinks(
+  value: AkariFooterLinkGroup[] | false | undefined,
+): AkariFooterLinkGroup[] | false | undefined {
+  if (value === false) return false;
+  if (!Array.isArray(value)) return undefined;
+
+  return value
+    .filter(
+      (group): group is AkariFooterLinkGroup =>
+        !!group && typeof group.title === "string" && Array.isArray(group.items),
+    )
+    .map((group) => ({
+      title: group.title,
+      items: group.items.filter(
+        (item): item is AkariFooterLink =>
+          !!item &&
+          typeof item.text === "string" &&
+          typeof item.link === "string",
+      ),
+    }));
 }
 
 function clampNumber(
@@ -66,8 +93,8 @@ function clampNumber(
 }
 
 function normalizeSearchBackend(
-  value: M3eSearchBackendConfig | undefined,
-): M3eSearchBackendConfig {
+  value: AkariSearchBackendConfig | undefined,
+): AkariSearchBackendConfig {
   if (value?.type === "http" && value.endpoint.trim()) {
     return {
       type: "http",
@@ -94,33 +121,47 @@ function normalizeSearchBackend(
   return { type: "local", endpoint: DEFAULT_SEARCH_ENDPOINT };
 }
 
-export function resolveM3eConfig(
+/**
+ * Merges the theme options with their defaults. `site.lang` selects the
+ * language of the built-in strings; VitePress passes the current locale's.
+ */
+export function resolveAkariConfig(
   themeConfig: ThemeConfigLike = {},
-  site: { title?: string } = {},
-): ResolvedM3eThemeConfig {
-  const m3e = themeConfig.m3e ?? {};
-  const appBar = m3e.appBar ?? {};
-  const settings = m3e.settings ?? {};
-  const toc = m3e.toc ?? {};
-  const footer = m3e.footer ?? {};
-  const search = m3e.search ?? {};
+  site: { title?: string; lang?: string } = {},
+): ResolvedAkariThemeConfig {
+  const akari = themeConfig.akari ?? {};
+  const messages = resolveMessages(site.lang, akari.messages);
+  const appBar = akari.appBar ?? {};
+  const settings = akari.settings ?? {};
+  const toc = akari.toc ?? {};
+  const footer = akari.footer ?? {};
+  const search = akari.search ?? {};
 
-  const m3eSidebarItems = m3e.sidebar?.items;
-  const hasM3eSidebar =
-    !!m3eSidebarItems &&
-    (Array.isArray(m3eSidebarItems) ||
-      (typeof m3eSidebarItems === "object" &&
-        Object.keys(m3eSidebarItems).length > 0));
+  const akariSidebarItems = akari.sidebar?.items;
+  const hasAkariSidebar =
+    !!akariSidebarItems &&
+    (Array.isArray(akariSidebarItems) ||
+      (typeof akariSidebarItems === "object" &&
+        Object.keys(akariSidebarItems).length > 0));
 
-  const width = Number.isFinite(m3e.sidebar?.width)
-    ? Math.min(400, Math.max(240, Number(m3e.sidebar?.width)))
+  const width = Number.isFinite(akari.sidebar?.width)
+    ? Math.min(400, Math.max(240, Number(akari.sidebar?.width)))
     : 320;
 
   const maxDepth = Number.isInteger(toc.maxDepth)
     ? Math.min(6, Math.max(1, Number(toc.maxDepth)))
     : 3;
 
+  const sectionLabels = Object.fromEntries(
+    SETTINGS_SECTION_KEYS.map((key) => [
+      key,
+      messages[SECTION_LABEL_MESSAGES[key]],
+    ]),
+  ) as Record<SettingsSectionKey, string>;
+
   return {
+    lang: site.lang?.trim() || resolveMessagesLang(site.lang),
+    messages,
     appBar: {
       title: appBar.title ?? site.title ?? "Documentation",
       version: appBar.version,
@@ -130,16 +171,17 @@ export function resolveM3eConfig(
       socialLinks: normalizeSocialLinks(appBar.socialLinks),
     },
     sidebar: {
-      source: hasM3eSidebar ? "m3e" : "native",
-      m3eItems: hasM3eSidebar ? m3eSidebarItems : undefined,
+      source: hasAkariSidebar ? "akari" : "native",
+      akariItems: hasAkariSidebar ? akariSidebarItems : undefined,
       nativeItems: themeConfig.sidebar,
       width,
     },
     settings: {
       enabled: settings.enabled ?? true,
-      title: settings.title ?? "设置",
+      showSchemeToggle: settings.showSchemeToggle ?? true,
+      title: settings.title ?? messages.settingsTitle,
       sections: normalizeSections(settings.sections),
-      labels: { ...DEFAULT_SECTION_LABELS, ...settings.labels },
+      labels: { ...sectionLabels, ...settings.labels },
       defaults: mergeSettings(DEFAULT_SETTINGS, settings.defaults),
       persist: settings.persist ?? true,
       storageKey: settings.storageKey ?? SETTINGS_STORAGE_KEY,
@@ -147,16 +189,17 @@ export function resolveM3eConfig(
     toc: {
       enabled: toc.enabled ?? true,
       maxDepth,
-      overline: toc.overline ?? "本页内容",
+      overline: toc.overline ?? messages.tocOverline,
     },
     footer: {
-      message: footer.message ?? "基于 VitePress 与 M3E 构建",
+      message: footer.message ?? messages.footerMessage,
       copyright: footer.copyright ?? "",
       showPrevNext: footer.showPrevNext ?? true,
+      links: normalizeFooterLinks(footer.links),
     },
     search: {
       enabled: search.enabled ?? true,
-      placeholder: search.placeholder?.trim() || DEFAULT_SEARCH_PLACEHOLDER,
+      placeholder: search.placeholder?.trim() || messages.searchPlaceholder,
       shortcut:
         typeof search.shortcut === "string"
           ? search.shortcut.trim().toLowerCase().slice(0, 1)
@@ -170,6 +213,7 @@ export function resolveM3eConfig(
       debounce: clampNumber(search.debounce, DEFAULT_SEARCH_DEBOUNCE, 0, 1000),
       backend: normalizeSearchBackend(search.backend),
     },
-    components: m3e.components ?? {},
+    fonts: resolveFonts(site.lang, akari.fonts),
+    components: akari.components ?? {},
   };
 }

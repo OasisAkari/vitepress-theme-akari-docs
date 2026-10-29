@@ -4,18 +4,20 @@ import {
   provide,
   reactive,
   watch,
+  type ComputedRef,
   type InjectionKey,
 } from "vue";
+import { useData } from "vitepress";
 
 import { readStoredSettings, writeStoredSettings } from "../settings";
 import type {
-  M3eSettingsApi,
-  M3eThemeSettings,
-  ResolvedM3eThemeConfig,
+  AkariSettingsApi,
+  AkariThemeSettings,
+  ResolvedAkariThemeConfig,
   StorageLike,
 } from "../types";
 
-const settingsKey: InjectionKey<M3eSettingsApi> = Symbol("m3e-settings");
+const settingsKey: InjectionKey<AkariSettingsApi> = Symbol("akari-settings");
 
 function getStorage(): StorageLike | undefined {
   if (typeof window === "undefined") return undefined;
@@ -28,11 +30,14 @@ function getStorage(): StorageLike | undefined {
   }
 }
 
-export function provideM3eSettings(
-  config: ResolvedM3eThemeConfig,
-): M3eSettingsApi {
-  const { defaults, sections, labels, persist, storageKey } = config.settings;
-  const state = reactive<M3eThemeSettings>({ ...defaults });
+export function provideAkariSettings(
+  config: ComputedRef<ResolvedAkariThemeConfig>,
+): AkariSettingsApi {
+  // Stored values and their defaults are shared by every locale; only the
+  // section list and headings follow the locale being read.
+  const { defaults, persist, storageKey } = config.value.settings;
+  const state = reactive<AkariThemeSettings>({ ...defaults });
+  const { dir } = useData();
 
   let hydrated = false;
   let storage: StorageLike | undefined;
@@ -42,7 +47,7 @@ export function provideM3eSettings(
     if (typeof document === "undefined") return;
 
     const root = document.documentElement;
-    root.dir = state.direction;
+    root.dir = state.direction === "auto" ? dir.value : state.direction;
     root.style.fontSize = state.textSize;
   }
 
@@ -62,9 +67,9 @@ export function provideM3eSettings(
     queueMicrotask(persistState);
   }
 
-  function setSetting<K extends keyof M3eThemeSettings>(
+  function setSetting<K extends keyof AkariThemeSettings>(
     key: K,
-    value: M3eThemeSettings[K],
+    value: AkariThemeSettings[K],
   ): void {
     state[key] = value;
   }
@@ -74,15 +79,19 @@ export function provideM3eSettings(
   }
 
   function isDefault(): boolean {
-    return (Object.keys(state) as Array<keyof M3eThemeSettings>).every(
+    return (Object.keys(state) as Array<keyof AkariThemeSettings>).every(
       (key) => state[key] === defaults[key],
     );
   }
 
-  const api: M3eSettingsApi = {
+  const api: AkariSettingsApi = {
     settings: state,
-    sections,
-    labels,
+    get sections() {
+      return config.value.settings.sections;
+    },
+    get labels() {
+      return config.value.settings.labels;
+    },
     defaults: { ...defaults },
     setSetting,
     reset,
@@ -96,6 +105,16 @@ export function provideM3eSettings(
     () => {
       if (hydrated) applyDocumentSettings();
     },
+  );
+
+  // VitePress rewrites <html dir> from the page's language whenever it
+  // changes; a direction the reader chose wins, `auto` keeps the language's.
+  watch(
+    dir,
+    () => {
+      if (hydrated) applyDocumentSettings();
+    },
+    { flush: "post" },
   );
 
   onMounted(() => {
@@ -117,12 +136,12 @@ export function provideM3eSettings(
   return api;
 }
 
-export function useM3eSettings(): M3eSettingsApi {
+export function useAkariSettings(): AkariSettingsApi {
   const api = inject(settingsKey);
 
   if (!api) {
     throw new Error(
-      "[vitepress-theme-m3e] useM3eSettings() must be called inside M3eLayout.",
+      "[vitepress-akari-theme-docs] useAkariSettings() must be called inside AkariLayout.",
     );
   }
 

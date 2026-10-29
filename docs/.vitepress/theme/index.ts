@@ -1,35 +1,45 @@
 import type { Theme } from "vitepress";
 import DefaultTheme from "vitepress/theme-without-fonts";
-import "@fontsource-variable/roboto";
 
-import Layout from "./layouts/M3eLayout.vue";
+import { provideAkariSiteData } from "./composables/useLocales";
+import Layout from "./layouts/AkariLayout.vue";
 import "./styles/index.css";
 
 if (!import.meta.env.SSR) {
   void import("./m3e").then(() => {
-    document.documentElement.dataset.m3eReady = "";
-    window.dispatchEvent(new Event("m3e-ready"));
+    document.documentElement.dataset.akariReady = "";
+    window.dispatchEvent(new Event("akari-ready"));
   });
 }
 
 export default {
   extends: DefaultTheme,
   Layout,
+  enhanceApp({ app, siteData }) {
+    provideAkariSiteData(app, siteData);
+  },
 } satisfies Theme;
 
 export * from "./types";
-export { defineM3eThemeConfig } from "./config";
+export { defineAkariConfig, defineAkariThemeConfig } from "./config";
 export {
-  M3E_CONTENT_ID,
-  M3E_SETTINGS_ID,
-  M3E_SIDEBAR_ID,
+  AKARI_CONTENT_ID,
+  AKARI_SETTINGS_ID,
+  AKARI_SIDEBAR_ID,
 } from "./constants";
-export { useM3eConfig } from "./composables/useM3eConfig";
-export { useM3eSettings } from "./composables/useSettings";
+export {
+  provideAkariComponents,
+  useAkariConfig,
+} from "./composables/useAkariConfig";
+export { useAkariColorScheme } from "./composables/useColorScheme";
+export { useAkariI18n } from "./composables/useI18n";
+export { useAkariLocales } from "./composables/useLocales";
+export type { AkariLocaleOption } from "./composables/useLocales";
+export { useAkariSettings } from "./composables/useSettings";
 export { useSidebar } from "./composables/useSidebar";
 export { registerSearchBackend } from "./search/registry";
-export { useM3eSearch } from "./search/useSearch";
+export { useAkariSearch } from "./search/useSearch";
 export type {
-  M3eSearchBackend,
-  M3eSearchHandler,
+  AkariSearchBackend,
+  AkariSearchHandler,
 } from "./search/types";

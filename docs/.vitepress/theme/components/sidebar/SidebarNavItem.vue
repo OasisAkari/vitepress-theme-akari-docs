@@ -3,21 +3,33 @@ import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { useRoute, withBase } from "vitepress";
 
 import { useSidebar } from "../../composables/useSidebar";
-import { isExternalLink } from "../../sidebar";
-import type { M3eSidebarItem } from "../../types";
+import { nextLayoutFrame, whenAkariReady } from "../../ready";
+import { findFirstLink, isExternalLink } from "../../sidebar";
+import type { AkariSidebarItem } from "../../types";
 
 interface NavMenuItemElement extends HTMLElement {
   open: boolean;
+  selected: boolean;
   updateComplete?: Promise<unknown>;
 }
 
-const props = defineProps<{ item: M3eSidebarItem }>();
+const props = defineProps<{
+  item: AkariSidebarItem;
+  // Only the first level of a menu carries icons, mirroring the rail.
+  // Vue casts an absent boolean prop to `false`, so nested items stay
+  // text-only without passing anything down.
+  showIcon?: boolean;
+}>();
 
-const { isActive, hasActive } = useSidebar();
+const { hasActive } = useSidebar();
 const route = useRoute();
 const groupElement = ref<NavMenuItemElement | null>(null);
+const leafElement = ref<NavMenuItemElement | null>(null);
 
 const hasChildren = computed(() => (props.item.items?.length ?? 0) > 0);
+const icon = computed(() =>
+  props.showIcon ? (props.item.icon ?? "category") : undefined,
+);
 // Resolve to `undefined` instead of `false`: Vue's hydration path can write
 // `open="false"` / `selected="false"` before the custom element upgrades, and
 // Lit's Boolean converter treats any present attribute as true.
@@ -28,37 +40,31 @@ const open = computed(() =>
       ? true
       : undefined,
 );
+// A tab group is a single entry, selected on any of its pages.
 const selected = computed(() =>
-  !hasChildren.value && isActive(props.item.link) ? true : undefined,
+  !hasChildren.value && hasActive(props.item) ? true : undefined,
 );
+// An item that is already selected when it mounts (first render, a drawer
+// list remounting on a category switch, a drawer leaving display: none)
+// skips m3e's selection animation; it plays only when the selection moves
+// to an item that is already on screen.
+const settled = ref(!!selected.value);
+
+watch(selected, (value) => {
+  if (!value) settled.value = false;
+});
 
 // VitePress 2.x renders internal links as plain anchors and intercepts
 // clicks globally (capture phase) to keep SPA navigation.
 const internalHref = computed(() => {
-  const link = props.item.link;
+  const link = findFirstLink(props.item);
   return link && !isExternalLink(link) ? withBase(link) : undefined;
 });
 
 const externalLink = computed(() => {
-  const link = props.item.link;
+  const link = findFirstLink(props.item);
   return link && isExternalLink(link) ? link : undefined;
 });
-
-function whenM3eReady(): Promise<void> {
-  if (document.documentElement.hasAttribute("data-m3e-ready")) {
-    return Promise.resolve();
-  }
-
-  return new Promise((resolve) => {
-    window.addEventListener("m3e-ready", () => resolve(), { once: true });
-  });
-}
-
-function nextLayoutFrame(): Promise<void> {
-  return new Promise((resolve) => {
-    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-  });
-}
 
 async function applyGroupState(): Promise<void> {
   if (typeof window === "undefined" || !hasChildren.value) return;
@@ -68,7 +74,7 @@ async function applyGroupState(): Promise<void> {
 
   await customElements.whenDefined("m3e-nav-menu-item");
   await customElements.whenDefined("m3e-collapsible");
-  await whenM3eReady();
+  await whenAkariReady();
   await nextTick();
   await nextLayoutFrame();
 
@@ -95,18 +101,46 @@ async function applyGroupState(): Promise<void> {
   }
 }
 
+async function applySelectedState(): Promise<void> {
+  if (typeof window === "undefined" || hasChildren.value) return;
+
+  const element = leafElement.value;
+  if (!element) return;
+
+  await customElements.whenDefined("m3e-nav-menu-item");
+  await whenAkariReady();
+  await nextTick();
+  await nextLayoutFrame();
+
+  // A nested item that upgrades already selected notifies its ancestor
+  // groups before they know they have children; the menu then treats a
+  // group as the selected leaf and clears the real one. Re-select it once
+  // the tree has settled.
+  if (selected.value && !element.selected) {
+    element.selected = true;
+  }
+}
+
 onMounted(() => {
   void applyGroupState();
+  void applySelectedState();
 });
 
 watch(open, () => void applyGroupState(), { flush: "post" });
-watch(() => route.path, () => void applyGroupState(), { flush: "post" });
+watch(
+  () => route.path,
+  () => {
+    void applyGroupState();
+    void applySelectedState();
+  },
+  { flush: "post" },
+);
 </script>
 
 <template>
   <m3e-nav-menu-item v-if="hasChildren" ref="groupElement">
-    <m3e-icon v-if="item.icon" slot="icon" :name="item.icon"></m3e-icon>
-    <span slot="label" class="m3e-nav-label">{{ item.text }}</span>
+    <m3e-icon v-if="icon" slot="icon" :name="icon"></m3e-icon>
+    <span slot="label" class="akari-nav-label">{{ item.text }}</span>
     <m3e-badge v-if="item.badge" slot="badge">{{ item.badge }}</m3e-badge>
     <SidebarNavItem
       v-for="(child, index) in item.items"
@@ -115,30 +149,35 @@ watch(() => route.path, () => void applyGroupState(), { flush: "post" });
     />
   </m3e-nav-menu-item>
 
-  <m3e-nav-menu-item v-else :selected="selected">
-    <m3e-icon v-if="item.icon" slot="icon" :name="item.icon"></m3e-icon>
+  <m3e-nav-menu-item
+    v-else
+    ref="leafElement"
+    :selected="selected"
+    :data-akari-settled="settled ? '' : undefined"
+  >
+    <m3e-icon v-if="icon" slot="icon" :name="icon"></m3e-icon>
     <a
       v-if="internalHref"
       slot="label"
-      class="m3e-nav-label"
+      class="akari-nav-label"
       :href="internalHref"
       :aria-current="selected ? 'page' : undefined"
     >{{ item.text }}</a>
     <a
       v-else-if="externalLink"
       slot="label"
-      class="m3e-nav-label"
+      class="akari-nav-label"
       :href="externalLink"
       target="_blank"
       rel="noreferrer"
     >{{ item.text }}</a>
-    <span v-else slot="label" class="m3e-nav-label">{{ item.text }}</span>
+    <span v-else slot="label" class="akari-nav-label">{{ item.text }}</span>
     <m3e-badge v-if="item.badge" slot="badge">{{ item.badge }}</m3e-badge>
   </m3e-nav-menu-item>
 </template>
 
 <style scoped>
-.m3e-nav-label {
+.akari-nav-label {
   display: block;
   min-width: 0;
   max-width: 100%;
