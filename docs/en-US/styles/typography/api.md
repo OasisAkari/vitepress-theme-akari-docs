@@ -6,7 +6,7 @@ tab: API
 
 ## Fonts by language
 
-The text's fonts depend on the page's language. The defaults are below, and [`fonts`](#fonts) can change all of them:
+The text's fonts depend on the page's language. The defaults come from the `fonts` of the [language pack](/en-US/theme/i18n/api#akarilanguage); the built-in packs' are below, and [`fonts`](#fonts) can change all of them:
 
 | Language | Loaded from Google Fonts | Font stack |
 | --- | --- | --- |
@@ -15,12 +15,12 @@ The text's fonts depend on the page's language. The defaults are below, and [`fo
 | `ar` | Roboto, Noto Sans Arabic | Roboto, Noto Sans Arabic, Geeza Pro, Tahoma, system-ui, sans-serif |
 | Others | Roboto, Noto Sans SC | Roboto, Noto Sans SC, PingFang SC, Microsoft YaHei, system-ui, sans-serif |
 
-The language is matched by the primary language of `<html lang>`, so `ja-JP` takes the `ja` row.
+The language is matched by the language pack rules: first the full code, then the primary language, so `ja-JP` takes the `ja` row. Packs without `fonts`, such as English and French, take the "Others" row.
 
 - These Google Fonts are all variable-weight fonts. Noto Sans SC and the Japanese and Korean fonts are split by Unicode range, so a page only downloads the characters it uses.
 - Each language loads only its own fonts: the Japanese, Korean and Arabic fonts load only on that language's pages, and are downloaded when you switch to that language.
 - Fonts don't block page display. `<head>` only holds preconnects and a `preload`; the theme's script inserts the stylesheet, and `display=swap` shows text in a fallback font first. Without scripts, the stylesheet in `<noscript>` applies. When Google Fonts can't be reached, text uses the system fonts further down the stack.
-- Parts of a page marked as another language (such as the language names in the language dialog) use whatever fonts of that language's default stack the device has.
+- Parts of a page marked as another language (such as the language names in the language dialog) use whatever fonts of that language pack's stack the device has.
 
 ## fonts
 
@@ -55,7 +55,9 @@ export default defineAkariConfig({
 });
 ```
 
-`akariContent` writes each language's font stack (the CSS variable `--akari-font-family`) and preload tags into the `<head>` of its pages from its config, so the first paint already uses the right fonts; when you switch language, the theme changes them. The code is in `docs/.vitepress/theme/fonts.ts`: `resolveFonts(lang, fonts)` works out the stylesheet URL and the `font-family`, `fontHead` makes the `<head>` tags, and `applyFonts` applies them in the page. The defaults are `AKARI_DEFAULT_FONTS` and `AKARI_LANGUAGE_FONTS`.
+To change a language's default fonts for every site, change the `fonts` of its language pack; for this site only, the `fonts` config is enough.
+
+`akariContent` writes each language's font stack (the CSS variable `--akari-font-family`), the font rules for parts marked with `lang`, and preload tags into the `<head>` of its pages, from its language pack and config, so the first paint already uses the right fonts; when you switch language, the theme changes them. The code is in `docs/.vitepress/theme/fonts.ts`: `resolveFonts(fonts, defaults, languages)` works out the stylesheet URL and the `font-family` from the config and the pack's fonts, `markedFontRules(languages)` makes the font rules for marked parts, `fontHead` makes the `<head>` tags, and `applyFonts` applies them in the page. Packs without `fonts` use `AKARI_DEFAULT_FONTS`.
 
 ## Typography tokens
 
@@ -125,5 +127,5 @@ Elements with a background in the article carry an almost invisible pattern, lik
 ## Code blocks
 
 - Syntax highlighting uses the `github-light` and `github-dark` themes and switches with light and dark mode.
-- The copy button is VitePress's `button.copy`. Its tooltip text comes from `markdown.codeCopyButton` in the language config.
+- The copy button is VitePress's `button.copy`. Its tooltip text comes from the language pack's `markdown.codeCopyButton`, and the language config can override it.
 - Below 600px, the corner radius of code blocks shrinks to 12px.

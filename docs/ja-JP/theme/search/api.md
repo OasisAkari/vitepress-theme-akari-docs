@@ -20,28 +20,24 @@ tab: API
 ## ローカルバックエンド
 
 ```ts
-backend: { type: "local", endpoint: "/search-index.json" },
+backend: { type: "local" },
 ```
 
-`endpoint` は同一オリジンの別の静的 JSON ファイルを指すこともできます。相対パスには `base` が自動で付きます。ファイルの形式は次のとおりです。
+VitePress のローカル検索（`provider: "local"`）が作るインデックスを使います。インデックスは言語ごとに 1 つで、VitePress のロケールキー（ルート言語は `root`）で読み込まれます。いずれかの言語がローカルバックエンドを使うと、`akariContent` がサイト設定でローカル検索を有効にし、結果の抜粋のために、インデックスに各セクションの本文を保持させます。
 
 ```ts
-interface SearchIndexFile {
-  version: 1;
-  generatedAt: string;          // ISO 形式の時刻
-  entries: SearchIndexEntry[];
-}
-
-interface SearchIndexEntry {
-  id: string;                   // "/ja-JP/theme/layout::page" または "/ja-JP/theme/layout::アプリバー"
-  pageTitle: string;            // ページのタイトル
-  title: string;                // ページの項目ではページのタイトル、セクションの項目ではセクションの見出し
-  heading: string;              // セクションの見出し。ページの項目では空
-  href: string;                 // "/ja-JP/theme/layout#アプリバー"
-  content: string;              // マークアップを除いた本文。最大 4000 文字
-  level: number;                // ページの項目は 0、セクションは 2 または 3
-}
+// akariContent が生成するサイト設定
+themeConfig: {
+  search: {
+    provider: "local",
+    options: { miniSearch: { options: { storeFields: ["title", "titles", "text"] } } },
+  },
+},
 ```
+
+各セクションがインデックスの 1 つのドキュメントです。`id` はページのパスに見出しのアンカーを付けたもの、`title` はセクションの見出し、`titles` はその上の見出し（先頭はページのタイトル）、`text` はタグを除いた本文です。ページのレベル 1 の見出しの下のセクションはページ自体を表し、その結果はページの先頭にリンクします。
+
+`.vitepress/config.mts` で `themeConfig` を設定していなければ、`...content.site` がこの設定を一緒に持ち込みます。設定している場合は、`content.site.themeConfig` をそこにマージしてください。
 
 ## HTTP バックエンド
 

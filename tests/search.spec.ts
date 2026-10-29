@@ -1,3 +1,4 @@
+import MiniSearch from "minisearch";
 import { describe, expect, it, vi } from "vitest";
 
 import { resolveAkariConfig } from "../docs/.vitepress/theme/config";
@@ -17,43 +18,47 @@ import {
   resolveSearchEndpoint,
 } from "../docs/.vitepress/theme/search/backends";
 import { splitHighlight } from "../docs/.vitepress/theme/search/highlight";
-import { searchLocal } from "../docs/.vitepress/theme/search/local";
-import { registerSearchBackend } from "../docs/.vitepress/theme/search/registry";
-import type { SearchIndexEntry } from "../docs/.vitepress/theme/search/types";
 import {
-  parseMarkdownPage,
-  slugifyHeading,
-} from "../docs/.vitepress/search/parse";
+  LOCAL_SEARCH_OPTIONS,
+  searchLocal,
+  tokenizeSearchText,
+  type LocalSearchDocument,
+} from "../docs/.vitepress/theme/search/local";
+import { MissingLocalIndexError } from "../docs/.vitepress/theme/search/localIndex";
+import { registerSearchBackend } from "../docs/.vitepress/theme/search/registry";
 
-const entries: SearchIndexEntry[] = [
-  {
-    id: "/components/button::page",
-    pageTitle: "按钮",
-    title: "按钮",
-    heading: "",
-    href: "/components/button",
-    content: "按钮用于触发操作。",
-    level: 0,
-  },
-  {
-    id: "/components/button::变体",
-    pageTitle: "按钮",
-    title: "变体",
-    heading: "变体",
-    href: "/components/button#变体",
-    content: "五种外观，包括 filled、tonal、outlined 与 text。",
-    level: 2,
-  },
-  {
-    id: "/theme/sidebar::配置",
-    pageTitle: "侧边导航",
-    title: "配置",
-    heading: "配置",
-    href: "/theme/sidebar#配置",
-    content: "在 sidebar.categories 中配置导航的分类。",
-    level: 2,
-  },
-];
+// An index as VitePress builds it: one document per section, the page's
+// title as the first section's.
+function indexOf(documents: LocalSearchDocument[]): MiniSearch<LocalSearchDocument> {
+  const index = new MiniSearch<LocalSearchDocument>(LOCAL_SEARCH_OPTIONS);
+  index.addAll(documents);
+  return index;
+}
+
+const doc = (
+  id: string,
+  title: string,
+  titles: string[] = [],
+  text = "",
+): LocalSearchDocument => ({ id, title, titles, text });
+
+const index = indexOf([
+  doc("/components/button#按钮", "按钮", [], "按钮用于触发操作。"),
+  doc("/components/button#变体", "变体", ["按钮"], "五种外观，包括 filled、tonal、outlined 与 text。"),
+  doc("/theme/sidebar#配置", "配置", ["侧边导航"], "在 sidebar.categories 中配置导航的分类。"),
+]);
+
+// The local backend loads indexes through VitePress' virtual module.
+vi.mock("../docs/.vitepress/theme/search/localIndex", () => {
+  class MissingLocalIndexError extends Error {}
+  return {
+    MissingLocalIndexError,
+    loadLocalIndex: async (locale: string) => {
+      if (locale === "root") return index;
+      throw new MissingLocalIndexError(locale);
+    },
+  };
+});
 
 describe("resolveAkariConfig search", () => {
   it("uses local defaults", () => {
@@ -63,7 +68,7 @@ describe("resolveAkariConfig search", () => {
       shortcut: "k",
       maxResults: 8,
       debounce: 180,
-      backend: { type: "local", endpoint: "/search-index.json" },
+      backend: { type: "local" },
     });
   });
 
@@ -85,10 +90,7 @@ describe("resolveAkariConfig search", () => {
     expect(
       resolveAkariConfig({ akari: { search: { shortcut: "" } } }).search.shortcut,
     ).toBe("");
-    expect(search.backend).toEqual({
-      type: "local",
-      endpoint: "/search-index.json",
-    });
+    expect(search.backend).toEqual({ type: "local" });
   });
 
   it("keeps valid http and registered backends, trimmed", () => {
@@ -114,117 +116,94 @@ describe("resolveAkariConfig search", () => {
   });
 });
 
-describe("search index parsing", () => {
-  it("parses frontmatter, sections, anchors and excludes code fences", () => {
-    const page = parseMarkdownPage(
-      [
-        "---",
-        "title: 按钮",
-        "---",
-        "",
-        "# 按钮",
-        "",
-        "介绍文本。",
-        "",
-        "## 变体",
-        "",
-        "五种外观。",
-        "",
-        "### 尺寸",
-        "",
-        "大小说明。",
-        "",
-        "```ts",
-        "const hidden = true;",
-        "```",
-        "",
-      ].join("\n"),
-      "components/button.md",
-    );
-
-    expect(page.route).toBe("/components/button");
-    expect(page.title).toBe("按钮");
-    expect(page.entries[0]).toMatchObject({
-      pageTitle: "按钮",
-      title: "按钮",
-      href: "/components/button",
-      level: 0,
-    });
-    expect(page.entries.some((entry) => entry.href === "/components/button#变体")).toBe(true);
-    expect(page.entries.some((entry) => entry.href === "/components/button#尺寸")).toBe(true);
-    expect(page.entries.some((entry) => entry.content.includes("hidden"))).toBe(false);
-    expect(parseMarkdownPage("# 首页\n", "index.md").route).toBe("/");
-    expect(parseMarkdownPage("# 指南\n", "guide/index.md").route).toBe("/guide");
-  });
-
-  it("creates VitePress-compatible unique heading slugs", () => {
-    const used = new Map<string, number>();
-    expect(slugifyHeading("为什么不要导入 `@m3e/web/all`", used)).toBe(
-      "为什么不要导入-m3e-web-all",
-    );
-    expect(slugifyHeading("变体", used)).toBe("变体");
-    expect(slugifyHeading("变体", used)).toBe("变体-1");
-  });
-
-  it("keeps the anchor a heading names", () => {
-    const page = parseMarkdownPage(
-      "# ページ\n\n## 平行ページ {#parallel-pages}\n\n本文\n",
-      "ja-JP/guide.md",
-    );
-    expect(page.entries[1]).toMatchObject({
-      title: "平行ページ",
-      href: "/ja-JP/guide#parallel-pages",
-    });
-  });
-});
-
 describe("local search", () => {
-  it("matches Chinese substrings and ranks title hits", () => {
-    const results = searchLocal(entries, "变体", 5);
-    expect(results[0].href).toBe("/components/button#变体");
+  it("splits Chinese and Japanese into words, as the index does", () => {
+    const words = tokenizeSearchText("搜索与导航 search-backend");
+    expect(words).toEqual(expect.arrayContaining(["搜索", "search", "backend"]));
+    expect(words).not.toContain("搜索与导航");
   });
 
-  it("requires every whitespace token and respects the limit", () => {
-    expect(searchLocal(entries, "按钮 不存在的词", 5)).toHaveLength(0);
-    expect(searchLocal(entries, "配置 导航", 5).map((r) => r.href)).toEqual([
+  it("ranks the heading that matches first", () => {
+    expect(searchLocal(index, "变体", 5)[0]?.href).toBe("/components/button#变体");
+  });
+
+  it("requires every word, or any when none has them all", () => {
+    expect(searchLocal(index, "配置 导航", 5).map((r) => r.href)).toEqual([
       "/theme/sidebar#配置",
     ]);
-    const [result, ...rest] = searchLocal(entries, "按钮", 1);
+    // No section has both words: the one with either still shows.
+    const results = searchLocal(index, "按钮 不存在的词", 5);
+    expect(results[0]?.href).toBe("/components/button");
+    const [result, ...rest] = searchLocal(index, "按钮", 1);
     expect(rest).toHaveLength(0);
     expect(result!.excerpt).toBeTruthy();
   });
 
-  it("puts the page whose title is the query first", () => {
-    const entry = (
-      href: string,
-      pageTitle: string,
-      heading = "",
-    ): SearchIndexEntry => ({
-      id: href,
-      pageTitle,
-      title: heading || pageTitle,
-      heading,
-      href,
-      content: "",
-      level: heading ? 2 : 0,
-    });
-    const index = [
-      entry("/config/details#what", "配置：技术细节", "配置文件中能写什么"),
-      entry("/search/api#search", "Search: API", "search"),
-      entry("/config", "配置"),
-      entry("/search", "Search"),
-    ];
+  it("finds a misspelled word and reports the word it matched", () => {
+    const [result] = searchLocal(index, "tonnal", 5);
+    expect(result?.href).toBe("/components/button#变体");
+    expect(result?.terms).toContain("tonal");
+  });
 
-    // Over a section that starts with the query, and one that matches it.
-    expect(searchLocal(index, "配置", 2)[0]?.href).toBe("/config");
-    expect(searchLocal(index, "Search", 2).map((r) => r.href)).toEqual([
+  it("links a page's first section to the page, under its title", () => {
+    expect(searchLocal(index, "触发", 5)[0]).toMatchObject({
+      href: "/components/button",
+      title: "按钮",
+      pageTitle: "按钮",
+      heading: undefined,
+    });
+    expect(searchLocal(index, "分类", 5)[0]).toMatchObject({
+      href: "/theme/sidebar#配置",
+      pageTitle: "侧边导航",
+      heading: "配置",
+    });
+  });
+
+  it("puts the page whose title is the query first", () => {
+    const pages = indexOf([
+      doc("/config/details#what", "配置文件中能写什么", ["配置：技术细节"]),
+      doc("/search/api#search", "search", ["Search: API"]),
+      doc("/config#配置", "配置"),
+      doc("/search#search", "Search"),
+    ]);
+
+    expect(searchLocal(pages, "配置", 2)[0]?.href).toBe("/config");
+    expect(searchLocal(pages, "Search", 2).map((r) => r.href)).toEqual([
       "/search",
       "/search/api#search",
     ]);
   });
+
+  it("puts a phrase as typed over its words apart", () => {
+    const sections = indexOf([
+      doc("/components/button#图标", "图标", ["按钮"], "按钮可以带图标；复制、粘贴等常用操作各有图标。"),
+      doc("/styles/typography/api#代码块", "代码块", ["排版"], "复制按钮的提示文字来自语言包。"),
+    ]);
+    expect(searchLocal(sections, "复制按钮", 2)[0]?.href).toBe(
+      "/styles/typography/api#代码块",
+    );
+  });
+
+  it("searches the index of the locale being read", async () => {
+    const backend = createSearchBackend({ type: "local" });
+    const results = await backend.search("变体", { limit: 5, locale: "root" });
+    expect(results[0]?.href).toBe("/components/button#变体");
+
+    await expect(
+      backend.search("变体", { limit: 5, locale: "en-US" }),
+    ).rejects.toMatchObject({ code: "index-unavailable" });
+    expect(MissingLocalIndexError).toBeTypeOf("function");
+  });
 });
 
 describe("highlight splitting", () => {
+  it("highlights the words a backend says matched, too", () => {
+    expect(splitHighlight("Tonal Spot", "tonnal", ["tonal"])).toEqual([
+      { text: "Tonal", match: true },
+      { text: " Spot", match: false },
+    ]);
+  });
+
   it("splits case-insensitive highlights, none for an empty query", () => {
     expect(splitHighlight("Filled 和 filled", "filled")).toEqual([
       { text: "Filled", match: true },
@@ -391,54 +370,15 @@ describe("search backend adapters", () => {
     expect(received).toMatchObject({ lang: "en-US", locale: "en-US" });
   });
 
-  it("keeps local results inside the locale being read", async () => {
-    const page = (id: string, href: string): SearchIndexEntry => ({
-      id,
-      pageTitle: "Theme",
-      title: "Theme",
-      heading: "",
-      href,
-      content: "",
-      level: 0,
-    });
-    const index = [
-      page("zh", "/guide"),
-      page("en", "/en-US/guide"),
-      page("en-home", "/en-US/"),
-    ];
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(async () => Response.json({ version: 1, entries: index })),
-    );
-
-    try {
-      const backend = createSearchBackend(
-        { type: "local", endpoint: "/index.json" },
-        { locales: ["root", "en-US"] },
-      );
-      const ids = async (locale: string) =>
-        (await backend.search("theme", { limit: 10, locale })).map(
-          (result) => result.id,
-        );
-
-      expect(await ids("root")).toEqual(["zh"]);
-      expect((await ids("en-US")).sort()).toEqual(["en", "en-home"]);
-    } finally {
-      vi.unstubAllGlobals();
-    }
-  });
-
   it("describes built-in failures in the reader's language", () => {
     const zh = resolveMessages("zh-CN");
     const en = resolveMessages("en");
 
-    const unavailable = new AkariSearchError("index-unavailable", {
-      status: 404,
-    });
+    const unavailable = new AkariSearchError("index-unavailable");
     const missing = new AkariSearchError("backend-missing", { id: "x" });
 
     expect(describeSearchError(unavailable, zh)).toBe(
-      "无法加载本地搜索索引（HTTP 404）。",
+      "无法加载本地搜索索引。",
     );
     expect(describeSearchError(missing, en)).toBe(
       'No search backend is registered as "x".',

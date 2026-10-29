@@ -7,7 +7,7 @@ icon: home
 
 # 概要
 
-Vitepress Theme Akari Docs は、VitePress `2.0.0-alpha.21` と `@m3e/web` `2.10.2` で作られたドキュメントテーマです。VitePress の Markdown、静的生成、ルーティングはそのまま使い、ドキュメントの外枠を Material 3 Expressive Web Components で作り直しています。
+Vitepress Theme Akari Docs は、VitePress と `@m3e/web` で作られたドキュメントテーマです。
 
 <div class="demo-row">
   <m3e-button id="overview-demo-button" variant="filled">
@@ -65,7 +65,7 @@ npm run dev
 
 次に読むページ：
 
-- [インストール](/ja-JP/getting-started/installation)：動作要件、フォルダー構成、ビルドとデプロイ。
+- [インストール](/ja-JP/getting-started/installation)：テンプレートからのリポジトリ作成、動作要件とデプロイ。
 - [構成](/ja-JP/getting-started/configuration)：共通設定と言語設定。
 - [ページの作成](/ja-JP/getting-started/writing)：新しい記事、フロントマター、Markdown。
 - [レイアウトとアプリバー](/ja-JP/theme/layout)、[サイドナビゲーション](/ja-JP/theme/sidebar)：テーマの外枠を構成する各部分。

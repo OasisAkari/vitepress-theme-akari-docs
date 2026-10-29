@@ -101,7 +101,7 @@ pnpm install
 :::
 ````
 
-提示块有 `info`、`tip`、`warning`、`danger` 与 `details`。代码块标注语言后有语法高亮与复制按钮，复制按钮的文字由语言配置的 `markdown.codeCopyButton` 决定。
+提示块有 `info`、`tip`、`warning`、`danger` 与 `details`。代码块标注语言后有语法高亮与复制按钮，复制按钮的文字与没写标题的提示块的标题来自语言包的 `markdown`，可以在语言配置中改写。
 
 ## 演示辅助类
 

@@ -6,7 +6,7 @@ tab: API
 
 ## 言語ごとのフォント
 
-本文のフォントはページの言語によって決まります。デフォルトは次のとおりで、[`fonts`](#fonts) ですべて変更できます。
+本文のフォントはページの言語によって決まります。デフォルトは[言語パック](/ja-JP/theme/i18n/api#akarilanguage)の `fonts` から取ります。組み込みの言語パックの値は次のとおりで、[`fonts`](#fonts) ですべて変更できます。
 
 | 言語 | Google Fonts から読み込むもの | フォントスタック |
 | --- | --- | --- |
@@ -15,12 +15,12 @@ tab: API
 | `ar` | Roboto, Noto Sans Arabic | Roboto, Noto Sans Arabic, Geeza Pro, Tahoma, system-ui, sans-serif |
 | その他 | Roboto, Noto Sans SC | Roboto, Noto Sans SC, PingFang SC, Microsoft YaHei, system-ui, sans-serif |
 
-言語は `<html lang>` の主言語で照合されるため、`ja-JP` には `ja` の行が使われます。
+言語は言語パックの規則で照合されます。まず完全なコード、次に主言語で照合するため、`ja-JP` には `ja` の行が使われます。英語やフランス語のように `fonts` のない言語パックには「その他」の行が使われます。
 
 - これらの Google Fonts はすべて可変ウェイトのフォントです。Noto Sans SC と日本語・韓国語のフォントは Unicode の範囲ごとに分割されているため、ページは使っている文字だけをダウンロードします。
 - 各言語は自身のフォントだけを読み込みます。日本語、韓国語、アラビア語のフォントはその言語のページでのみ読み込まれ、その言語に切り替えたときにダウンロードされます。
 - フォントはページの表示を妨げません。`<head>` にはプリコネクトと `preload` だけが入ります。スタイルシートはテーマのスクリプトが挿入し、`display=swap` によってまずフォールバックのフォントでテキストを表示します。スクリプトがない場合は `<noscript>` 内のスタイルシートが適用されます。Google Fonts に接続できない場合、テキストはスタックの後ろにあるシステムフォントを使います。
-- ページ内でほかの言語として指定された部分（言語ダイアログの言語名など）は、その言語のデフォルトのスタックのうち、端末にあるフォントを使います。
+- ページ内でほかの言語として指定された部分（言語ダイアログの言語名など）は、その言語パックのスタックのうち、端末にあるフォントを使います。
 
 ## fonts
 
@@ -55,7 +55,9 @@ export default defineAkariConfig({
 });
 ```
 
-`akariContent` は各言語の設定から、フォントスタック（CSS 変数 `--akari-font-family`）とプリロードのタグをその言語のページの `<head>` に書き込みます。そのため、最初の描画から正しいフォントが使われます。言語を切り替えると、テーマがそれらを変更します。コードは `docs/.vitepress/theme/fonts.ts` にあります。`resolveFonts(lang, fonts)` がスタイルシートの URL と `font-family` を求め、`fontHead` が `<head>` のタグを作り、`applyFonts` がそれらをページに適用します。デフォルト値は `AKARI_DEFAULT_FONTS` と `AKARI_LANGUAGE_FONTS` です。
+ある言語のデフォルトのフォントをすべてのサイトで変えるには、その言語パックの `fonts` を変更します。このサイトだけなら、`fonts` の設定で十分です。
+
+`akariContent` は各言語の言語パックと設定から、フォントスタック（CSS 変数 `--akari-font-family`）、`lang` が付いた部分のフォントのルール、プリロードのタグをその言語のページの `<head>` に書き込みます。そのため、最初の描画から正しいフォントが使われます。言語を切り替えると、テーマがそれらを変更します。コードは `docs/.vitepress/theme/fonts.ts` にあります。`resolveFonts(fonts, defaults, languages)` が設定と言語パックのフォントからスタイルシートの URL と `font-family` を求め、`markedFontRules(languages)` が `lang` の付いた部分のフォントのルールを作り、`fontHead` が `<head>` のタグを作り、`applyFonts` がそれらをページに適用します。`fonts` のない言語パックは `AKARI_DEFAULT_FONTS` を使います。
 
 ## タイポグラフィのトークン
 
@@ -125,5 +127,5 @@ m3e は Material 3 のタイポグラフィのトークンを提供していま�
 ## コードブロック
 
 - シンタックスハイライトには `github-light` と `github-dark` のテーマを使い、ライトモードとダークモードに合わせて切り替わります。
-- コピーボタンは VitePress の `button.copy` です。ツールチップのテキストは言語設定の `markdown.codeCopyButton` から取ります。
+- コピーボタンは VitePress の `button.copy` です。ツールチップのテキストは言語パックの `markdown.codeCopyButton` から取り、言語設定で上書きできます。
 - 600px 未満では、コードブロックの角の丸みが 12px に小さくなります。

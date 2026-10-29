@@ -14,7 +14,6 @@ import {
   rewritePage,
   type ContentPage,
 } from "../docs/.vitepress/content/structure";
-import { parseMarkdownPage } from "../docs/.vitepress/search/parse";
 import { defineAkariConfig } from "../docs/.vitepress/theme/define";
 
 const languages = contentLanguages(["en", "zh"], "zh");
@@ -231,21 +230,6 @@ describe("defineAkariConfig", () => {
   });
 });
 
-describe("parseMarkdownPage with a route", () => {
-  it("indexes the page where it is served", () => {
-    const parsed = parseMarkdownPage(
-      "# 布局\n\n## 顶栏\n",
-      "zh/theme/layout/index.md",
-      "/theme/layout",
-    );
-    expect(parsed.route).toBe("/theme/layout");
-    expect(parsed.entries.map((entry) => entry.href)).toEqual([
-      "/theme/layout",
-      "/theme/layout#顶栏",
-    ]);
-  });
-});
-
 describe("akariContent", () => {
   let docs = "";
 
@@ -268,6 +252,8 @@ describe("akariContent", () => {
       "en-US/config.ts",
       `export default { label: "English", lang: "en", markdown: { codeCopyButton: { tooltipText: "Copy" } }, themeConfig: { akari: { fonts: { google: false } } } };`,
     );
+    // A language whose config leaves everything to the theme.
+    await write("ar-SA/config.ts", "export default {};");
     await write("zh-CN/index.md", "---\ncategory: start\n---\n\n# 概览\n");
     await write("zh-CN/start/install/index.md", "# 安装\n");
     await write("en-US/start/install/index.md", "# Install\n");
@@ -284,22 +270,43 @@ describe("akariContent", () => {
 
     expect(content.languages.map((language) => language.folder)).toEqual([
       "zh-CN",
+      "ar-SA",
       "en-US",
     ]);
-    expect(Object.keys(locales!)).toEqual(["root", "en-US"]);
+    expect(Object.keys(locales!)).toEqual(["root", "ar-SA", "en-US"]);
     // The folder is the language code unless the config says otherwise.
     expect(locales!.root).toMatchObject({ lang: "zh-CN", label: "简体中文", title: "文档" });
     expect(locales!["en-US"]).toMatchObject({
       lang: "en",
       label: "English",
-      markdown: { codeCopyButton: { tooltipText: "Copy" } },
+      dir: "ltr",
+      // The config's strings over the language's.
+      markdown: { codeCopyButton: { tooltipText: "Copy", copiedText: "Copied" } },
     });
     expect(content.site.lang).toBe("zh-CN");
+    // Searching locally, so VitePress builds its index for the theme.
+    expect(content.site.themeConfig).toMatchObject({ search: { provider: "local" } });
+  });
+
+  it("takes what a language's config leaves out from the language", async () => {
+    const { locales } = (await akariContent(docs, { warn() {} })).site;
+    expect(locales!["ar-SA"]).toMatchObject({
+      lang: "ar-SA",
+      label: "العربية",
+      dir: "rtl",
+      markdown: {
+        codeCopyButton: { tooltipText: "نسخ الشيفرة" },
+        container: { tipLabel: "تلميح" },
+      },
+    });
   });
 
   it("sets up each language's fonts in its head, its config over the shared one", async () => {
     const { locales } = (await akariContent(docs, { warn() {} })).site;
-    const family = ["style", {}, ':root { --akari-font-family: "Inter", sans-serif; }'];
+    const style = (head: unknown[] | undefined) =>
+      head?.find((tag) => Array.isArray(tag) && tag[0] === "style") as
+        | [string, object, string]
+        | undefined;
 
     expect(locales!.root!.head).toContainEqual([
       "link",
@@ -309,9 +316,12 @@ describe("akariContent", () => {
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap",
       },
     ]);
-    expect(locales!.root!.head).toContainEqual(family);
+    expect(style(locales!.root!.head)?.[2]).toMatch(
+      /^:root \{ --akari-font-family: "Inter", sans-serif; \}\nhtml:not\(:lang\(zh\)\)/,
+    );
     // English loads nothing from Google Fonts, with the same stack.
-    expect(locales!["en-US"]!.head).toEqual([family]);
+    expect(locales!["en-US"]!.head).toHaveLength(1);
+    expect(style(locales!["en-US"]!.head)).toEqual(style(locales!.root!.head));
   });
 
   it("serves the pages out of their folders and builds the navigation", async () => {

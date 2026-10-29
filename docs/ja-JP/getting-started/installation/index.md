@@ -5,21 +5,35 @@ order: 1
 
 # インストール
 
-テーマはリポジトリ内の `docs/.vitepress/theme` にあります。別途インストールするテーマパッケージはありません。
+Vitepress Theme Akari Docs は GitHub のテンプレートリポジトリです。このテンプレートから自分のリポジトリを作成すると、テーマのソース、設定、サンプルのドキュメントが手に入ります。別途インストールするテーマパッケージはありません。
+
+## テンプレートからリポジトリを作成する
+
+1. [OasisAkari/vitepress-theme-akari-docs](https://github.com/OasisAkari/vitepress-theme-akari-docs) を開き、**Use this template** → **Create a new repository** をクリックします。
+2. リポジトリ名と公開範囲を入力して作成します。新しいリポジトリにはテンプレートのファイルがすべて含まれます。コミット履歴は新しく始まり、テンプレートのフォークにはなりません。
+3. クローンして、依存関係をインストールし、起動します。
+
+   ```bash
+   git clone https://github.com/<アカウント>/<リポジトリ>.git
+   cd <リポジトリ>
+   npm install
+   npm run dev
+   ```
+
+GitHub CLI を使うと、作成とクローンを 1 回で行えます。
+
+```bash
+gh repo create my-docs --template OasisAkari/vitepress-theme-akari-docs --public --clone
+```
 
 ## 動作要件
 
-- Node.js `>=22.12.0`（`package.json` の `engines` フィールド）。リポジトリは Node.js `24.21.0` と npm `12.2.1` で動作を確認しています。
-- npm。リポジトリには `package-lock.json` が 1 つだけあります。
+- Node.js `>=22.12.0`（`package.json` の `engines` フィールド）。テンプレートは Node.js `24.21.0` と npm `12.2.1` で動作を確認しています。
+- npm。リポジトリには `package-lock.json` が 1 つだけあります。継続的インテグレーションでは、`npm ci` でロックファイルからインストールします。
 
-## インストールと起動
+## コマンド
 
-```bash
-npm install
-npm run dev
-```
-
-開発サーバーはデフォルトで `http://localhost:5173` で起動します。継続的インテグレーションでは、`npm ci` でロックファイルからインストールします。
+開発サーバーはデフォルトで `http://localhost:5173` で起動します。
 
 | コマンド | 用途 |
 | --- | --- |
@@ -28,6 +42,24 @@ npm run dev
 | `npm run preview` | ビルド結果をローカルでプレビューします |
 | `npm run typecheck` | `vue-tsc --noEmit` でテーマとテストを型チェックします |
 | `npm test` | Vitest の単体テストを実行します |
+
+## 自分のサイトにする
+
+- サイト名、バージョン、ソーシャルリンク、フッターは `docs/config.ts` と各言語の `config.ts` にあります。[構成](/ja-JP/getting-started/configuration) を参照してください。
+- ロゴは `docs/public/logo.svg` です。
+- 言語フォルダーには、このサイトのドキュメントが入っています。必要な言語を残して他のフォルダーを削除し、残したフォルダーに自分のページを書きます。[ページの作成](/ja-JP/getting-started/writing) を参照してください。
+
+## テンプレートの更新を取り込む
+
+テンプレートから作成したリポジトリはテンプレートとつながっていないため、テンプレートのその後の更新は自動では入ってきません。取り込みたいときは、テンプレートをリモートとして追加し、テーマのある `docs/.vitepress` を取得します。
+
+```bash
+git remote add template https://github.com/OasisAkari/vitepress-theme-akari-docs.git
+git fetch template
+git checkout template/main -- docs/.vitepress
+```
+
+この操作でフォルダーはテンプレートのバージョンに置き換わるため、テーマに加えた変更は改めてマージする必要があります。`package.json` の依存関係もあわせて比較してください。
 
 ## バージョンの基準
 
@@ -56,7 +88,6 @@ VitePress はまだアルファ版です。アップグレードするときは�
 │   └── .vitepress/
 │       ├── config.mts             テーマを VitePress に組み込む
 │       ├── content/               フォルダーから言語、パス、ナビゲーションを生成
-│       ├── search/                ローカル検索インデックス
 │       └── theme/                 テーマのソース
 ├── tests/                         単体テスト
 └── package.json
@@ -70,7 +101,7 @@ VitePress はまだアルファ版です。アップグレードするときは�
 
 - **拡張子のないパス**：サイトでは `cleanUrls` を有効にしているため、`/theme/layout` はファイル `theme/layout.html` に対応します。ファイルが見つからないとき、ホスティング側で `.html` を付けて再試行する必要があります。GitHub Pages、Netlify、Cloudflare Pages はデフォルトでこの動作をします。Vercel では `vercel.json` に `"cleanUrls": true` が必要です。Nginx では `try_files $uri $uri.html $uri/ =404;` と書きます。
 - **サブパスで配信する場合**：たとえば `https://example.com/docs/` では、`.vitepress/config.mts` に `base: "/docs/"` を設定します。ナビゲーション、ヒーロー、ロゴ、検索インデックスの内部パスには自動で付加されます。
-- **検索インデックス**：`search-index.json` はビルド時に生成され、出力のルートにコピーされます。追加の手順は不要です。
+- **検索インデックス**：各言語のインデックスは、ビルド時に出力の `assets/chunks/` にまとめられます。追加の手順は不要です。
 
 ## よくある質問
 

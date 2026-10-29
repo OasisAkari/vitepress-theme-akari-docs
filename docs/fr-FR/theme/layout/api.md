@@ -33,6 +33,12 @@ Champs de `AkariSocialLink` :
 
 Pour désactiver la table des matières sur une seule page, écrivez `toc: false` dans son frontmatter. Les titres qui portent l'attribut `m3e-toc-ignore` sont exclus de la table des matières.
 
+## loadingBar
+
+| Champ | Type | Par défaut | Description |
+| --- | --- | --- | --- |
+| `enabled` | `boolean` | `true` | Afficher ou non une barre de progression en haut de la fenêtre pendant le chargement d'une page |
+
 ## footer
 
 | Champ | Type | Par défaut | Description |
@@ -78,6 +84,8 @@ Redéfinissez-les dans les styles de votre site, par exemple sur `:root` :
 | `--akari-wavy-divider-color` | `--md-sys-color-outline-variant` | Couleur du séparateur ondulé au-dessus du pied de page |
 | `--akari-doc-app-bar-height` | `64px` | Hauteur de la barre d'application ; en lecture seule, sert à calculer les positions collantes |
 | `--akari-doc-rail-width` | `96px` | Largeur du rail ; en lecture seule |
+| `--akari-loading-bar-height` | `4px` | Hauteur de la barre de chargement |
+| `--akari-loading-bar-color` | `--md-sys-color-primary` | Couleur de la barre de chargement |
 
 ```css
 :root {

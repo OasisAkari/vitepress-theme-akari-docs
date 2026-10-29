@@ -23,33 +23,38 @@ When the system's "reduce motion" setting is on, the panel opens and closes with
 
 ## Building the index
 
-- A Vite plugin scans every `.md` file in `docs` (except in `.vitepress`, `public` and directories starting with `.`) when the dev server starts and when a build begins, and writes `docs/public/search-index.json`. During development, it regenerates the index about 150ms after a Markdown file is added, changed or removed. When the build ends, it copies the file to the root of the output.
-- Page URLs are computed by `content.route`, so they match the pages' real URLs.
-- The page title is the frontmatter `title`, then the first level-1 heading, then the file name.
-- Each level-2 and level-3 heading produces a section entry. Its anchor matches the heading id that VitePress generates.
-- Fenced code blocks are left out of the index. HTML tags, link URLs and Markdown markup are stripped, leaving only the text. Each entry's body text is at most 4000 characters.
+- VitePress' local search builds the index: it renders each page with the site's Markdown renderer, splits it into sections at the headings that have anchors, and builds one index per language, each bundled into one file at build time. While the dev server runs, the index is updated as pages change and pushed to the browser.
+- Paths and anchors come from the rendered pages, so they match the pages' real paths and heading ids, including rewritten paths and `{#anchor}` headings.
+- The body text is the rendered HTML without tags, code blocks included, so names in code can be searched too. Pages with `search: false` in their frontmatter are left out.
+- Chinese and Japanese have no spaces, so they are split into words with `Intl.Segmenter`. The theme splits queries the same way (`tokenizeSearchText`), so queries and the index meet on the same words.
 
 ## Matching and ranking
 
-The query is first normalized (case, full-width and half-width forms and so on) and split into words on whitespace. An entry matches only when every word appears in its title, page title or body text. Its score adds up as follows, where "title" is the entry's own title: the page title for a page entry, the heading for a section entry:
+The query is split into words the same way as the index, and MiniSearch matches them:
 
-| Condition | Score |
+- A word matches as typed, or as the start of a longer word. Longer words may be misspelled, by an edit distance of up to 20% of their length.
+- Every word has to match. When no section has them all, sections with any of them are accepted instead.
+- Relevance is BM25, with a weight of 4 for the section heading, 2 for the body text and 1 for the headings above.
+
+The results are then ranked in tiers by the query as typed, where "heading" is the section's own heading:
+
+| Tier | Condition |
 | --- | --- |
-| Title is exactly the whole query | +100 |
-| Title starts with the whole query | +60 |
-| Title contains the whole query | +40 |
-| Page title contains the whole query | +20 |
-| Body text contains the whole query | +10 |
-| Each word: in the title / page title / body text | +24 / +10 / +6 |
-| Entry level: page / level-2 heading / level-3 heading | +3 / +2 / +1 |
+| 4 | The heading is exactly the whole query |
+| 3 | The heading starts with the whole query |
+| 2 | The heading contains the whole query |
+| 1 | The headings above or the body text contain the whole query word for word, such as a Chinese phrase |
+| 0 | Anything else |
 
-Results are sorted by score from high to low, and by title when scores are equal. Only one result per URL is kept, and at most `maxResults` are returned. On a multilingual site, the local index holds the pages of every language, and only entries under the current language's path are kept (the root language does not include pages under `/<language folder>/`).
+Higher tiers come first. In tiers 4 and 3, a page comes before its sections. Within a tier, results follow MiniSearch's relevance, then their heading. Only one result per URL is kept, and at most `maxResults` are returned. Each result carries the words that matched (`terms`), including ones typed only partly or misspelled, and the panel highlights them.
+
+Each language has its own index, so results only ever come from the current language.
 
 ## Loading and caching
 
-- The local index loads on the first search and is then cached in the page. In development mode the browser cache is not used, so edited content is searchable right away.
+- Each language's index loads on the first search in that language and is then cached in the page. In development, the cache is cleared when the index is updated.
 - Input is debounced by `debounce`. When a new query is typed or the panel closes, the request in progress is aborted through `AbortSignal`.
-- If the index file is missing or malformed, the panel shows an error and a retry button.
+- If the index fails to load or is malformed, the panel shows an error and a retry button.
 
 ## Panel states
 
@@ -65,5 +70,5 @@ Opening a result goes through the VitePress router, keeping SPA navigation. The 
 
 ## Known limitations
 
-- The local index uses simple substring matching, with no spelling correction or semantic search. When you need them, use an HTTP or registered backend.
-- The local index refreshes only while the dev server runs or during a build. Markdown you edit while the dev server is not running becomes searchable after the next `npm run dev` or `npm run build`.
+- The local search matches words, with no semantic search or synonyms. When you need them, use an HTTP or registered backend. Splitting Chinese and Japanese into words depends on the browser's `Intl.Segmenter`; browsers without it can only split at spaces and punctuation.
+- The local index is built only while the dev server runs or during a build. Markdown you edit while the dev server is not running becomes searchable after the next `npm run dev` or `npm run build`.

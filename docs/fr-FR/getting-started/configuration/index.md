@@ -62,19 +62,15 @@ export default defineAkariConfig({
 
 ## Configuration de langue
 
-Le nom, le titre et les textes propres à la langue. `lang` vaut par défaut le nom du dossier, et le thème s'en sert pour choisir les textes d'interface intégrés correspondants. Une langue qui s'écrit de droite à gauche définit aussi `dir: "rtl"`.
+Les titres et les textes de la langue sur ce site. `lang` vaut par défaut le nom du dossier, et le thème s'en sert pour choisir le [pack de langue](/fr-FR/theme/i18n#language-packs) : le nom dans le menu des langues, le sens du texte, les textes de l'interface et le texte du bouton de copie des blocs de code viennent tous du pack, et vous les remplacez ici au besoin.
 
 ```ts
 // docs/fr-FR/config.ts
 import { defineAkariConfig } from "../.vitepress/theme/define.ts";
 
 export default defineAkariConfig({
-  label: "Français",
   title: "Vitepress Theme Akari Docs",
   description: "Un thème de documentation construit avec VitePress et M3E Web Components",
-  markdown: {
-    codeCopyButton: { tooltipText: "Copier le code", copiedText: "Copié" },
-  },
   appBar: { title: "Vitepress Theme Akari Docs" },
   sidebar: {
     categories: {

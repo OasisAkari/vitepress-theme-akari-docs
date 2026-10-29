@@ -24,11 +24,11 @@ parallel:
 
 ## 本地索引
 
-默认不需要任何后端：开发与构建时，主题扫描所有 Markdown 页面，生成 `docs/public/search-index.json`。每个页面一条，每个二级、三级标题再各一条。索引不提交到仓库，`npm run dev` 与 `npm run build` 会自动刷新它。
+默认不需要任何后端：主题使用 VitePress 本地搜索生成的索引，每种语言一个，只在这种语言第一次搜索时下载。页面按标题分成章节，匹配由 [MiniSearch](https://lucaong.github.io/minisearch/) 完成：中文与日文按词切分，词可以只输入开头，较长的词允许拼错一两个字母。开发时修改页面后，索引随之更新。
 
 ## 接入其他搜索
 
-需要拼写纠错、语义搜索或站外内容时，换成 HTTP 接口或自己的 JS 函数：
+需要语义搜索或站外内容时，换成 HTTP 接口或自己的 JS 函数：
 
 ```ts
 // docs/config.ts

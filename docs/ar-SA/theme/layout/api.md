@@ -33,6 +33,12 @@ tab: API
 
 لإيقاف جدول المحتويات في صفحة واحدة، اكتب `toc: false` في بياناتها الأمامية (frontmatter). العناوين التي تحمل الخاصية `m3e-toc-ignore` لا تُدرج في جدول المحتويات.
 
+## loadingBar
+
+| الحقل | النوع | القيمة الافتراضية | الوصف |
+| --- | --- | --- | --- |
+| `enabled` | `boolean` | `true` | ما إذا كان يُعرض شريط تقدّم في أعلى النافذة أثناء تحميل الصفحة |
+
 ## footer
 
 | الحقل | النوع | القيمة الافتراضية | الوصف |
@@ -78,6 +84,8 @@ footer: {
 | `--akari-wavy-divider-color` | `--md-sys-color-outline-variant` | لون الفاصل المتموّج فوق التذييل |
 | `--akari-doc-app-bar-height` | `64px` | ارتفاع شريط التطبيق؛ للقراءة فقط، ويُستخدم لحساب المواضع الملتصقة |
 | `--akari-doc-rail-width` | `96px` | عرض شريط التنقل؛ للقراءة فقط |
+| `--akari-loading-bar-height` | `4px` | ارتفاع شريط التحميل |
+| `--akari-loading-bar-color` | `--md-sys-color-primary` | لون شريط التحميل |
 
 ```css
 :root {

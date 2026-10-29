@@ -62,19 +62,15 @@ export default defineAkariConfig({
 
 ## 언어 구성
 
-언어 자체의 이름, 제목, 텍스트입니다. `lang`의 기본값은 폴더 이름이며, 테마는 이 값으로 해당하는 기본 제공 인터페이스 텍스트를 고릅니다. 오른쪽에서 왼쪽으로 쓰는 언어는 `dir: "rtl"`도 설정합니다.
+이 사이트에서 쓰는 그 언어의 제목과 텍스트입니다. `lang`의 기본값은 폴더 이름이며, 테마는 이 값으로 [언어 팩](/ko-KR/theme/i18n#language-packs)을 고릅니다. 언어 메뉴의 이름, 텍스트 방향, 인터페이스 문자열, 코드 블록 복사 버튼의 텍스트는 모두 언어 팩에서 가져오며, 필요하면 여기에서 재정의합니다.
 
 ```ts
 // docs/ko-KR/config.ts
 import { defineAkariConfig } from "../.vitepress/theme/define.ts";
 
 export default defineAkariConfig({
-  label: "한국어",
   title: "Vitepress Theme Akari Docs",
   description: "VitePress와 M3E Web Components로 만든 문서 테마",
-  markdown: {
-    codeCopyButton: { tooltipText: "코드 복사", copiedText: "복사됨" },
-  },
   appBar: { title: "Vitepress Theme Akari Docs" },
   sidebar: {
     categories: {

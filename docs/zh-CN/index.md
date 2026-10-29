@@ -7,7 +7,7 @@ icon: home
 
 # 概览
 
-Vitepress Theme Akari Docs 是一个用 VitePress `2.0.0-alpha.21` 与 `@m3e/web` `2.10.2` 搭建的文档主题：保留 VitePress 的 Markdown、静态生成与路由，用 Material 3 Expressive Web Components 重写文档外壳。
+Vitepress Theme Akari Docs 是一个用 VitePress 与 `@m3e/web` 搭建的文档主题。
 
 <div class="demo-row">
   <m3e-button id="overview-demo-button" variant="filled">
@@ -65,7 +65,7 @@ npm run dev
 
 接着阅读：
 
-- [安装](/getting-started/installation)：运行环境、目录结构、构建与部署。
+- [安装](/getting-started/installation)：从模板创建仓库、运行环境与部署。
 - [配置](/getting-started/configuration)：共用配置与语言配置。
 - [撰写页面](/getting-started/writing)：新建文章、头部信息与 Markdown 写法。
 - [布局与顶栏](/theme/layout)、[侧边导航](/theme/sidebar)：主题外壳的各个部分。

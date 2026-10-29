@@ -56,7 +56,7 @@ export function provideAkariSearch(
   const router = useRouter();
 
   // Locales may configure their own backend. Each distinct configuration is
-  // created once, so a local index is fetched once for the whole site.
+  // created once; the local one loads each locale's index once.
   const backends = new Map<string, AkariSearchBackend>();
 
   function currentBackend(): AkariSearchBackend {
@@ -67,7 +67,6 @@ export function provideAkariSearch(
     if (!backend) {
       backend = createSearchBackend(backendConfig, {
         base: site.value.base ?? "/",
-        locales: Object.keys(site.value.locales ?? {}),
       });
       backends.set(key, backend);
     }

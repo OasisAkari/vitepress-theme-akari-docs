@@ -6,8 +6,14 @@ import matter from "gray-matter";
 import { loadConfigFromFile, type Plugin } from "vite";
 import type { LocaleConfig, SiteConfig, UserConfig } from "vitepress";
 
-import { extractFirstH1, stripFencedCode } from "../search/parse";
+import { extractFirstH1, stripFencedCode } from "./markdown";
 import { fontHead, resolveFonts } from "../theme/fonts";
+import {
+  akariLanguages,
+  languageName,
+  mergeMarkdown,
+  resolveLanguage,
+} from "../theme/i18n";
 import type {
   AkariDirectoryConfig,
   AkariSidebarCategory,
@@ -28,6 +34,15 @@ export * from "./structure";
 
 /** The names VitePress loads a directory's config from. */
 const CONFIG_FILES = ["config.ts", "config.mts", "config.js", "config.mjs"];
+
+/**
+ * VitePress' local search, for its index only: the theme searches it with
+ * its own dialog. The index keeps each section's text, for excerpts.
+ */
+const LOCAL_SEARCH = {
+  provider: "local",
+  options: { miniSearch: { options: { storeFields: ["title", "titles", "text"] } } },
+} as const;
 
 /** Top-level folders that are never a language. */
 const NOT_LANGUAGES = new Set(["public", "node_modules"]);
@@ -97,7 +112,10 @@ export interface AkariContent {
   /** The route of a page of the docs, from its path in them. */
   route(page: string): string;
   /** VitePress options: the languages as locales, the rewrites, defaults. */
-  site: Pick<UserConfig, "lang" | "title" | "description" | "locales" | "rewrites">;
+  site: Pick<
+    UserConfig,
+    "lang" | "title" | "description" | "locales" | "rewrites" | "themeConfig"
+  >;
   /** Keeps the navigation up to date while the dev server runs. */
   plugin: Plugin;
 }
@@ -185,16 +203,23 @@ export async function akariContent(
       configs.get(language.folder)!;
     const sidebar = sidebarOf(language, pages);
     const lang = config.lang ?? language.folder;
-    // Its fonts, set up in the head of its pages for the first paint.
-    const fonts = resolveFonts(lang, {
-      ...shared?.themeConfig?.akari?.fonts,
-      ...themeConfig?.akari?.fonts,
-    });
+    // What the config leaves out comes from the language serving `lang`:
+    // its name, direction, Markdown strings and fonts.
+    const known =
+      themeConfig?.akari?.languages ?? shared?.themeConfig?.akari?.languages;
+    const spoken = resolveLanguage(lang, known);
+    const fonts = resolveFonts(
+      { ...shared?.themeConfig?.akari?.fonts, ...themeConfig?.akari?.fonts },
+      spoken.fonts,
+      akariLanguages(known),
+    );
 
     locales[language.key] = {
       ...config,
       lang,
-      label: config.label ?? lang,
+      label: config.label ?? languageName(lang),
+      dir: config.dir ?? spoken.dir,
+      markdown: mergeMarkdown(spoken.markdown, config.markdown),
       head: fontHead(fonts),
       themeConfig: sidebar
         ? {
@@ -210,6 +235,20 @@ export async function akariContent(
 
   const rootConfig = languages[0] && configs.get(languages[0].folder);
 
+  // The theme's local search reads the index VitePress' own local search
+  // builds, one per locale. It is built when any language searches locally.
+  const sharedSearch = shared?.themeConfig?.akari?.search;
+  const searches = languages.length
+    ? languages.map((language) => ({
+        ...sharedSearch,
+        ...configs.get(language.folder)?.themeConfig?.akari?.search,
+      }))
+    : [sharedSearch ?? {}];
+  const searchesLocally = searches.some(
+    (search) =>
+      (search.enabled ?? true) && (search.backend?.type ?? "local") === "local",
+  );
+
   return {
     languages,
     rewrite,
@@ -220,6 +259,7 @@ export async function akariContent(
       description: rootConfig?.description ?? shared?.description,
       locales,
       rewrites: rewrite,
+      ...(searchesLocally ? { themeConfig: { search: LOCAL_SEARCH } } : {}),
     },
     plugin: {
       name: "akari-content",

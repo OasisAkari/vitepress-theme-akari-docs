@@ -3,7 +3,7 @@ import { defineAkariConfig } from "./.vitepress/theme/define.ts";
 // What every language shares. Each language folder's config.ts (zh-CN/,
 // en-US/) lays its own fields over these for its pages.
 export default defineAkariConfig({
-  rootLanguage: "zh-CN",
+  rootLanguage: "en-US",
   logo: "/logo.svg",
   head: [["link", { rel: "icon", type: "image/svg+xml", href: "/logo.svg" }]],
   appBar: {

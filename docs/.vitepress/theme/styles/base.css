@@ -34,7 +34,10 @@ body {
   min-height: 100dvh;
   background: var(--akari-doc-page-background, Canvas);
   color: var(--akari-doc-page-foreground, CanvasText);
-  /* The page language's fonts (fonts.ts), set from its config. */
+  /*
+   * The page's fonts (fonts.ts): its language's, or its config's. Text
+   * marked as another language gets that one's (markedFontRules).
+   */
   font-family: var(
     --akari-font-family,
     Roboto,
@@ -47,34 +50,6 @@ body {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-}
-
-/*
- * Text marked as another language than the page's (a name in the language
- * menu) takes the fonts of its script, as far as the device has them: the
- * page loads only its own language's.
- */
-html:not(:lang(zh)) [lang|="zh"] {
-  font-family:
-    Roboto, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui,
-    sans-serif;
-}
-
-html:not(:lang(ja)) [lang|="ja"] {
-  font-family:
-    Roboto, "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN",
-    "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
-}
-
-html:not(:lang(ko)) [lang|="ko"] {
-  font-family:
-    Roboto, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui,
-    sans-serif;
-}
-
-html:not(:lang(ar)) [lang|="ar"] {
-  font-family:
-    Roboto, "Noto Sans Arabic", "Geeza Pro", Tahoma, system-ui, sans-serif;
 }
 
 /*

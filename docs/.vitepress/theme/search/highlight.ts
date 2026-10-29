@@ -7,11 +7,25 @@ function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-export function splitHighlight(text: string, query: string): HighlightPart[] {
+/**
+ * Splits text around what the search matched: the words of the query, and
+ * `terms`, the words a backend says matched (a word the query only started,
+ * or misspelled).
+ */
+export function splitHighlight(
+  text: string,
+  query: string,
+  terms: readonly string[] = [],
+): HighlightPart[] {
   if (!text) return [];
 
-  const tokens = [...new Set(query.toLowerCase().split(/\s+/).filter(Boolean))]
-    .sort((a, b) => b.length - a.length);
+  const tokens = [
+    ...new Set(
+      [...query.split(/\s+/), ...terms]
+        .map((token) => token.toLowerCase())
+        .filter(Boolean),
+    ),
+  ].sort((a, b) => b.length - a.length);
 
   if (!tokens.length) return [{ text, match: false }];
 

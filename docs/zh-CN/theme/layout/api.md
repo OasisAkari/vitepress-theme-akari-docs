@@ -33,6 +33,12 @@ tab: 接口
 
 单个页面在头部信息中写 `toc: false` 关闭目录。带 `m3e-toc-ignore` 属性的标题不进入目录。
 
+## loadingBar
+
+| 字段 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `enabled` | `boolean` | `true` | 页面加载时是否在窗口顶部显示进度条 |
+
 ## footer
 
 | 字段 | 类型 | 默认值 | 说明 |
@@ -78,6 +84,8 @@ footer: {
 | `--akari-wavy-divider-color` | `--md-sys-color-outline-variant` | 页尾波浪分隔线的颜色 |
 | `--akari-doc-app-bar-height` | `64px` | 顶栏高度；只读，用于计算吸附位置 |
 | `--akari-doc-rail-width` | `96px` | rail 的宽度；只读 |
+| `--akari-loading-bar-height` | `4px` | 加载进度条的高度 |
+| `--akari-loading-bar-color` | `--md-sys-color-primary` | 加载进度条的颜色 |
 
 ```css
 :root {

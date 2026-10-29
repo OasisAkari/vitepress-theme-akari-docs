@@ -1,12 +1,8 @@
 import { defineAkariConfig } from "../.vitepress/theme/define.ts";
 
 export default defineAkariConfig({
-  label: "English",
   title: "Vitepress Theme Akari Docs",
   description: "A documentation theme built on VitePress and M3E Web Components",
-  markdown: {
-    codeCopyButton: { tooltipText: "Copy code", copiedText: "Copied" },
-  },
   appBar: { title: "Vitepress Theme Akari Docs" },
   sidebar: {
     categories: {

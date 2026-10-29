@@ -73,6 +73,9 @@ The result of `useAkariConfig()` contains `lang`, `messages`, `appBar`, `sidebar
 | `defineAkariConfig` | `(config: AkariSiteConfig) => AkariDirectoryConfig` | Writing config files; see [Configuration](/en-US/getting-started/configuration/api#defineakariconfig) |
 | `defineAkariThemeConfig` | `(config: AkariThemeConfig) => AkariThemeConfig` | Type helper when you write only theme fields |
 | `registerSearchBackend` | `(id, handler) => void` | Registers a search backend; see [Search](/en-US/theme/search/api#registered-backends) |
+| `defineAkariLanguage` | `(language: AkariLanguage) => AkariLanguage` | Writes a language pack; see [Internationalization](/en-US/theme/i18n/api#akarilanguage) |
+| `AKARI_LANGUAGES` | `AkariLanguage[]` | The built-in language packs |
+| `resolveLanguage` | `(lang, languages?) => ResolvedAkariLanguage` | The pack a language ends up with |
 | `AKARI_CONTENT_ID` | `"akari-doc-content"` | id of the content container |
 | `AKARI_SIDEBAR_ID` | `"akari-sidebar"` | id of the navigation drawer on narrow screens |
 | `AKARI_SETTINGS_ID` | `"akari-settings"` | id of the settings panel |
@@ -96,25 +99,26 @@ Types (`AkariThemeConfig`, `AkariSidebarItem`, `AkariSearchResult` and others) a
 docs/.vitepress/
 ├── config.mts             connects the theme to VitePress
 ├── content/               languages, paths and navigation from the folders (Node)
-├── search/                parsing, generation and Vite plugin of the local search index (Node)
 └── theme/
     ├── index.ts           theme entry and public exports
-    ├── define.ts          defineAkariConfig
+    ├── define.ts          defineAkariConfig and defineAkariLanguage
     ├── config.ts          config defaults and validation
     ├── types.ts           type definitions
     ├── constants.ts       defaults, breakpoints and ids
-    ├── i18n.ts            built-in interface strings
+    ├── i18n/              language packs and resolving a language
+    │   └── languages/     built-in language packs, one file per language
     ├── locales.ts         path mapping for switching language
     ├── sidebar.ts         navigation normalizing, matching and paging
     ├── settings.ts        settings validation and storage
     ├── scheme.ts          light and dark mode resolution and first-frame script
     ├── hero.ts            hero frontmatter parsing
+    ├── loading.ts         loading bar progress math
     ├── head.ts / fonts.ts akariHead and fonts
     ├── markdown.ts        akariMarkdown
     ├── m3e.ts / icons.ts  on-demand registration of components and icons
     ├── layouts/           AkariLayout.vue
     ├── components/
-    │   ├── shell/         app bar, "More" menu, appearance and language buttons, dialogs
+    │   ├── shell/         app bar, "More" menu, appearance and language buttons, dialogs, loading bar
     │   ├── sidebar/       rail, desktop navigation drawer, narrow-screen navigation
     │   ├── content/       hero, tab bar, TOC, pager, FABs, footer
     │   └── settings/      settings dialog and panel

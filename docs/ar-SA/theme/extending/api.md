@@ -73,6 +73,9 @@ const config = useAkariConfig();
 | `defineAkariConfig` | `(config: AkariSiteConfig) => AkariDirectoryConfig` | كتابة ملفات التهيئة؛ راجع [التهيئة](/ar-SA/getting-started/configuration/api#defineakariconfig) |
 | `defineAkariThemeConfig` | `(config: AkariThemeConfig) => AkariThemeConfig` | مساعد للأنواع عندما تكتب حقول السمة فقط |
 | `registerSearchBackend` | `(id, handler) => void` | يسجّل خدمة بحث؛ راجع [البحث](/ar-SA/theme/search/api#registered-backends) |
+| `defineAkariLanguage` | `(language: AkariLanguage) => AkariLanguage` | كتابة حزمة لغة؛ راجع [التدويل](/ar-SA/theme/i18n/api#akarilanguage) |
+| `AKARI_LANGUAGES` | `AkariLanguage[]` | حزم اللغات المدمجة |
+| `resolveLanguage` | `(lang, languages?) => ResolvedAkariLanguage` | الحزمة التي تنتهي إليها اللغة |
 | `AKARI_CONTENT_ID` | `"akari-doc-content"` | معرّف (id) حاوية المحتوى |
 | `AKARI_SIDEBAR_ID` | `"akari-sidebar"` | معرّف (id) درج التنقل على الشاشات الضيقة |
 | `AKARI_SETTINGS_ID` | `"akari-settings"` | معرّف (id) لوحة الإعدادات |
@@ -96,25 +99,26 @@ const config = useAkariConfig();
 docs/.vitepress/
 ├── config.mts             يربط السمة بـ VitePress
 ├── content/               اللغات والمسارات والتنقل من المجلدات (Node)
-├── search/                التحليل والتوليد وإضافة Vite لفهرس البحث المحلي (Node)
 └── theme/
     ├── index.ts           مدخل السمة والتصديرات العامة
-    ├── define.ts          defineAkariConfig
+    ├── define.ts          defineAkariConfig و defineAkariLanguage
     ├── config.ts          القيم الافتراضية للتهيئة والتحقق منها
     ├── types.ts           تعريفات الأنواع
     ├── constants.ts       القيم الافتراضية ونقاط التوقف والمعرّفات
-    ├── i18n.ts            نصوص الواجهة المدمجة
+    ├── i18n/              حزم اللغات وتحديد اللغة
+    │   └── languages/     حزم اللغات المدمجة، ملف لكل لغة
     ├── locales.ts         ربط المسارات عند تبديل اللغة
     ├── sidebar.ts         توحيد التنقل ومطابقته والتنقل بين الصفحات
     ├── settings.ts        التحقق من الإعدادات وتخزينها
     ├── scheme.ts          تحديد الوضع الفاتح والوضع الداكن وسكربت الإطار الأول
     ├── hero.ts            تحليل البيانات الأمامية لقسم الواجهة
+    ├── loading.ts         حسابات تقدّم شريط التحميل
     ├── head.ts / fonts.ts akariHead والخطوط
     ├── markdown.ts        akariMarkdown
     ├── m3e.ts / icons.ts  تسجيل المكوّنات والأيقونات عند الحاجة
     ├── layouts/           AkariLayout.vue
     ├── components/
-    │   ├── shell/         شريط التطبيق، قائمة «المزيد»، زرّا المظهر واللغة، مربعات الحوار
+    │   ├── shell/         شريط التطبيق، قائمة «المزيد»، زرّا المظهر واللغة، مربعات الحوار، شريط التحميل
     │   ├── sidebar/       شريط التنقل، درج التنقل على سطح المكتب، التنقل على الشاشات الضيقة
     │   ├── content/       قسم الواجهة، شريط التبويب، جدول المحتويات، التنقل بين الصفحات، أزرار FAB، التذييل
     │   └── settings/      مربع حوار الإعدادات ولوحتها

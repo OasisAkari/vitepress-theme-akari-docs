@@ -52,4 +52,4 @@ Quand vous changez de langue, le thème transpose le chemin actuel dans la langu
 
 ## Index de recherche
 
-L'index de recherche local calcule les chemins selon les mêmes règles : le plugin d'index appelle `content.route` pour chaque fichier source, donc les liens de ses entrées correspondent aux vrais chemins des pages. Chaque page reçoit une entrée de page, chaque titre h2 et h3 une entrée de section, et les pages parallèles ont aussi leurs propres entrées.
+VitePress construit l'index de recherche local : ses liens sont donc les chemins réels des pages (après les réécritures ci-dessus). Il y a un index par langue. Chaque page est découpée en sections à ses titres ; la partie sous le titre de niveau 1 représente la page elle-même, et les pages parallèles sont des pages à part entière.

@@ -48,7 +48,7 @@ document.documentElement.dir =
 document.documentElement.style.fontSize = settings.textSize;
 ```
 
-- `auto` (« Selon la langue ») prend le `dir` de la configuration de la langue courante (`useData().dir`) et change avec lui quand vous passez à une autre langue. Une langue qui définit `dir: "rtl"`, comme l'arabe, s'affiche donc de droite à gauche par défaut.
+- `auto` (« Selon la langue ») prend le `dir` de la langue courante (`useData().dir`, issu de la configuration de langue, ou du pack de langue quand la configuration ne le définit pas) et change avec lui quand vous passez à une autre langue. Une langue qui s'écrit de droite à gauche, comme l'arabe, s'affiche donc de droite à gauche par défaut.
 - Changer le sens du texte agit sur la mise en page bidirectionnelle et sur l'orientation des icônes des composants m3e, et l'animation de changement de page des pages parallèles s'inverse avec lui.
 - Changer la taille du texte agit sur toutes les tailles calculées en `rem` : le texte, les titres, les espacements, les blocs de code et le reste s'agrandissent proportionnellement. La taille du texte des composants m3e est fixée par les jetons des composants : elle ne double donc pas simplement, mais la mise en page reste utilisable.
 - La mise en page synchronise la palette générée par `m3e-theme` avec l'élément racine. `html` et `body`, la barre d'application, la navigation, la surface du document, la table des matières et toutes les boîtes de dialogue suivent la couleur source, la variante, le mode clair ou sombre et le contraste. Il n'existe pas de jeu distinct de couleurs fixes.

@@ -10,14 +10,22 @@ Le chemin détermine la langue : une page dont le chemin commence par `/<dossie
 
 La configuration qu'obtient une page est le `config.ts` de son dossier de langue, appliqué par-dessus la configuration partagée et la configuration de locale de VitePress ; voir [Configuration : détails](/fr-FR/getting-started/configuration/details#how-the-two-levels-layer).
 
-## Choix des textes de l'interface
+## Choix du pack de langue
 
-1. Prendre le `lang` de la langue courante, le mettre en minuscules et comparer le code complet avec les langues intégrées (`zh`, `en`, `ja`, `ko`, `fr`, `ar`).
-2. À défaut de correspondance, comparer la langue principale : `zh-CN` et `zh-TW` utilisent tous deux le chinois, `en-GB` utilise l'anglais et `fr-CA` utilise le français.
-3. S'il n'y a toujours pas de correspondance, utiliser l'anglais.
-4. Les entrées écrites dans les `messages` de la configuration de langue remplacent les textes intégrés.
+1. Les packs possibles sont les six packs intégrés (`zh`, `en`, `ja`, `ko`, `fr`, `ar`) plus ceux de `languages` ; un pack qui porte le code d'un pack intégré s'applique par-dessus celui-ci.
+2. Prendre le `lang` de la langue courante, le mettre en minuscules (en remplaçant `_` par `-`) et chercher un pack qui porte exactement ce code.
+3. S'il n'y en a pas, comparer la langue principale : `zh-CN` et `zh-TW` utilisent tous deux le chinois, `en-GB` utilise l'anglais et `fr-CA` utilise le français.
+4. S'il n'y en a toujours pas, utiliser l'anglais.
+5. Combler les manques : les textes d'interface manquants sont en anglais, un pack sans `fonts` utilise les polices du thème, et un pack sans `dir` s'écrit de gauche à droite.
+6. Les `messages`, `fonts`, `dir` et `markdown` écrits dans la configuration de langue s'appliquent par-dessus le pack.
 
 Lorsque `settings.title`, `settings.labels`, `toc.overline`, `footer.message` et `search.placeholder` ne sont pas définis, ils proviennent aussi de cette table : une seule configuration partagée a ainsi des valeurs par défaut adaptées dans chaque langue. Les textes écrits dans la configuration partagée sont hérités par toutes les langues ; les textes qui varient selon la langue vont dans la configuration de langue.
+
+## Où les packs de langue sont utilisés {#where-language-packs-are-used}
+
+- Au moment du build, `akariContent` génère une locale VitePress pour chaque langue. `label` vaut par défaut le nom de la langue dans sa propre langue, fourni par `Intl.DisplayNames`, avec une majuscule initiale (comme `Français`) ; `dir` vaut par défaut le sens du pack ; `markdown` reprend les textes Markdown du pack, avec ceux de la configuration de langue appliqués par-dessus ; et `head` contient les balises de polices de la langue. VitePress rend le bouton de copie des blocs de code et les titres des conteneurs à partir du `markdown` de la locale.
+- Dans la page, le thème résout les textes d'interface et les polices de la langue courante : les `messages` et les `fonts` de `useAkariConfig()`.
+- Les parties d'une page marquées d'un attribut `lang` (comme les noms des langues dans la boîte de dialogue des langues) utilisent la pile de polices de cette langue. Ces règles sont générées à partir de chaque pack qui a des `fonts` ; les feuilles de style ne nomment aucune langue.
 
 ## Où mène le changement de langue
 

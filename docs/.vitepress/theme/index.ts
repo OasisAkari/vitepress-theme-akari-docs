@@ -22,6 +22,8 @@ export default {
 
 export * from "./types";
 export { defineAkariConfig, defineAkariThemeConfig } from "./config";
+export { defineAkariLanguage } from "./define";
+export { AKARI_LANGUAGES, resolveLanguage } from "./i18n";
 export {
   AKARI_CONTENT_ID,
   AKARI_SETTINGS_ID,

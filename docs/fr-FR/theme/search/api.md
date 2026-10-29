@@ -20,28 +20,24 @@ tab: API
 ## Backend local
 
 ```ts
-backend: { type: "local", endpoint: "/search-index.json" },
+backend: { type: "local" },
 ```
 
-`endpoint` peut pointer vers un autre fichier JSON statique de même origine ; `base` est ajouté automatiquement aux chemins relatifs. Le format du fichier :
+Il utilise l'index que construit la recherche locale de VitePress (`provider: "local"`) : un par langue, chargé selon la clé de locale VitePress (`root` pour la langue racine). Quand une langue utilise le backend local, `akariContent` l'active dans la configuration du site et fait conserver par l'index le texte de chaque section, pour les extraits des résultats :
 
 ```ts
-interface SearchIndexFile {
-  version: 1;
-  generatedAt: string;          // date et heure ISO
-  entries: SearchIndexEntry[];
-}
-
-interface SearchIndexEntry {
-  id: string;                   // "/fr-FR/theme/layout::page" ou "/fr-FR/theme/layout::barre-d-application"
-  pageTitle: string;            // titre de la page
-  title: string;                // titre de la page pour une entrée de page, titre de section pour une entrée de section
-  heading: string;              // titre de section ; vide pour une entrée de page
-  href: string;                 // "/fr-FR/theme/layout#barre-d-application"
-  content: string;              // texte sans balisage, 4000 caractères au plus
-  level: number;                // 0 pour une entrée de page, 2 ou 3 pour une section
-}
+// La configuration du site que génère akariContent
+themeConfig: {
+  search: {
+    provider: "local",
+    options: { miniSearch: { options: { storeFields: ["title", "titles", "text"] } } },
+  },
+},
 ```
+
+Chaque section est un document de l'index : `id` est le chemin de la page suivi de l'ancre du titre, `title` est le titre de la section, `titles` sont les titres qui la précèdent (le titre de la page en premier), et `text` est son texte sans balises. La section sous le titre de niveau 1 de la page représente la page elle-même, et son résultat renvoie en haut de la page.
+
+Si `.vitepress/config.mts` ne définit pas de `themeConfig`, `...content.site` apporte ce réglage ; s'il en définit un, fusionnez-y `content.site.themeConfig`.
 
 ## Backend HTTP
 

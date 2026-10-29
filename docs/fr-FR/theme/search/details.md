@@ -23,33 +23,38 @@ Quand l'option « réduire les animations » du système est activée, le pann
 
 ## Construction de l'index
 
-- Un plugin Vite parcourt chaque fichier `.md` de `docs` (sauf dans `.vitepress`, `public` et les répertoires qui commencent par `.`) au démarrage du serveur de développement et au début d'un build, et écrit `docs/public/search-index.json`. Pendant le développement, il régénère l'index environ 150ms après l'ajout, la modification ou la suppression d'un fichier Markdown. À la fin du build, il copie le fichier à la racine de la sortie.
-- Les URL des pages sont calculées par `content.route` : elles correspondent donc aux vraies URL des pages.
-- Le titre de la page est le `title` du frontmatter, à défaut le premier titre de niveau 1, à défaut le nom du fichier.
-- Chaque titre de niveau 2 et de niveau 3 produit une entrée de section. Son ancre correspond à l'id de titre que génère VitePress.
-- Les blocs de code délimités sont exclus de l'index. Les balises HTML, les URL des liens et la syntaxe Markdown sont retirées pour ne garder que le texte. Le texte de chaque entrée fait au plus 4 000 caractères.
+- La recherche locale de VitePress construit l'index : elle rend chaque page avec le moteur Markdown du site, la découpe en sections aux titres qui ont une ancre, et construit un index par langue, chacun regroupé dans un seul fichier au moment du build. Tant que le serveur de développement tourne, l'index est mis à jour quand les pages changent et envoyé au navigateur.
+- Les chemins et les ancres viennent des pages rendues : ils correspondent donc aux vrais chemins des pages et aux ids de titre, y compris les chemins réécrits et les titres à ancre personnalisée.
+- Le texte est le HTML rendu sans balises, blocs de code compris, donc les noms qui figurent dans du code sont eux aussi trouvables. Les pages dont le frontmatter contient `search: false` sont exclues.
+- Le chinois et le japonais n'ont pas d'espaces : ils sont découpés en mots avec `Intl.Segmenter`. Le thème découpe les requêtes de la même façon (`tokenizeSearchText`), si bien que les requêtes et l'index se rejoignent sur les mêmes mots.
 
 ## Correspondance et classement
 
-La requête est d'abord normalisée (casse, formes pleine chasse et demi-chasse, etc.), puis découpée en mots selon les espaces. Une entrée ne correspond que si chaque mot apparaît dans son titre, dans le titre de sa page ou dans son texte. Son score s'additionne comme suit, où « titre » désigne le titre propre de l'entrée : le titre de la page pour une entrée de page, le titre de section pour une entrée de section :
+La requête est découpée en mots comme l'index, et MiniSearch les met en correspondance :
 
-| Condition | Score |
+- Un mot correspond tel que saisi, ou comme début d'un mot plus long. Les mots plus longs peuvent comporter une faute de frappe, avec une distance d'édition allant jusqu'à 20 % de leur longueur.
+- Chaque mot doit correspondre. Quand aucune section ne les contient tous, on accepte à la place les sections qui en contiennent au moins un.
+- La pertinence est calculée avec BM25, avec un poids de 4 pour le titre de la section, 2 pour le texte et 1 pour les titres qui la précèdent.
+
+Les résultats sont ensuite classés par paliers selon la requête telle que saisie, où « titre » désigne le titre propre de la section :
+
+| Palier | Condition |
 | --- | --- |
-| Le titre est exactement la requête entière | +100 |
-| Le titre commence par la requête entière | +60 |
-| Le titre contient la requête entière | +40 |
-| Le titre de la page contient la requête entière | +20 |
-| Le texte contient la requête entière | +10 |
-| Chaque mot : dans le titre / le titre de la page / le texte | +24 / +10 / +6 |
-| Niveau de l'entrée : page / titre de niveau 2 / titre de niveau 3 | +3 / +2 / +1 |
+| 4 | Le titre est exactement la requête entière |
+| 3 | Le titre commence par la requête entière |
+| 2 | Le titre contient la requête entière |
+| 1 | Les titres qui précèdent ou le texte contiennent la requête entière mot pour mot, comme une expression chinoise |
+| 0 | Tout le reste |
 
-Les résultats sont triés par score décroissant, puis par titre à score égal. Un seul résultat est conservé par URL, et `maxResults` au plus sont renvoyés. Sur un site multilingue, l'index local contient les pages de toutes les langues, et seules les entrées situées sous le chemin de la langue courante sont conservées (la langue racine n'inclut pas les pages sous `/<dossier de langue>/`).
+Les paliers les plus élevés viennent en premier. Dans les paliers 4 et 3, une page passe avant ses sections. À l'intérieur d'un palier, les résultats suivent la pertinence de MiniSearch, puis leur titre. Un seul résultat est conservé par URL, et `maxResults` au plus sont renvoyés. Chaque résultat porte les mots qui ont correspondu (`terms`), y compris ceux saisis en partie ou avec une faute, et le panneau les met en évidence.
+
+Chaque langue a son propre index : les résultats viennent donc toujours de la langue courante.
 
 ## Chargement et cache
 
-- L'index local se charge à la première recherche, puis il est mis en cache dans la page. En mode développement, le cache du navigateur n'est pas utilisé : le contenu modifié est donc trouvable tout de suite.
+- L'index de chaque langue se charge à la première recherche dans cette langue, puis il est mis en cache dans la page. En développement, le cache est vidé quand l'index est mis à jour.
 - La saisie est soumise à un anti-rebond de `debounce`. Quand une nouvelle requête est saisie ou que le panneau se ferme, la requête en cours est interrompue au moyen d'`AbortSignal`.
-- Si le fichier d'index est absent ou mal formé, le panneau affiche une erreur et un bouton pour réessayer.
+- Si l'index ne se charge pas ou est mal formé, le panneau affiche une erreur et un bouton pour réessayer.
 
 ## États du panneau
 
@@ -65,5 +70,5 @@ Ouvrir un résultat passe par le routeur de VitePress, ce qui conserve la naviga
 
 ## Limites connues
 
-- L'index local utilise une simple recherche de sous-chaînes, sans correction orthographique ni recherche sémantique. Si vous en avez besoin, utilisez un backend HTTP ou un backend enregistré.
-- L'index local n'est actualisé que pendant que le serveur de développement tourne ou pendant un build. Le Markdown modifié alors que le serveur de développement est arrêté devient trouvable après le prochain `npm run dev` ou `npm run build`.
+- La recherche locale met en correspondance des mots, sans recherche sémantique ni synonymes. Si vous en avez besoin, utilisez un backend HTTP ou un backend enregistré. Le découpage du chinois et du japonais en mots dépend de `Intl.Segmenter` du navigateur ; les navigateurs qui en sont dépourvus ne peuvent découper qu'aux espaces et à la ponctuation.
+- L'index local n'est construit que pendant que le serveur de développement tourne ou pendant un build. Le Markdown modifié alors que le serveur de développement est arrêté devient trouvable après le prochain `npm run dev` ou `npm run build`.

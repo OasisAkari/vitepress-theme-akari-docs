@@ -5,21 +5,35 @@ order: 1
 
 # 설치
 
-테마는 저장소의 `docs/.vitepress/theme`에 있습니다. 따로 설치할 테마 패키지는 없습니다.
+Vitepress Theme Akari Docs는 GitHub 템플릿 저장소입니다. 이 템플릿으로 자신의 저장소를 만들면 테마 소스, 구성, 샘플 문서를 받을 수 있습니다. 따로 설치할 테마 패키지는 없습니다.
+
+## 템플릿으로 저장소 만들기
+
+1. [OasisAkari/vitepress-theme-akari-docs](https://github.com/OasisAkari/vitepress-theme-akari-docs)를 열고 **Use this template** → **Create a new repository**를 클릭합니다.
+2. 저장소 이름과 공개 범위를 입력하고 저장소를 만듭니다. 새 저장소에는 템플릿의 모든 파일이 들어 있고 커밋 기록은 처음부터 시작하며, 템플릿의 포크가 아닙니다.
+3. 저장소를 클론하고 의존성을 설치한 다음 실행합니다.
+
+   ```bash
+   git clone https://github.com/<계정>/<저장소>.git
+   cd <저장소>
+   npm install
+   npm run dev
+   ```
+
+GitHub CLI를 사용하면 한 번에 만들고 클론할 수 있습니다.
+
+```bash
+gh repo create my-docs --template OasisAkari/vitepress-theme-akari-docs --public --clone
+```
 
 ## 요구 사항
 
-- Node.js `>=22.12.0`(`package.json`의 `engines` 필드). 저장소는 Node.js `24.21.0`과 npm `12.2.1`로 검증되었습니다.
-- npm. 저장소에는 `package-lock.json` 하나만 있습니다.
+- Node.js `>=22.12.0`(`package.json`의 `engines` 필드). 템플릿은 Node.js `24.21.0`과 npm `12.2.1`로 검증되었습니다.
+- npm. 저장소에는 `package-lock.json` 하나만 있습니다. 지속적 통합(CI)에서는 `npm ci`로 이 파일에서 설치합니다.
 
-## 설치와 실행
+## 명령
 
-```bash
-npm install
-npm run dev
-```
-
-개발 서버는 기본적으로 `http://localhost:5173`에서 실행됩니다. 지속적 통합(CI)에서는 `npm ci`로 잠금 파일에서 설치합니다.
+개발 서버는 기본적으로 `http://localhost:5173`에서 실행됩니다.
 
 | 명령 | 용도 |
 | --- | --- |
@@ -28,6 +42,24 @@ npm run dev
 | `npm run preview` | 빌드 결과를 로컬에서 미리 봅니다 |
 | `npm run typecheck` | `vue-tsc --noEmit`으로 테마와 테스트를 검사합니다 |
 | `npm test` | Vitest 단위 테스트를 실행합니다 |
+
+## 내 사이트로 만들기
+
+- 사이트 이름, 버전, 소셜 링크, 푸터는 `docs/config.ts`와 각 언어의 `config.ts`에 있습니다. [구성](/ko-KR/getting-started/configuration)을 참고하세요.
+- 로고는 `docs/public/logo.svg`입니다.
+- 언어 폴더에는 이 사이트의 문서가 들어 있습니다. 필요한 언어만 남기고 나머지 폴더는 삭제한 다음, 남긴 폴더에 자신의 페이지를 작성하세요. [페이지 작성](/ko-KR/getting-started/writing)을 참고하세요.
+
+## 템플릿에서 업데이트 받기
+
+템플릿으로 만든 저장소는 템플릿과 연결되어 있지 않으므로 템플릿의 이후 업데이트는 자동으로 들어오지 않습니다. 업데이트가 필요하면 템플릿을 리모트로 추가하고, 테마가 있는 `docs/.vitepress`를 가져오세요.
+
+```bash
+git remote add template https://github.com/OasisAkari/vitepress-theme-akari-docs.git
+git fetch template
+git checkout template/main -- docs/.vitepress
+```
+
+이 명령은 폴더를 템플릿의 버전으로 바꾸므로, 테마에 직접 가한 변경은 다시 병합해야 합니다. `package.json`의 의존성도 함께 비교하세요.
 
 ## 버전 기준
 
@@ -56,7 +88,6 @@ VitePress는 아직 알파 단계입니다. 업그레이드할 때는 테마 코
 │   └── .vitepress/
 │       ├── config.mts             테마를 VitePress에 연결
 │       ├── content/               폴더에서 언어, 경로, 내비게이션 생성
-│       ├── search/                로컬 검색 색인
 │       └── theme/                 테마 소스
 ├── tests/                         단위 테스트
 └── package.json
@@ -70,7 +101,7 @@ VitePress는 아직 알파 단계입니다. 업그레이드할 때는 테마 코
 
 - **확장자 없는 경로**: 사이트는 `cleanUrls`를 켜 두므로 `/theme/layout`은 `theme/layout.html` 파일에 대응합니다. 파일을 찾지 못하면 호스트가 `.html`을 붙여 다시 시도해야 합니다. GitHub Pages, Netlify, Cloudflare Pages는 기본으로 이렇게 동작합니다. Vercel은 `vercel.json`에 `"cleanUrls": true`가 필요하고, Nginx에서는 `try_files $uri $uri.html $uri/ =404;`를 작성합니다.
 - **하위 경로에 배포**: 예를 들어 `https://example.com/docs/`라면 `.vitepress/config.mts`에 `base: "/docs/"`를 설정합니다. 내비게이션, 히어로, 로고, 검색 색인의 내부 경로에는 자동으로 붙습니다.
-- **검색 색인**: `search-index.json`은 빌드할 때 생성되어 출력 루트로 복사됩니다. 추가 작업은 필요 없습니다.
+- **검색 색인**: 각 언어의 색인은 빌드할 때 출력의 `assets/chunks/`에 묶입니다. 추가 작업은 필요 없습니다.
 
 ## 자주 묻는 질문
 

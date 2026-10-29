@@ -33,6 +33,12 @@ tab: API
 
 한 페이지에서만 목차를 끄려면 그 페이지의 프런트매터에 `toc: false`를 씁니다. `m3e-toc-ignore` 속성이 있는 제목은 목차에서 제외됩니다.
 
+## loadingBar
+
+| 필드 | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `enabled` | `boolean` | `true` | 페이지를 불러오는 동안 창 맨 위에 진행 막대를 표시할지 여부 |
+
 ## footer
 
 | 필드 | 타입 | 기본값 | 설명 |
@@ -78,6 +84,8 @@ footer: {
 | `--akari-wavy-divider-color` | `--md-sys-color-outline-variant` | 푸터 위 물결 구분선의 색상 |
 | `--akari-doc-app-bar-height` | `64px` | 앱 바의 높이. 읽기 전용이며, 고정 위치를 계산하는 데 씁니다 |
 | `--akari-doc-rail-width` | `96px` | 레일의 너비. 읽기 전용 |
+| `--akari-loading-bar-height` | `4px` | 로딩 바의 높이 |
+| `--akari-loading-bar-color` | `--md-sys-color-primary` | 로딩 바의 색상 |
 
 ```css
 :root {

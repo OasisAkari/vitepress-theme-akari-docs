@@ -1,7 +1,11 @@
 // Imported by the docs' config files. Vite loads those on its own and
 // warns about imports its coming native loader cannot follow, so this
 // module imports only types, by their full file name.
-import type { AkariDirectoryConfig, AkariSiteConfig } from "./types.ts";
+import type {
+  AkariDirectoryConfig,
+  AkariLanguage,
+  AkariSiteConfig,
+} from "./types.ts";
 
 /**
  * Writes a config file of the docs (`docs/config.ts`, or the `config.ts`
@@ -40,4 +44,12 @@ export function defineAkariConfig(config: AkariSiteConfig): AkariDirectoryConfig
     ),
     themeConfig: { ...(logo === undefined ? {} : { logo }), akari },
   };
+}
+
+/**
+ * Writes a language for `languages` in a config file: a language the theme
+ * does not come with, or changes to one it does.
+ */
+export function defineAkariLanguage(language: AkariLanguage): AkariLanguage {
+  return language;
 }

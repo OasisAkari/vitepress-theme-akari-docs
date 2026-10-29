@@ -19,15 +19,15 @@ function defineAkariConfig(config: AkariSiteConfig): AkariDirectoryConfig;
 | フィールド | 型 | デフォルト | 説明 |
 | --- | --- | --- | --- |
 | `rootLanguage` | `string` | アルファベット順で最初の言語フォルダー | 共通設定でのみ有効。サイトのルートで配信する言語フォルダーです。ほかの言語のパスはフォルダー名で始まります |
-| `lang` | `string` | 言語フォルダー名 | 言語コード。`<html lang>` に使われ、テーマの組み込みのインターフェーステキストを選びます |
-| `label` | `string` | `lang` | 言語メニューでの名前 |
-| `dir` | `"ltr" \| "rtl" \| "auto"` | `"ltr"` | 文字の方向。右から左に書く言語では `rtl` を設定します |
+| `lang` | `string` | 言語フォルダー名 | 言語コード。`<html lang>` に使われ、[言語パック](/ja-JP/theme/i18n/api#akarilanguage)を選びます |
+| `label` | `string` | その言語自身による呼び名 | 言語メニューでの名前 |
+| `dir` | `"ltr" \| "rtl" \| "auto"` | 言語パックの値 | 文字の方向 |
 | `title` | `string` | なし | サイトのタイトル。アプリバーのデフォルトのタイトルにもなります |
 | `titleTemplate` | `string \| boolean` | なし | ページタイトルの接尾辞またはテンプレート。VitePress と同じです |
 | `description` | `string` | なし | サイトの説明 |
 | `head` | `HeadConfig[]` | `[]` | 追加の `<head>` タグ。上のレベルとマージされます |
 | `logo` | `string` | なし | アプリバーとフッターに表示するブランド画像 |
-| `markdown` | `MarkdownLocaleOptions` | なし | Markdown 内のその言語のテキスト。コードブロックのコピーボタンのツールチップなど |
+| `markdown` | `MarkdownLocaleOptions` | 言語パックの値 | Markdown 内のその言語のテキスト。コードブロックのコピーボタンのツールチップなど。言語パックの値の上に重ねられます |
 
 `lang`、`label`、`dir`、`markdown` は言語を表すもので、言語設定に書きます。それ以外のフィールドはすべて、デフォルトとして共通設定に書くことができ、言語設定で上書きできます。
 
@@ -37,12 +37,14 @@ function defineAkariConfig(config: AkariSiteConfig): AkariDirectoryConfig;
 | --- | --- | --- |
 | `appBar` | アプリバーのタイトル、バージョン、ロゴ、ボタン、ソーシャルリンク | [レイアウトとアプリバー](/ja-JP/theme/layout/api#appbar) |
 | `toc` | 右側の目次 | [レイアウトとアプリバー](/ja-JP/theme/layout/api#toc) |
+| `loadingBar` | ページの読み込み中にウィンドウの上端に表示されるバー | [レイアウトとアプリバー](/ja-JP/theme/layout/api#loadingbar) |
 | `footer` | ページ送りカードとフッター | [レイアウトとアプリバー](/ja-JP/theme/layout/api#footer) |
 | `sidebar` | カテゴリ、手書きのナビゲーション、ドロワーの幅 | [サイドナビゲーション](/ja-JP/theme/sidebar/api#sidebar) |
 | `settings` | 設定ダイアログとカラーモードボタン | [設定と外観](/ja-JP/theme/settings/api#settings) |
 | `search` | 検索の入り口とバックエンド | [検索](/ja-JP/theme/search/api#search) |
 | `messages` | インターフェーステキスト | [国際化](/ja-JP/theme/i18n/api#messages) |
 | `fonts` | Google Fonts からフォントを読み込むかどうかと、フォントスタック | [タイポグラフィ](/ja-JP/styles/typography/api#fonts) |
+| `languages` | 組み込み以外の言語パック、または組み込みの言語パックへの変更 | [国際化](/ja-JP/theme/i18n/api#akarilanguage) |
 
 インターフェースのコンポーネントの置き換えは、設定ファイルでは行いません。[テーマの拡張](/ja-JP/theme/extending/api#provideakaricomponents) を参照してください。
 
@@ -54,7 +56,6 @@ function defineAkariConfig(config: AkariSiteConfig): AkariDirectoryConfig;
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitepress";
 import { akariContent } from "./content";
-import { searchIndexPlugin } from "./search/indexPlugin";
 import { akariHead } from "./theme/head";
 import { akariMarkdown } from "./theme/markdown";
 
@@ -73,21 +74,20 @@ export default defineConfig({
     },
   },
   vite: {
-    plugins: [content.plugin, searchIndexPlugin({ docsDir, route: content.route })],
+    plugins: [content.plugin],
   },
 });
 ```
 
 | オプション | 用途 |
 | --- | --- |
-| `...content.site` | フォルダーから生成される `locales`、`rewrites`、およびサイトレベルの `lang`、`title`、`description` |
+| `...content.site` | フォルダーから生成される `locales`、`rewrites`、およびサイトレベルの `lang`、`title`、`description`。ローカル検索では `themeConfig.search` も含まれ、VitePress のローカル検索インデックスが有効になります |
 | `cleanUrls: true` | `.html` のないパス。ホスティングの要件は [インストール](/ja-JP/getting-started/installation#deployment) を参照 |
 | `appearance: false` | VitePress に組み込まれたライト・ダークの切り替えをオフにします。テーマが管理します |
 | `head: akariHead()` | 最初のフレームの前にライトモードまたはダークモードを適用するスクリプト |
 | `akariMarkdown` | テーブルの M3 の枠線と、リモート画像のサイズ |
 | `isCustomElement` | Vue に `m3e-*` をカスタム要素として扱わせます |
 | `content.plugin` | 開発中、Markdown ファイルの追加や削除、フロントマターの変更に合わせてナビゲーションを更新します |
-| `searchIndexPlugin` | ローカル検索インデックスを生成します。`route` により、インデックスで実際のページパスが使われます |
 
 ## akariContent
 

@@ -57,6 +57,10 @@ Une page qui appartient à un groupe de pages parallèles a une barre d'onglets 
 
 Après les cartes de pagination viennent un séparateur ondulé et le pied de page : le logo, le nom du site et `footer.message` à gauche, les colonnes de liens à droite, et `footer.copyright` en bas. Par défaut, les colonnes de liens reprennent les quatre premières catégories de la navigation.
 
+## Barre de chargement
+
+Pendant le chargement d'une page, une fine barre de la couleur primaire court en haut de la fenêtre : à l'ouverture du site, elle attend les scripts, les images et les polices ; en naviguant dans le site, elle attend le script de la page suivante, ses images et ses polices. Un chargement rapide n'affiche rien. La configuration permet de la désactiver ; voir [API](/fr-FR/theme/layout/api#loadingbar).
+
 ## Tailles de fenêtre
 
 | Largeur de la fenêtre | Navigation | Table des matières |

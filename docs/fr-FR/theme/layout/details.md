@@ -66,6 +66,16 @@ La barre d'application dispose les boutons de droite selon sa largeur réelle :
 
 Quand vous allez vers un autre groupe de pages, toute la surface du document disparaît d'abord en fondu (environ 250ms). Une fois la nouvelle page chargée, elle apparaît en fondu (environ 450ms) et remonte de 16px jusqu'à sa place, portée par le ressort spatial lent de m3e. Le fondu de sortie se déroule pendant le chargement de la nouvelle page : il ne ralentit donc pas la navigation. Les sauts vers des ancres dans une même page ne jouent aucune animation. Passer d'une page à l'autre au sein d'un même groupe parallèle fait plutôt glisser le contenu latéralement ; voir [Navigation latérale](/fr-FR/theme/sidebar/details#switching-pages). Quand l'option « réduire les animations » est activée dans le système, les pages changent sans animation.
 
+## Barre de chargement
+
+La barre est un indicateur de progression linéaire M3 de 4px en haut de la fenêtre : l'indicateur actif est de la couleur primaire, sans piste. Elle se place au-dessus de la barre d'application et grandit du début de la ligne vers sa fin, en miroir dans les mises en page de droite à gauche.
+
+- Navigation dans le site : elle démarre quand VitePress commence à charger la page suivante. La taille du script de cette page est inconnue, donc la progression avance vers 70 % par pas de plus en plus petits sans l'atteindre. Une fois la page rendue, le thème recense les images et les polices encore en cours de chargement, et chacune qui se termine rapproche la progression de 100 % d'une part. Les images avec `loading="lazy"` ne comptent que près de la fenêtre d'affichage ; les autres ne se chargent que lorsque le lecteur fait défiler jusqu'à elles. Les images non affichées (comme l'image claire ou sombre du hero que le mode courant n'utilise pas) ne comptent pas. Chaque ressource est attendue au plus 8 secondes.
+- Ouverture du site : avant l'exécution des scripts, la barre rendue par le serveur avance seule avec une animation CSS. Quand le script prend le relais, il continue là où la barre en est et attend l'événement `load` de la page, ses images et ses polices. Sans scripts, une règle `<noscript>` dans `akariHead()` la masque.
+- Un chargement qui se termine en moins de 150ms n'affiche pas de barre, donc elle ne fait jamais que clignoter. À 100 %, la barre reste 200ms, puis disparaît en fondu. Un chargement encore en cours après 15 secondes cesse de s'afficher.
+- La barre a `role="progressbar"` et `aria-valuenow`, tire son nom de la chaîne d'interface `loadingLabel` et est masquée pour les technologies d'assistance tant qu'elle n'est pas affichée. Avec « réduire les animations » activé dans le système, elle n'a aucune transition ; en mode couleurs forcées, elle utilise la couleur de surbrillance du système.
+- Le calcul de la progression est dans `loading.ts`, et le suivi dans le composable `useLoadingBar`, qui se branche sur `onBeforePageLoad` du routeur VitePress comme le font les transitions de page.
+
 ## Table des matières
 
 - **Section courante** : le dernier titre qui a franchi la ligne de lecture (96px sous la barre d'application). Une fois arrivé en bas de la page, le dernier titre encore à l'écran.

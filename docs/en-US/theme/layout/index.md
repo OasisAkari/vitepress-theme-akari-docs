@@ -57,6 +57,10 @@ A page that belongs to a group of parallel pages has a tab bar at the top of the
 
 After the pager cards come a wavy divider and the footer: the logo, site name and `footer.message` on the left, link columns on the right, and `footer.copyright` at the bottom. By default, the link columns take the first four categories of the navigation.
 
+## Loading bar
+
+While a page is still loading, a thin bar in the primary color runs along the top of the window: on opening the site it waits for the scripts, images and fonts, and on navigating within the site for the next page's script and its images and fonts. A quick load shows nothing. The config can turn it off; see [API](/en-US/theme/layout/api#loadingbar).
+
 ## Window sizes
 
 | Window width | Navigation | Table of contents |

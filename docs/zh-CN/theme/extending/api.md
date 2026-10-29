@@ -73,6 +73,9 @@ const config = useAkariConfig();
 | `defineAkariConfig` | `(config: AkariSiteConfig) => AkariDirectoryConfig` | 写配置文件，见[配置](/getting-started/configuration/api#defineakariconfig) |
 | `defineAkariThemeConfig` | `(config: AkariThemeConfig) => AkariThemeConfig` | 只写主题字段时的类型辅助 |
 | `registerSearchBackend` | `(id, handler) => void` | 注册搜索后端，见[搜索](/theme/search/api#注册的后端) |
+| `defineAkariLanguage` | `(language: AkariLanguage) => AkariLanguage` | 写语言包，见[国际化](/theme/i18n/api#akarilanguage) |
+| `AKARI_LANGUAGES` | `AkariLanguage[]` | 内置的语言包 |
+| `resolveLanguage` | `(lang, languages?) => ResolvedAkariLanguage` | 一种语言最终使用的语言包 |
 | `AKARI_CONTENT_ID` | `"akari-doc-content"` | 正文容器的 id |
 | `AKARI_SIDEBAR_ID` | `"akari-sidebar"` | 窄屏导航抽屉的 id |
 | `AKARI_SETTINGS_ID` | `"akari-settings"` | 设置面板的 id |
@@ -96,25 +99,26 @@ const config = useAkariConfig();
 docs/.vitepress/
 ├── config.mts             把主题接入 VitePress
 ├── content/               由目录生成语言、地址与导航（Node）
-├── search/                本地搜索索引的解析、生成与 Vite 插件（Node）
 └── theme/
     ├── index.ts           主题入口与公开导出
-    ├── define.ts          defineAkariConfig
+    ├── define.ts          defineAkariConfig 与 defineAkariLanguage
     ├── config.ts          配置的默认值与校验
     ├── types.ts           类型定义
     ├── constants.ts       默认值、断点与 id
-    ├── i18n.ts            内置界面文字
+    ├── i18n/              语言包与语言的解析
+    │   └── languages/     内置语言包，每种语言一个文件
     ├── locales.ts         语言切换的路径换算
     ├── sidebar.ts         导航的归一化、匹配与翻页
     ├── settings.ts        设置的校验与存储
     ├── scheme.ts          明暗模式的解析与首帧脚本
     ├── hero.ts            头图头部信息的解析
+    ├── loading.ts         加载进度条的进度计算
     ├── head.ts / fonts.ts akariHead 与字体
     ├── markdown.ts        akariMarkdown
     ├── m3e.ts / icons.ts  按需注册组件与图标
     ├── layouts/           AkariLayout.vue
     ├── components/
-    │   ├── shell/         顶栏、更多菜单、明暗模式与语言按钮、对话框
+    │   ├── shell/         顶栏、更多菜单、明暗模式与语言按钮、对话框、加载进度条
     │   ├── sidebar/       rail、桌面导航抽屉、窄屏导航
     │   ├── content/       头图、标签栏、目录、翻页、悬浮按钮、页尾
     │   └── settings/      设置模态框与面板

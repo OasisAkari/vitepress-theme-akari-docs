@@ -1,6 +1,5 @@
 import {
   DEFAULT_SEARCH_DEBOUNCE,
-  DEFAULT_SEARCH_ENDPOINT,
   DEFAULT_SEARCH_MAX_RESULTS,
   DEFAULT_SEARCH_SHORTCUT,
   DEFAULT_SETTINGS,
@@ -9,7 +8,12 @@ import {
   SETTINGS_STORAGE_KEY,
 } from "./constants";
 import { resolveFonts } from "./fonts";
-import { resolveMessages, resolveMessagesLang } from "./i18n";
+import {
+  akariLanguages,
+  DEFAULT_LANGUAGE,
+  mergeMessages,
+  resolveLanguage,
+} from "./i18n";
 import { mergeSettings } from "./settings";
 import type {
   AkariFooterLink,
@@ -111,26 +115,21 @@ function normalizeSearchBackend(
     return { type: "registered", id: value.id.trim() };
   }
 
-  if (value?.type === "local") {
-    return {
-      type: "local",
-      endpoint: value.endpoint?.trim() || DEFAULT_SEARCH_ENDPOINT,
-    };
-  }
-
-  return { type: "local", endpoint: DEFAULT_SEARCH_ENDPOINT };
+  return { type: "local" };
 }
 
 /**
  * Merges the theme options with their defaults. `site.lang` selects the
- * language of the built-in strings; VitePress passes the current locale's.
+ * language the strings and fonts come from; VitePress passes the current
+ * locale's.
  */
 export function resolveAkariConfig(
   themeConfig: ThemeConfigLike = {},
   site: { title?: string; lang?: string } = {},
 ): ResolvedAkariThemeConfig {
   const akari = themeConfig.akari ?? {};
-  const messages = resolveMessages(site.lang, akari.messages);
+  const language = resolveLanguage(site.lang, akari.languages);
+  const messages = mergeMessages(language.messages, akari.messages);
   const appBar = akari.appBar ?? {};
   const settings = akari.settings ?? {};
   const toc = akari.toc ?? {};
@@ -160,7 +159,7 @@ export function resolveAkariConfig(
   ) as Record<SettingsSectionKey, string>;
 
   return {
-    lang: site.lang?.trim() || resolveMessagesLang(site.lang),
+    lang: site.lang?.trim() || DEFAULT_LANGUAGE,
     messages,
     appBar: {
       title: appBar.title ?? site.title ?? "Documentation",
@@ -185,6 +184,9 @@ export function resolveAkariConfig(
       defaults: mergeSettings(DEFAULT_SETTINGS, settings.defaults),
       persist: settings.persist ?? true,
       storageKey: settings.storageKey ?? SETTINGS_STORAGE_KEY,
+    },
+    loadingBar: {
+      enabled: akari.loadingBar?.enabled ?? true,
     },
     toc: {
       enabled: toc.enabled ?? true,
@@ -213,7 +215,11 @@ export function resolveAkariConfig(
       debounce: clampNumber(search.debounce, DEFAULT_SEARCH_DEBOUNCE, 0, 1000),
       backend: normalizeSearchBackend(search.backend),
     },
-    fonts: resolveFonts(site.lang, akari.fonts),
+    fonts: resolveFonts(
+      akari.fonts,
+      language.fonts,
+      akariLanguages(akari.languages),
+    ),
     components: akari.components ?? {},
   };
 }

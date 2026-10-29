@@ -20,28 +20,24 @@ tab: API
 ## Local backend
 
 ```ts
-backend: { type: "local", endpoint: "/search-index.json" },
+backend: { type: "local" },
 ```
 
-`endpoint` can point to another same-origin static JSON file; relative paths get `base` added automatically. The file format:
+It uses the index that VitePress' local search (`provider: "local"`) builds: one per language, loaded by VitePress locale key (`root` for the root language). When any language uses the local backend, `akariContent` turns it on in the site config and has the index keep each section's text, for the excerpts in the results:
 
 ```ts
-interface SearchIndexFile {
-  version: 1;
-  generatedAt: string;          // ISO time
-  entries: SearchIndexEntry[];
-}
-
-interface SearchIndexEntry {
-  id: string;                   // "/en-US/theme/layout::page" or "/en-US/theme/layout::app-bar"
-  pageTitle: string;            // page title
-  title: string;                // page title for a page entry, section heading for a section entry
-  heading: string;              // section heading; empty for a page entry
-  href: string;                 // "/en-US/theme/layout#app-bar"
-  content: string;              // body text without markup, at most 4000 characters
-  level: number;                // 0 for a page entry, 2 or 3 for a section
-}
+// The site config akariContent generates
+themeConfig: {
+  search: {
+    provider: "local",
+    options: { miniSearch: { options: { storeFields: ["title", "titles", "text"] } } },
+  },
+},
 ```
+
+Each section is one document in the index: `id` is the page path plus the heading's anchor, `title` is the section's heading, `titles` are the headings above it (the page title first), and `text` is its body text without tags. The section under the page's level-1 heading stands for the page itself, and its result links to the top of the page.
+
+If `.vitepress/config.mts` sets no `themeConfig`, `...content.site` brings this setting along; if it does, merge `content.site.themeConfig` into it.
 
 ## HTTP backend
 

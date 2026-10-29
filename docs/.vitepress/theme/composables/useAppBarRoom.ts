@@ -27,17 +27,27 @@ interface TitleWidth {
  */
 const TRUNCATING = ".akari-title__text, .akari-app-bar__page-title";
 
-/** Measures a title layer, the same whatever width the title is given. */
+/**
+ * Measures a title layer, the same whatever width the title is given. The
+ * text is measured to the fraction of a pixel (a Range's box covers the
+ * part cut off too): scrollWidth and clientWidth are rounded, and a cut
+ * under half a pixel, invisible while the width eases, would read as none
+ * and end in an ellipsis once it settles.
+ */
 function measureTitle(element: HTMLElement): TitleWidth {
   let natural = element.getBoundingClientRect().width;
   let shrinkable = 0;
+  const range = document.createRange();
   for (const node of [element, ...element.querySelectorAll<HTMLElement>("*")]) {
     if (!node.matches(TRUNCATING)) continue;
     const style = getComputedStyle(node);
-    const hidden = node.scrollWidth - node.clientWidth;
-    // scrollWidth is rounded; one pixel more keeps the ellipsis away.
-    if (hidden > 0) natural += hidden + 1;
-    const text = node.scrollWidth + 1;
+    range.selectNodeContents(node);
+    const text = range.getBoundingClientRect().width;
+    const box =
+      node.getBoundingClientRect().width -
+      pixels(style, "padding-left") -
+      pixels(style, "padding-right");
+    if (text > box) natural += text - box;
     shrinkable +=
       text - Math.min(text, MIN_TEXT_EM * Number.parseFloat(style.fontSize));
   }
@@ -212,9 +222,12 @@ export function useAppBarRoom(
     const width = Math.max(0, Math.floor(max));
     // Measuring a title mid-transition can come out a pixel off (layout
     // widths are rounded); resetting the cap for that would restart its
-    // transition every frame and stall it.
-    if (applied >= 0 && Math.abs(width - applied) < 2) return;
-    const animate = applied >= 0;
+    // transition every frame and stall it. Once it has settled, a pixel
+    // counts: the measure after the transition puts it right, at once.
+    const easing = element.dataset.easing !== undefined;
+    const change = Math.abs(width - applied);
+    if (applied >= 0 && change < (easing ? 2 : 1)) return;
+    const animate = applied >= 0 && change >= 2;
     applied = width;
     const value = `${width}px`;
 
@@ -223,7 +236,10 @@ export function useAppBarRoom(
       // covered as it goes, rather than ending in an ellipsis mid-way.
       element.dataset.easing = "";
       clearTimeout(easeTimer);
-      easeTimer = setTimeout(() => delete element.dataset.easing, EASE_END);
+      easeTimer = setTimeout(() => {
+        delete element.dataset.easing;
+        schedule();
+      }, EASE_END);
       element.style.setProperty(TITLE_MAX, value);
       return;
     }

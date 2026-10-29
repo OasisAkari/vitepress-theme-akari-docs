@@ -10,14 +10,22 @@ The path decides the language: a page whose path starts with `/<language folder>
 
 The config a page ends up with is the `config.ts` of its language folder layered over the shared config and the VitePress locale config; see [Configuration: Details](/en-US/getting-started/configuration/details#how-the-two-levels-layer).
 
-## Choosing interface strings
+## Choosing a language pack
 
-1. Take the current language's `lang`, lowercase it, and compare the full code with the built-in languages (`zh`, `en`, `ja`, `ko`, `fr`, `ar`).
-2. If nothing matches, compare the primary language: `zh-CN` and `zh-TW` both use Chinese, `en-GB` uses English, and `fr-CA` uses French.
-3. If there is still no match, use English.
-4. Entries written in the language config's `messages` replace the built-in strings.
+1. The packs to choose from are the six built-in ones (`zh`, `en`, `ja`, `ko`, `fr`, `ar`) plus those in `languages`; one with the code of a built-in pack is laid over it.
+2. Take the current language's `lang`, lowercase it (with `_` turned into `-`), and look for a pack with exactly that code.
+3. If there is none, compare the primary language: `zh-CN` and `zh-TW` both use Chinese, `en-GB` uses English, and `fr-CA` uses French.
+4. If there is still none, use English.
+5. Fill the gaps: missing interface strings are English, a pack without `fonts` uses the theme's fonts, and one without `dir` is left to right.
+6. The `messages`, `fonts`, `dir` and `markdown` written in the language config are laid over the pack.
 
 When `settings.title`, `settings.labels`, `toc.overline`, `footer.message` and `search.placeholder` are not set, they also come from this table, so one shared config has sensible defaults in every language. Strings written in the shared config are inherited by every language; strings that differ by language belong in the language config.
+
+## Where language packs are used
+
+- At build time, `akariContent` generates a VitePress locale for each language. `label` defaults to the language's own name from `Intl.DisplayNames`, with a capital first letter (such as `Français`); `dir` defaults to the pack's direction; `markdown` is the pack's Markdown strings with the language config's laid over them; and `head` holds the language's font tags. VitePress renders the code block copy button and container titles from the locale's `markdown`.
+- In the page, the theme resolves the interface strings and fonts of the current language: the `messages` and `fonts` of `useAkariConfig()`.
+- Parts of a page marked with a `lang` attribute (such as the language names in the language dialog) use that language's font stack. These rules are generated from every pack that has `fonts`; the stylesheets don't name any language.
 
 ## Where switching language goes
 

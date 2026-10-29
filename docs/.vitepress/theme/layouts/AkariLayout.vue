@@ -14,6 +14,7 @@ import DefaultToc from "../components/content/DocToc.vue";
 import DefaultPager from "../components/content/DocPager.vue";
 import DefaultFooter from "../components/content/DocFooter.vue";
 import LocaleDialog from "../components/shell/LocaleDialog.vue";
+import LoadingBar from "../components/shell/LoadingBar.vue";
 import { applyFonts } from "../fonts";
 import { provideAkariColorScheme } from "../composables/useColorScheme";
 import { provideAkariLocaleDialog } from "../composables/useLocaleDialog";
@@ -184,6 +185,7 @@ onUnmounted(() => {
     strong-focus
     @change="syncBodyTheme"
   >
+    <LoadingBar v-if="config.loadingBar.enabled" />
     <!--
       Page grid: the rail owns the full-height strip at the start, the app bar
       and the document sit beside it, and a pinned drawer takes the column

@@ -1,5 +1,4 @@
 import { formatMessage, resolveMessages } from "../i18n";
-import { localeKeyForPath } from "../locales";
 import type {
   AkariMessages,
   AkariSearchBackendConfig,
@@ -7,12 +6,7 @@ import type {
 } from "../types";
 import { searchLocal } from "./local";
 import { getSearchBackend } from "./registry";
-import type {
-  AkariSearchBackend,
-  AkariSearchContext,
-  SearchIndexEntry,
-  SearchIndexFile,
-} from "./types";
+import type { AkariSearchBackend, AkariSearchContext } from "./types";
 
 const MAX_TITLE_LENGTH = 200;
 const MAX_EXCERPT_LENGTH = 320;
@@ -150,59 +144,31 @@ function rejectedAbort(): Error {
   return error;
 }
 
-function createLocalSearchBackend(
-  endpoint: string,
-  base: string,
-  locales: readonly string[],
-): AkariSearchBackend {
-  let indexPromise: Promise<SearchIndexEntry[]> | undefined;
-
-  async function loadIndex(): Promise<SearchIndexEntry[]> {
-    if (!indexPromise) {
-      indexPromise = fetch(resolveSearchEndpoint(endpoint, base), {
-        cache: "no-store",
-      })
-        .then(async (response) => {
-          if (!response.ok) {
-            throw new AkariSearchError("index-unavailable", {
-              status: response.status,
-            });
-          }
-
-          const payload = (await response.json()) as Partial<SearchIndexFile>;
-          if (!Array.isArray(payload.entries)) {
-            throw new AkariSearchError("index-invalid");
-          }
-
-          return payload.entries;
-        })
-        .catch((error) => {
-          indexPromise = undefined;
-          throw error;
-        });
-    }
-
-    return indexPromise;
-  }
-
+/**
+ * Searches the index VitePress builds for the locale being read. The index
+ * module is loaded on the first search, so a site on another backend never
+ * downloads it.
+ */
+function createLocalSearchBackend(): AkariSearchBackend {
   return {
     async search(query, context) {
       if (context.signal?.aborted) throw rejectedAbort();
 
-      const entries = await loadIndex();
+      const { loadLocalIndex, MissingLocalIndexError } = await import(
+        "./localIndex"
+      );
+      let index: Awaited<ReturnType<typeof loadLocalIndex>>;
+      try {
+        index = await loadLocalIndex(context.locale ?? "root");
+      } catch (error) {
+        throw error instanceof MissingLocalIndexError ||
+          !(error instanceof SyntaxError)
+          ? new AkariSearchError("index-unavailable")
+          : new AkariSearchError("index-invalid");
+      }
 
       if (context.signal?.aborted) throw rejectedAbort();
-
-      // One index covers every locale; results stay in the one being read.
-      const { locale } = context;
-      const scoped =
-        locale && locales.length > 1
-          ? entries.filter(
-              (entry) => localeKeyForPath(entry.href, locales) === locale,
-            )
-          : entries;
-
-      return searchLocal(scoped, query, context.limit);
+      return searchLocal(index, query, context.limit);
     },
   };
 }
@@ -308,7 +274,7 @@ function createRegisteredSearchBackend(id: string): AkariSearchBackend {
 
 export function createSearchBackend(
   config: AkariSearchBackendConfig,
-  options: { base?: string; locales?: readonly string[] } = {},
+  options: { base?: string } = {},
 ): AkariSearchBackend {
   const base = options.base ?? "/";
 
@@ -319,10 +285,6 @@ export function createSearchBackend(
       return createRegisteredSearchBackend(config.id);
     case "local":
     default:
-      return createLocalSearchBackend(
-        config.endpoint || "/search-index.json",
-        base,
-        options.locales ?? [],
-      );
+      return createLocalSearchBackend();
   }
 }

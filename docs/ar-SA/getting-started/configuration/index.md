@@ -62,21 +62,15 @@ export default defineAkariConfig({
 
 ## تهيئة اللغة
 
-اسم اللغة وعنوانها ونصوصها الخاصة بها. القيمة الافتراضية لـ `lang` هي اسم المجلد، ومنها تختار السمة نصوص الواجهة المدمجة المطابقة. واللغة التي تُكتب من اليمين إلى اليسار تضبط أيضًا `dir: "rtl"`.
+عناوين اللغة ونصوصها في هذا الموقع. القيمة الافتراضية لـ `lang` هي اسم المجلد، ومنها تختار السمة [حزمة اللغة](/ar-SA/theme/i18n#language-packs): الاسم في قائمة اللغات واتجاه النص ونصوص الواجهة ونص زر نسخ كتلة الشيفرة كلها تأتي من الحزمة، ويمكنك استبدالها هنا عند الحاجة.
 
 ```ts
 // docs/ar-SA/config.ts
 import { defineAkariConfig } from "../.vitepress/theme/define.ts";
 
 export default defineAkariConfig({
-  label: "العربية",
-  // تُكتب من اليمين إلى اليسار.
-  dir: "rtl",
   title: "Vitepress Theme Akari Docs",
   description: "قالب توثيق مبني على VitePress و M3E Web Components",
-  markdown: {
-    codeCopyButton: { tooltipText: "نسخ الشيفرة", copiedText: "تم النسخ" },
-  },
   appBar: { title: "Vitepress Theme Akari Docs" },
   sidebar: {
     categories: {

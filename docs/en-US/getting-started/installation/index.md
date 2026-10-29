@@ -5,29 +5,61 @@ order: 1
 
 # Installation
 
-The theme lives in the repository at `docs/.vitepress/theme`. There is no separate theme package to install.
+Vitepress Theme Akari Docs is a GitHub template repository. Create your own repository from it to get the theme's source, the config and the sample docs; there is no separate theme package to install.
+
+## Creating a repository from the template
+
+1. Open [OasisAkari/vitepress-theme-akari-docs](https://github.com/OasisAkari/vitepress-theme-akari-docs) and click **Use this template** → **Create a new repository**.
+2. Fill in the repository name and visibility, and create it. The new repository has all of the template's files, its commit history starts fresh, and it isn't a fork of the template.
+3. Clone it, install the dependencies and start:
+
+   ```bash
+   git clone https://github.com/<account>/<repository>.git
+   cd <repository>
+   npm install
+   npm run dev
+   ```
+
+The GitHub CLI creates and clones it in one step:
+
+```bash
+gh repo create my-docs --template OasisAkari/vitepress-theme-akari-docs --public --clone
+```
 
 ## Requirements
 
-- Node.js `>=22.12.0` (the `engines` field of `package.json`). The repository is verified with Node.js `24.21.0` and npm `12.2.1`.
-- npm. The repository keeps a single `package-lock.json`.
+- Node.js `>=22.12.0` (the `engines` field of `package.json`). The template is verified with Node.js `24.21.0` and npm `12.2.1`.
+- npm. The repository keeps a single `package-lock.json`; in continuous integration, install from it with `npm ci`.
 
-## Install and start
+## Commands
 
-```bash
-npm install
-npm run dev
-```
+The dev server runs at `http://localhost:5173` by default.
 
-The dev server runs at `http://localhost:5173` by default. In continuous integration, use `npm ci` to install from the lockfile.
-
-| Command | Purpose |
+| Command | What it does |
 | --- | --- |
-| `npm run dev` | Dev server. Markdown changes update instantly; changing `config.ts` restarts it automatically |
+| `npm run dev` | Dev server. Markdown edits show at once; editing a `config.ts` restarts it |
 | `npm run build` | Builds the static site into `docs/.vitepress/dist` |
 | `npm run preview` | Previews the build locally |
 | `npm run typecheck` | Checks the theme and the tests with `vue-tsc --noEmit` |
 | `npm test` | Runs the Vitest unit tests |
+
+## Making it your site
+
+- The site name, version, social links and footer are in `docs/config.ts` and each language's `config.ts`; see [Configuration](/en-US/getting-started/configuration).
+- The logo is `docs/public/logo.svg`.
+- The language folders hold this site's docs. Keep the languages you need, delete the other folders, and write your own pages in the ones left; see [Writing pages](/en-US/getting-started/writing).
+
+## Getting updates from the template
+
+A repository created from the template has no link to it, so the template's later updates don't come in on their own. When you want them, add the template as a remote and take `docs/.vitepress`, where the theme lives:
+
+```bash
+git remote add template https://github.com/OasisAkari/vitepress-theme-akari-docs.git
+git fetch template
+git checkout template/main -- docs/.vitepress
+```
+
+This replaces the folder with the template's version, so changes you made to the theme have to be merged again. Compare the dependencies in `package.json` as well.
 
 ## Version baseline
 
@@ -56,7 +88,6 @@ VitePress is still in alpha. When you upgrade it, check the theme code, the conf
 │   └── .vitepress/
 │       ├── config.mts             wires the theme into VitePress
 │       ├── content/               languages, paths and navigation from the folders
-│       ├── search/                local search index
 │       └── theme/                 theme source
 ├── tests/                         unit tests
 └── package.json
@@ -70,7 +101,7 @@ For where pages and config go, see [Configuration](/en-US/getting-started/config
 
 - **Paths without extensions**: the site enables `cleanUrls`, so `/theme/layout` maps to the file `theme/layout.html`. When a file is not found, the host needs to try again with `.html` added. GitHub Pages, Netlify and Cloudflare Pages do this by default; Vercel needs `"cleanUrls": true` in `vercel.json`; for Nginx, write `try_files $uri $uri.html $uri/ =404;`.
 - **Under a subpath**: for example `https://example.com/docs/`, set `base: "/docs/"` in `.vitepress/config.mts`. Internal paths in the navigation, the hero, the logo and the search index get it added automatically.
-- **Search index**: `search-index.json` is generated at build time and copied to the root of the output. No extra step is needed.
+- **Search index**: each language's index is bundled into `assets/chunks/` of the output at build time. No extra step is needed.
 
 ## FAQ
 

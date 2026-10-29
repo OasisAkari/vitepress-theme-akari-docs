@@ -10,14 +10,22 @@ tab: 技术细节
 
 一个页面最终使用的配置，是它所在语言文件夹的 `config.ts` 叠在共用配置与 VitePress 的 locale 配置之上的结果，见[配置 · 技术细节](/getting-started/configuration/details#两层配置怎样叠加)。
 
-## 界面文字的选择
+## 语言包的选择
 
-1. 取当前语言的 `lang`，转为小写后与内置的语言（`zh`、`en`、`ja`、`ko`、`fr`、`ar`）比较完整代码。
-2. 不匹配时比较主语言：`zh-CN`、`zh-TW` 都使用中文，`en-GB` 使用英文，`fr-CA` 使用法文。
-3. 仍不匹配时使用英文。
-4. 语言配置的 `messages` 中写出的条目替换内置文字。
+1. 可选的语言包是内置的六个（`zh`、`en`、`ja`、`ko`、`fr`、`ar`），加上 `languages` 中写的；`code` 与内置语言包相同的叠在内置语言包上。
+2. 取当前语言的 `lang`，转为小写（`_` 换为 `-`），找 `code` 完全相同的语言包。
+3. 找不到时比较主语言：`zh-CN`、`zh-TW` 都使用中文，`en-GB` 使用英文，`fr-CA` 使用法文。
+4. 仍找不到时使用英文。
+5. 补齐空缺：缺少的界面文字取英文，没有 `fonts` 时用主题的字体，没有 `dir` 时从左到右。
+6. 语言配置中写出的 `messages`、`fonts`、`dir`、`markdown` 叠在语言包之上。
 
 `settings.title`、`settings.labels`、`toc.overline`、`footer.message` 与 `search.placeholder` 没有写时，也取自这张表，所以同一份共用配置在每种语言下都有合适的默认值。写在共用配置中的文字会被所有语言继承，需要按语言区分的文字要写在语言配置里。
+
+## 语言包用在哪里
+
+- 构建时，`akariContent` 为每种语言生成 VitePress 的 locale：`label` 缺省为 `Intl.DisplayNames` 给出的语言自称（首字母大写，如 `Français`），`dir` 缺省为语言包的方向，`markdown` 是语言包的 Markdown 文字叠上语言配置的，`head` 是这种语言的字体标签。VitePress 用 locale 的 `markdown` 渲染代码块复制按钮与提示块标题。
+- 页面中，主题按当前语言解析出界面文字与字体，即 `useAkariConfig()` 的 `messages` 与 `fonts`。
+- 页面中标了 `lang` 属性的片段（例如语言对话框中各语言的名称）使用那种语言的字体序列。这些规则由所有带 `fonts` 的语言包生成，样式表中没有写死任何一种语言。
 
 ## 切换语言的目标
 

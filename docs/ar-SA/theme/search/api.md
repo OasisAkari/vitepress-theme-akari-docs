@@ -20,28 +20,24 @@ tab: API
 ## خدمة البحث المحلية
 
 ```ts
-backend: { type: "local", endpoint: "/search-index.json" },
+backend: { type: "local" },
 ```
 
-يمكن أن يشير `endpoint` إلى ملف JSON ثابت آخر من الأصل نفسه؛ وتُضاف `base` تلقائيًا إلى المسارات النسبية. صيغة الملف:
+تستخدم هذه الخدمة الفهرس الذي يبنيه البحث المحلي في VitePress (`provider: "local"`): فهرس لكل لغة، يُحمَّل بحسب مفتاح اللغة في VitePress (`root` للغة الجذرية). وعندما تستخدم أي لغة الخدمة المحلية، يفعّلها `akariContent` في تهيئة الموقع ويجعل الفهرس يحتفظ بنص كل قسم، لأجل المقتطفات في النتائج:
 
 ```ts
-interface SearchIndexFile {
-  version: 1;
-  generatedAt: string;          // وقت بصيغة ISO
-  entries: SearchIndexEntry[];
-}
-
-interface SearchIndexEntry {
-  id: string;                   // "/ar-SA/theme/layout::page" أو "/ar-SA/theme/layout::شريط-التطبيق"
-  pageTitle: string;            // عنوان الصفحة
-  title: string;                // عنوان الصفحة لمدخل الصفحة، وعنوان القسم لمدخل القسم
-  heading: string;              // عنوان القسم؛ فارغ لمدخل الصفحة
-  href: string;                 // "/ar-SA/theme/layout#شريط-التطبيق"
-  content: string;              // نص المتن دون ترميز، بحد أقصى 4000 حرف
-  level: number;                // 0 لمدخل الصفحة، و2 أو 3 للقسم
-}
+// تهيئة الموقع التي يولّدها akariContent
+themeConfig: {
+  search: {
+    provider: "local",
+    options: { miniSearch: { options: { storeFields: ["title", "titles", "text"] } } },
+  },
+},
 ```
+
+كل قسم مستند واحد في الفهرس: `id` هو مسار الصفحة مضافًا إليه مرساة العنوان، و`title` عنوان القسم، و`titles` العناوين التي فوقه (عنوان الصفحة أولًا)، و`text` نص متنه دون وسوم. والقسم الواقع تحت عنوان الصفحة من المستوى الأول يمثّل الصفحة نفسها، وتشير نتيجته إلى أعلى الصفحة.
+
+إذا لم يضبط `.vitepress/config.mts` أي `themeConfig`، فإن `...content.site` يحمل هذا الإعداد معه؛ وإن ضبطه فادمج `content.site.themeConfig` فيه.
 
 ## خدمة HTTP
 

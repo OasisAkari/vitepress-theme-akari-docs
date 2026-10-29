@@ -66,6 +66,16 @@ The app bar arranges the buttons on the right by its actual width:
 
 When you go to another group of pages, the whole document surface first fades out (about 250ms). Once the new page has loaded, it fades in (about 450ms) and rises 16px from below into place on m3e's slow spatial spring. The fade-out runs while the new page loads, so it does not slow down navigation. Anchor jumps within a page play no animation. Switching between pages of the same parallel group slides sideways instead; see [Side navigation](/en-US/theme/sidebar/details#switching-pages). When "reduce motion" is turned on in the system, pages switch without animation.
 
+## Loading bar
+
+The bar is a 4px M3 linear progress indicator along the top of the window: the active indicator in the primary color, without a track. It sits over the app bar and grows from the start of the line towards its end, mirrored in right-to-left layouts.
+
+- Navigating within the site: it starts when VitePress begins loading the next page. The size of that page's script can't be known, so the progress creeps towards 70% in ever smaller steps without reaching it. Once the page has rendered, the theme collects the images and fonts it is still loading, and each one that finishes moves the progress a share closer to 100%. Images with `loading="lazy"` count only near the viewport; the others load only when the reader scrolls to them. Images that aren't displayed (such as the one of a hero's light and dark images the current mode doesn't use) don't count. Each resource is waited for at most 8 seconds.
+- Opening the site: before the scripts run, the server-rendered bar creeps on its own with a CSS animation. When the script takes over, it carries on from where the bar got to and waits for the page's `load` event, its images and fonts. Without scripts, a `<noscript>` rule in `akariHead()` hides it.
+- A load that finishes within 150ms shows no bar, so it never just flashes. At 100% the bar holds for 200ms, then fades. A load still going after 15 seconds stops showing.
+- The bar has `role="progressbar"` and `aria-valuenow`, takes its name from the interface string `loadingLabel`, and is hidden from assistive technology while it isn't shown. With "reduce motion" turned on in the system it has no transitions; in forced colors mode it uses the system highlight color.
+- The progress math is in `loading.ts`, and the tracking in the composable `useLoadingBar`, which chains onto the VitePress router's `onBeforePageLoad` like the page transitions do.
+
 ## Table of contents
 
 - **Current section**: the last heading that has passed the reading line (96px below the app bar). When you scroll to the bottom of the page, the last heading still on screen.

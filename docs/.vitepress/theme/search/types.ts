@@ -1,21 +1,5 @@
 import type { AkariSearchResult } from "../types";
 
-export interface SearchIndexEntry {
-  id: string;
-  pageTitle: string;
-  title: string;
-  heading: string;
-  href: string;
-  content: string;
-  level: number;
-}
-
-export interface SearchIndexFile {
-  version: number;
-  generatedAt: string;
-  entries: SearchIndexEntry[];
-}
-
 export interface AkariSearchContext {
   limit: number;
   signal?: AbortSignal;

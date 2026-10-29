@@ -19,15 +19,15 @@ function defineAkariConfig(config: AkariSiteConfig): AkariDirectoryConfig;
 | 字段 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `rootLanguage` | `string` | 按字母顺序的第一个语言文件夹 | 只在共用配置中有效：放在站点根路径的语言文件夹，其他语言的地址以文件夹名开头 |
-| `lang` | `string` | 语言文件夹名 | 语言代码；用于 `<html lang>`，并选择主题内置的界面文字 |
-| `label` | `string` | `lang` | 语言菜单中的名称 |
-| `dir` | `"ltr" \| "rtl" \| "auto"` | `"ltr"` | 文字方向；从右到左的语言写 `rtl` |
+| `lang` | `string` | 语言文件夹名 | 语言代码；用于 `<html lang>`，并选择[语言包](/theme/i18n/api#akarilanguage) |
+| `label` | `string` | 语言的自称 | 语言菜单中的名称 |
+| `dir` | `"ltr" \| "rtl" \| "auto"` | 语言包的方向 | 文字方向 |
 | `title` | `string` | 无 | 站点标题，也是顶栏标题的默认值 |
 | `titleTemplate` | `string \| boolean` | 无 | 页面标题的后缀或模板，同 VitePress |
 | `description` | `string` | 无 | 站点描述 |
 | `head` | `HeadConfig[]` | `[]` | 额外的 `<head>` 标签，与上层合并 |
 | `logo` | `string` | 无 | 顶栏与页尾的品牌图片 |
-| `markdown` | `MarkdownLocaleOptions` | 无 | 这种语言在 Markdown 中的文字，例如代码块复制按钮的提示 |
+| `markdown` | `MarkdownLocaleOptions` | 语言包的 | 这种语言在 Markdown 中的文字，例如代码块复制按钮的提示，叠在语言包之上 |
 
 `lang`、`label`、`dir` 与 `markdown` 描述一种语言，写在语言配置中；其余字段都可以写在共用配置中作为默认值，再由语言配置覆写。
 
@@ -37,12 +37,14 @@ function defineAkariConfig(config: AkariSiteConfig): AkariDirectoryConfig;
 | --- | --- | --- |
 | `appBar` | 顶栏标题、版本、logo、按钮与社交链接 | [布局与顶栏](/theme/layout/api#appbar) |
 | `toc` | 右侧目录 | [布局与顶栏](/theme/layout/api#toc) |
+| `loadingBar` | 页面加载时窗口顶部的进度条 | [布局与顶栏](/theme/layout/api#loadingbar) |
 | `footer` | 翻页卡片与页尾 | [布局与顶栏](/theme/layout/api#footer) |
 | `sidebar` | 分类、手写导航与抽屉宽度 | [侧边导航](/theme/sidebar/api#sidebar) |
 | `settings` | 设置模态框与明暗模式按钮 | [设置与明暗模式](/theme/settings/api#settings) |
 | `search` | 搜索入口与后端 | [搜索](/theme/search/api#search) |
 | `messages` | 界面文字 | [国际化](/theme/i18n/api#messages) |
 | `fonts` | 是否从 Google Fonts 加载字体，以及字体序列 | [排版](/styles/typography/api#fonts) |
+| `languages` | 内置之外的语言包，或对内置语言包的改写 | [国际化](/theme/i18n/api#akarilanguage) |
 
 替换界面组件不写在配置文件中，见[扩展主题](/theme/extending/api#provideakaricomponents)。
 
@@ -54,7 +56,6 @@ function defineAkariConfig(config: AkariSiteConfig): AkariDirectoryConfig;
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitepress";
 import { akariContent } from "./content";
-import { searchIndexPlugin } from "./search/indexPlugin";
 import { akariHead } from "./theme/head";
 import { akariMarkdown } from "./theme/markdown";
 
@@ -73,21 +74,20 @@ export default defineConfig({
     },
   },
   vite: {
-    plugins: [content.plugin, searchIndexPlugin({ docsDir, route: content.route })],
+    plugins: [content.plugin],
   },
 });
 ```
 
 | 选项 | 作用 |
 | --- | --- |
-| `...content.site` | 由目录生成的 `locales`、`rewrites` 与站点级 `lang`、`title`、`description` |
+| `...content.site` | 由目录生成的 `locales`、`rewrites` 与站点级 `lang`、`title`、`description`；使用本地搜索时还有开启 VitePress 本地搜索索引的 `themeConfig.search` |
 | `cleanUrls: true` | 地址不带 `.html`；部署要求见[安装](/getting-started/installation#部署) |
 | `appearance: false` | 关闭 VitePress 自带的明暗切换，由主题管理 |
 | `head: akariHead()` | 首帧前应用明暗模式的脚本 |
 | `akariMarkdown` | 表格的 M3 边框与远程图片的尺寸 |
 | `isCustomElement` | 让 Vue 把 `m3e-*` 当作自定义元素 |
 | `content.plugin` | 开发时随 Markdown 的增删与头部信息更新导航 |
-| `searchIndexPlugin` | 生成本地搜索索引，`route` 让索引使用页面实际的地址 |
 
 ## akariContent
 

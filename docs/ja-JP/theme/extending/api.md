@@ -73,6 +73,9 @@ const config = useAkariConfig();
 | `defineAkariConfig` | `(config: AkariSiteConfig) => AkariDirectoryConfig` | 設定ファイルを書くためのもの。[構成](/ja-JP/getting-started/configuration/api#defineakariconfig)を参照 |
 | `defineAkariThemeConfig` | `(config: AkariThemeConfig) => AkariThemeConfig` | テーマのフィールドだけを書くときの型ヘルパー |
 | `registerSearchBackend` | `(id, handler) => void` | 検索バックエンドを登録します。[検索](/ja-JP/theme/search/api#registered-backends)を参照 |
+| `defineAkariLanguage` | `(language: AkariLanguage) => AkariLanguage` | 言語パックを書くためのもの。[国際化](/ja-JP/theme/i18n/api#akarilanguage)を参照 |
+| `AKARI_LANGUAGES` | `AkariLanguage[]` | 組み込みの言語パック |
+| `resolveLanguage` | `(lang, languages?) => ResolvedAkariLanguage` | ある言語が最終的に使う言語パック |
 | `AKARI_CONTENT_ID` | `"akari-doc-content"` | コンテンツコンテナの id |
 | `AKARI_SIDEBAR_ID` | `"akari-sidebar"` | 狭い画面のナビゲーションドロワーの id |
 | `AKARI_SETTINGS_ID` | `"akari-settings"` | 設定パネルの id |
@@ -96,25 +99,26 @@ const config = useAkariConfig();
 docs/.vitepress/
 ├── config.mts             テーマを VitePress に接続
 ├── content/               フォルダーから言語、パス、ナビゲーションを生成 (Node)
-├── search/                ローカル検索インデックスの解析、生成、Vite プラグイン (Node)
 └── theme/
     ├── index.ts           テーマのエントリーと公開エクスポート
-    ├── define.ts          defineAkariConfig
+    ├── define.ts          defineAkariConfig と defineAkariLanguage
     ├── config.ts          設定のデフォルト値と検証
     ├── types.ts           型定義
     ├── constants.ts       デフォルト値、ブレークポイント、id
-    ├── i18n.ts            組み込みのインターフェース文字列
+    ├── i18n/              言語パックと言語の解決
+    │   └── languages/     組み込みの言語パック。1 言語 1 ファイル
     ├── locales.ts         言語切り替えのためのパスの対応付け
     ├── sidebar.ts         ナビゲーションの正規化、照合、ページ送り
     ├── settings.ts        設定の検証と保存
     ├── scheme.ts          ライトモードとダークモードの判定と、最初のフレーム用のスクリプト
     ├── hero.ts            ヒーローのフロントマターの解析
+    ├── loading.ts         ローディングバーの進行状況の計算
     ├── head.ts / fonts.ts akariHead と fonts
     ├── markdown.ts        akariMarkdown
     ├── m3e.ts / icons.ts  コンポーネントとアイコンのオンデマンド登録
     ├── layouts/           AkariLayout.vue
     ├── components/
-    │   ├── shell/         アプリバー、「その他」メニュー、カラーモードボタンと言語ボタン、ダイアログ
+    │   ├── shell/         アプリバー、「その他」メニュー、カラーモードボタンと言語ボタン、ダイアログ、ローディングバー
     │   ├── sidebar/       レール、デスクトップのナビゲーションドロワー、狭い画面のナビゲーション
     │   ├── content/       ヒーロー、タブバー、目次、ページ送り、FAB、フッター
     │   └── settings/      設定ダイアログとパネル

@@ -19,15 +19,15 @@ function defineAkariConfig(config: AkariSiteConfig): AkariDirectoryConfig;
 | 필드 | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `rootLanguage` | `string` | 알파벳순으로 첫 번째 언어 폴더 | 공통 구성에서만 적용됩니다. 사이트 루트에서 제공할 언어 폴더입니다. 다른 언어의 경로는 해당 폴더 이름으로 시작합니다 |
-| `lang` | `string` | 언어 폴더 이름 | 언어 코드. `<html lang>`에 쓰이고, 테마의 기본 제공 인터페이스 텍스트를 고르는 데 쓰입니다 |
-| `label` | `string` | `lang` | 언어 메뉴에 표시되는 이름 |
-| `dir` | `"ltr" \| "rtl" \| "auto"` | `"ltr"` | 텍스트 방향. 오른쪽에서 왼쪽으로 쓰는 언어는 `rtl`로 설정합니다 |
+| `lang` | `string` | 언어 폴더 이름 | 언어 코드. `<html lang>`에 쓰이고, [언어 팩](/ko-KR/theme/i18n/api#akarilanguage)을 고르는 데 쓰입니다 |
+| `label` | `string` | 그 언어로 표기한 언어 이름 | 언어 메뉴에 표시되는 이름 |
+| `dir` | `"ltr" \| "rtl" \| "auto"` | 언어 팩의 값 | 텍스트 방향 |
 | `title` | `string` | 없음 | 사이트 제목. 앱 바의 기본 제목이기도 합니다 |
 | `titleTemplate` | `string \| boolean` | 없음 | 페이지 제목의 접미사 또는 템플릿. VitePress와 같습니다 |
 | `description` | `string` | 없음 | 사이트 설명 |
 | `head` | `HeadConfig[]` | `[]` | 추가 `<head>` 태그. 상위 단계와 병합됩니다 |
 | `logo` | `string` | 없음 | 앱 바와 푸터의 브랜드 이미지 |
-| `markdown` | `MarkdownLocaleOptions` | 없음 | Markdown에서 쓰이는 해당 언어의 텍스트. 코드 블록 복사 버튼의 툴팁 등 |
+| `markdown` | `MarkdownLocaleOptions` | 언어 팩의 값 | Markdown에서 쓰이는 해당 언어의 텍스트. 코드 블록 복사 버튼의 툴팁 등이며, 언어 팩의 값 위에 겹쳐집니다 |
 
 `lang`, `label`, `dir`, `markdown`은 언어를 설명하는 필드이므로 언어 구성에 둡니다. 나머지 필드는 모두 공통 구성에 기본값으로 둘 수 있으며, 언어 구성에서 재정의할 수 있습니다.
 
@@ -37,12 +37,14 @@ function defineAkariConfig(config: AkariSiteConfig): AkariDirectoryConfig;
 | --- | --- | --- |
 | `appBar` | 앱 바 제목, 버전, 로고, 버튼, 소셜 링크 | [레이아웃과 앱 바](/ko-KR/theme/layout/api#appbar) |
 | `toc` | 오른쪽 목차 | [레이아웃과 앱 바](/ko-KR/theme/layout/api#toc) |
+| `loadingBar` | 페이지를 불러오는 동안 창 맨 위에 표시되는 막대 | [레이아웃과 앱 바](/ko-KR/theme/layout/api#loadingbar) |
 | `footer` | 페이지 이동 카드와 푸터 | [레이아웃과 앱 바](/ko-KR/theme/layout/api#footer) |
 | `sidebar` | 카테고리, 직접 작성한 내비게이션, 드로어 너비 | [사이드 내비게이션](/ko-KR/theme/sidebar/api#sidebar) |
 | `settings` | 설정 대화상자와 화면 모드 버튼 | [설정과 화면 모드](/ko-KR/theme/settings/api#settings) |
 | `search` | 검색 진입점과 백엔드 | [검색](/ko-KR/theme/search/api#search) |
 | `messages` | 인터페이스 텍스트 | [국제화](/ko-KR/theme/i18n/api#messages) |
 | `fonts` | Google Fonts에서 글꼴을 불러올지 여부와 글꼴 스택 | [타이포그래피](/ko-KR/styles/typography/api#fonts) |
+| `languages` | 기본 제공 언어 팩 외의 언어 팩, 또는 기본 제공 언어 팩의 변경 | [국제화](/ko-KR/theme/i18n/api#akarilanguage) |
 
 인터페이스 컴포넌트 교체는 구성 파일에서 하지 않습니다. [테마 확장](/ko-KR/theme/extending/api#provideakaricomponents)을 참고하세요.
 
@@ -54,7 +56,6 @@ function defineAkariConfig(config: AkariSiteConfig): AkariDirectoryConfig;
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitepress";
 import { akariContent } from "./content";
-import { searchIndexPlugin } from "./search/indexPlugin";
 import { akariHead } from "./theme/head";
 import { akariMarkdown } from "./theme/markdown";
 
@@ -73,21 +74,20 @@ export default defineConfig({
     },
   },
   vite: {
-    plugins: [content.plugin, searchIndexPlugin({ docsDir, route: content.route })],
+    plugins: [content.plugin],
   },
 });
 ```
 
 | 옵션 | 용도 |
 | --- | --- |
-| `...content.site` | 폴더에서 생성한 `locales`, `rewrites`와 사이트 단위의 `lang`, `title`, `description` |
+| `...content.site` | 폴더에서 생성한 `locales`, `rewrites`와 사이트 단위의 `lang`, `title`, `description`. 로컬 검색을 쓰면 VitePress의 로컬 검색 색인을 켜는 `themeConfig.search`도 포함됩니다 |
 | `cleanUrls: true` | `.html` 없는 경로. 호스팅 요구 사항은 [설치](/ko-KR/getting-started/installation#deployment)를 참고하세요 |
 | `appearance: false` | VitePress에 내장된 라이트/다크 전환을 끕니다. 화면 모드는 테마가 관리합니다 |
 | `head: akariHead()` | 첫 프레임 전에 라이트 모드나 다크 모드를 적용하는 스크립트 |
 | `akariMarkdown` | 표의 M3 테두리와 원격 이미지의 크기 |
 | `isCustomElement` | Vue가 `m3e-*`를 사용자 정의 요소로 취급하게 합니다 |
 | `content.plugin` | 개발 중에 Markdown 파일이 추가되거나 삭제될 때, 그리고 프런트매터가 바뀔 때 내비게이션을 갱신합니다 |
-| `searchIndexPlugin` | 로컬 검색 색인을 생성합니다. `route`는 색인이 실제 페이지 경로를 쓰게 합니다 |
 
 ## akariContent
 

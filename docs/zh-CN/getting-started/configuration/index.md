@@ -62,19 +62,17 @@ export default defineAkariConfig({
 
 ## 语言配置
 
-这种语言自己的名称、标题与文字。`lang` 默认就是文件夹名，界面文字随之选择对应的内置语言；从右到左书写的语言再写 `dir: "rtl"`。
+这种语言在本站的标题与文字。`lang` 默认就是文件夹名，主题按它选择[语言包](/theme/i18n#语言包)：语言菜单中的名称、文字方向、界面文字与代码块复制按钮的文字都由语言包提供，需要时再在这里改写。
 
 ```ts
 // docs/zh-CN/config.ts
 import { defineAkariConfig } from "../.vitepress/theme/define.ts";
 
 export default defineAkariConfig({
+  // 语言的自称是「中文」，这里改为更明确的名称。
   label: "简体中文",
   title: "Vitepress Theme Akari Docs",
   description: "基于 VitePress 与 M3E Web Components 的文档主题",
-  markdown: {
-    codeCopyButton: { tooltipText: "复制代码", copiedText: "已复制" },
-  },
   appBar: { title: "Vitepress Theme Akari Docs" },
   sidebar: {
     categories: {

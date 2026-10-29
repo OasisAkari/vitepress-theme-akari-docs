@@ -19,15 +19,15 @@ Les deux niveaux de fichiers de configuration exportent leur configuration avec 
 | Champ | Type | Défaut | Description |
 | --- | --- | --- | --- |
 | `rootLanguage` | `string` | Le premier dossier de langue par ordre alphabétique | Ne s'applique que dans la configuration partagée : le dossier de langue servi à la racine du site. Les chemins des autres langues commencent par le nom de leur dossier |
-| `lang` | `string` | Le nom du dossier de langue | Code de langue. Sert pour `<html lang>` et détermine les textes d'interface intégrés du thème |
-| `label` | `string` | `lang` | Nom dans le menu des langues |
-| `dir` | `"ltr" \| "rtl" \| "auto"` | `"ltr"` | Sens du texte. Définissez `rtl` pour une langue qui s'écrit de droite à gauche |
+| `lang` | `string` | Le nom du dossier de langue | Code de langue. Sert pour `<html lang>` et détermine le [pack de langue](/fr-FR/theme/i18n/api#akarilanguage) |
+| `label` | `string` | Le nom de la langue dans sa propre langue | Nom dans le menu des langues |
+| `dir` | `"ltr" \| "rtl" \| "auto"` | Celui du pack de langue | Sens du texte |
 | `title` | `string` | Aucun | Titre du site ; c'est aussi le titre par défaut de la barre d'application |
 | `titleTemplate` | `string \| boolean` | Aucun | Suffixe ou modèle des titres de page, comme dans VitePress |
 | `description` | `string` | Aucun | Description du site |
 | `head` | `HeadConfig[]` | `[]` | Balises `<head>` supplémentaires, fusionnées avec le niveau supérieur |
 | `logo` | `string` | Aucun | Image de marque dans la barre d'application et le pied de page |
-| `markdown` | `MarkdownLocaleOptions` | Aucun | Les textes de la langue dans le Markdown, comme l'info-bulle du bouton de copie des blocs de code |
+| `markdown` | `MarkdownLocaleOptions` | Celui du pack de langue | Les textes de la langue dans le Markdown, comme l'info-bulle du bouton de copie des blocs de code, appliqués par-dessus ceux du pack de langue |
 
 `lang`, `label`, `dir` et `markdown` décrivent une langue et vont dans la configuration de langue. Tous les autres champs peuvent aller dans la configuration partagée comme valeur par défaut, et une configuration de langue peut les remplacer.
 
@@ -37,12 +37,14 @@ Les deux niveaux de fichiers de configuration exportent leur configuration avec 
 | --- | --- | --- |
 | `appBar` | Titre, version, logo, boutons et liens sociaux de la barre d'application | [Mise en page et barre d'application](/fr-FR/theme/layout/api#appbar) |
 | `toc` | Table des matières à droite | [Mise en page et barre d'application](/fr-FR/theme/layout/api#toc) |
+| `loadingBar` | La barre en haut de la fenêtre pendant le chargement d'une page | [Mise en page et barre d'application](/fr-FR/theme/layout/api#loadingbar) |
 | `footer` | Cartes de pagination et pied de page | [Mise en page et barre d'application](/fr-FR/theme/layout/api#footer) |
 | `sidebar` | Catégories, navigation écrite à la main et largeur du tiroir | [Navigation latérale](/fr-FR/theme/sidebar/api#sidebar) |
 | `settings` | Boîte de dialogue des paramètres et bouton d'apparence | [Paramètres et apparence](/fr-FR/theme/settings/api#settings) |
 | `search` | Point d'entrée et backends de la recherche | [Recherche](/fr-FR/theme/search/api#search) |
 | `messages` | Textes de l'interface | [Internationalisation](/fr-FR/theme/i18n/api#messages) |
 | `fonts` | Chargement ou non des polices depuis Google Fonts, et pile de polices | [Typographie](/fr-FR/styles/typography/api#fonts) |
+| `languages` | Packs de langue en plus des packs intégrés, ou modifications de ceux-ci | [Internationalisation](/fr-FR/theme/i18n/api#akarilanguage) |
 
 Le remplacement des composants de l'interface ne se fait pas dans les fichiers de configuration ; voir [Étendre le thème](/fr-FR/theme/extending/api#provideakaricomponents).
 
@@ -54,7 +56,6 @@ La partie qui branche le thème sur VitePress. Vous aurez rarement besoin de la 
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitepress";
 import { akariContent } from "./content";
-import { searchIndexPlugin } from "./search/indexPlugin";
 import { akariHead } from "./theme/head";
 import { akariMarkdown } from "./theme/markdown";
 
@@ -73,21 +74,20 @@ export default defineConfig({
     },
   },
   vite: {
-    plugins: [content.plugin, searchIndexPlugin({ docsDir, route: content.route })],
+    plugins: [content.plugin],
   },
 });
 ```
 
 | Option | Rôle |
 | --- | --- |
-| `...content.site` | `locales`, `rewrites` et les `lang`, `title`, `description` du site, générés à partir des dossiers |
+| `...content.site` | `locales`, `rewrites` et les `lang`, `title`, `description` du site, générés à partir des dossiers ; avec la recherche locale, aussi `themeConfig.search`, qui active l'index de recherche local de VitePress |
 | `cleanUrls: true` | Chemins sans `.html` ; pour les exigences d'hébergement, voir [Installation](/fr-FR/getting-started/installation#deployment) |
 | `appearance: false` | Désactive le sélecteur clair/sombre intégré à VitePress ; c'est le thème qui s'en charge |
 | `head: akariHead()` | Un script qui applique le mode clair ou sombre avant la première image affichée |
 | `akariMarkdown` | Bordures M3 pour les tableaux et dimensions des images distantes |
 | `isCustomElement` | Indique à Vue de traiter `m3e-*` comme des éléments personnalisés |
 | `content.plugin` | En développement, met à jour la navigation quand des fichiers Markdown sont ajoutés ou supprimés et quand le frontmatter change |
-| `searchIndexPlugin` | Génère l'index de recherche local ; `route` fait utiliser à l'index les vrais chemins des pages |
 
 ## akariContent
 

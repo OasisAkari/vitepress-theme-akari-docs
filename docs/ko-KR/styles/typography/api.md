@@ -6,7 +6,7 @@ tab: API
 
 ## 언어별 글꼴
 
-텍스트의 글꼴은 페이지 언어에 따라 달라집니다. 기본값은 아래와 같으며, [`fonts`](#fonts)로 모두 바꿀 수 있습니다.
+텍스트의 글꼴은 페이지 언어에 따라 달라집니다. 기본값은 [언어 팩](/ko-KR/theme/i18n/api#akarilanguage)의 `fonts`에서 가져옵니다. 기본 제공 언어 팩의 값은 아래와 같으며, [`fonts`](#fonts)로 모두 바꿀 수 있습니다.
 
 | 언어 | Google Fonts에서 불러오는 글꼴 | 글꼴 스택 |
 | --- | --- | --- |
@@ -15,12 +15,12 @@ tab: API
 | `ar` | Roboto, Noto Sans Arabic | Roboto, Noto Sans Arabic, Geeza Pro, Tahoma, system-ui, sans-serif |
 | 그 밖의 언어 | Roboto, Noto Sans SC | Roboto, Noto Sans SC, PingFang SC, Microsoft YaHei, system-ui, sans-serif |
 
-언어는 `<html lang>`의 기본 언어로 판별하므로 `ja-JP`는 `ja` 행을 따릅니다.
+언어는 언어 팩 규칙으로 판별합니다. 먼저 전체 코드를, 다음으로 주 언어를 비교하므로 `ja-JP`는 `ja` 행을 따릅니다. 영어와 프랑스어처럼 `fonts`가 없는 언어 팩은 “그 밖의 언어” 행을 따릅니다.
 
 - 이 Google Fonts 글꼴은 모두 가변 굵기 글꼴입니다. Noto Sans SC와 일본어, 한국어 글꼴은 유니코드 범위별로 나뉘어 있어, 페이지는 사용하는 문자만 내려받습니다.
 - 각 언어는 자기 글꼴만 불러옵니다. 일본어, 한국어, 아랍어 글꼴은 해당 언어의 페이지에서만 불러오며, 그 언어로 전환할 때 내려받습니다.
 - 글꼴은 페이지 표시를 막지 않습니다. `<head>`에는 사전 연결(preconnect)과 `preload` 하나만 있고, 스타일시트는 테마의 스크립트가 삽입하며, `display=swap`으로 텍스트를 먼저 대체 글꼴로 표시합니다. 스크립트가 없으면 `<noscript>` 안의 스타일시트가 적용됩니다. Google Fonts에 연결할 수 없으면 텍스트는 스택에서 그 뒤에 있는 시스템 글꼴을 씁니다.
-- 다른 언어로 표시된 부분(언어 대화상자의 언어 이름 등)은 그 언어의 기본 스택 중 기기에 있는 글꼴을 씁니다.
+- 다른 언어로 표시된 부분(언어 대화상자의 언어 이름 등)은 그 언어 팩의 스택 중 기기에 있는 글꼴을 씁니다.
 
 ## fonts
 
@@ -55,7 +55,9 @@ export default defineAkariConfig({
 });
 ```
 
-`akariContent`는 각 언어의 구성에서 글꼴 스택(CSS 변수 `--akari-font-family`)과 프리로드 태그를 만들어 그 언어 페이지의 `<head>`에 기록합니다. 그래서 첫 화면부터 올바른 글꼴을 씁니다. 언어를 전환하면 테마가 글꼴을 바꿉니다. 코드는 `docs/.vitepress/theme/fonts.ts`에 있습니다. `resolveFonts(lang, fonts)`는 스타일시트 URL과 `font-family`를 계산하고, `fontHead`는 `<head>` 태그를 만들고, `applyFonts`는 페이지에 적용합니다. 기본값은 `AKARI_DEFAULT_FONTS`와 `AKARI_LANGUAGE_FONTS`입니다.
+모든 사이트에서 한 언어의 기본 글꼴을 바꾸려면 그 언어 팩의 `fonts`를 바꿉니다. 이 사이트에서만 바꾸려면 `fonts` 구성으로 충분합니다.
+
+`akariContent`는 각 언어의 언어 팩과 구성에서 글꼴 스택(CSS 변수 `--akari-font-family`), `lang`으로 표시한 부분의 글꼴 규칙, 프리로드 태그를 만들어 그 언어 페이지의 `<head>`에 기록합니다. 그래서 첫 화면부터 올바른 글꼴을 씁니다. 언어를 전환하면 테마가 글꼴을 바꿉니다. 코드는 `docs/.vitepress/theme/fonts.ts`에 있습니다. `resolveFonts(fonts, defaults, languages)`는 구성과 언어 팩의 글꼴에서 스타일시트 URL과 `font-family`를 계산하고, `markedFontRules(languages)`는 표시한 부분의 글꼴 규칙을 만들고, `fontHead`는 `<head>` 태그를 만들고, `applyFonts`는 페이지에 적용합니다. `fonts`가 없는 언어 팩은 `AKARI_DEFAULT_FONTS`를 씁니다.
 
 ## 타이포그래피 토큰
 
@@ -125,5 +127,5 @@ m3e는 Material 3 타이포그래피 토큰을 제공합니다. 각 단계에는
 ## 코드 블록
 
 - 구문 강조는 `github-light`와 `github-dark` 테마를 쓰며, 라이트 모드와 다크 모드에 따라 전환됩니다.
-- 복사 버튼은 VitePress의 `button.copy`입니다. 툴팁 텍스트는 언어 구성의 `markdown.codeCopyButton`에서 가져옵니다.
+- 복사 버튼은 VitePress의 `button.copy`입니다. 툴팁 텍스트는 언어 팩의 `markdown.codeCopyButton`에서 가져오며, 언어 구성에서 재정의할 수 있습니다.
 - 600px 미만에서는 코드 블록의 모서리 반경이 12px로 줄어듭니다.

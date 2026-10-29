@@ -113,8 +113,8 @@ function hrefFor(result: AkariSearchResult): string {
     : withBase(result.href);
 }
 
-function parts(text: string | undefined) {
-  return splitHighlight(text ?? "", query.value);
+function parts(text: string | undefined, result: AkariSearchResult) {
+  return splitHighlight(text ?? "", query.value, result.terms);
 }
 </script>
 
@@ -239,7 +239,7 @@ function parts(text: string | undefined) {
                 </span>
                 <span class="akari-search-result__title">
                   <template
-                    v-for="(part, partIndex) in parts(result.title)"
+                    v-for="(part, partIndex) in parts(result.title, result)"
                     :key="partIndex"
                   >
                     <mark v-if="part.match">{{ part.text }}</mark>
@@ -252,7 +252,7 @@ function parts(text: string | undefined) {
                   class="akari-search-result__excerpt"
                 >
                   <template
-                    v-for="(part, partIndex) in parts(result.excerpt)"
+                    v-for="(part, partIndex) in parts(result.excerpt, result)"
                     :key="partIndex"
                   >
                     <mark v-if="part.match">{{ part.text }}</mark>

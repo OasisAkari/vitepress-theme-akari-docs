@@ -101,7 +101,7 @@ pnpm install
 :::
 ````
 
-The custom containers are `info`, `tip`, `warning`, `danger` and `details`. A code block with a language gets syntax highlighting and a copy button. The copy button's text comes from `markdown.codeCopyButton` in the language config.
+The custom containers are `info`, `tip`, `warning`, `danger` and `details`. A code block with a language gets syntax highlighting and a copy button. The copy button's text and the titles of containers without one come from the language pack's `markdown`, and the language config can override them.
 
 ## Demo helper classes
 

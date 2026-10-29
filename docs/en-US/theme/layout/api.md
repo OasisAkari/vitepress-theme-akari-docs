@@ -33,6 +33,12 @@ Fields of `AkariSocialLink`:
 
 To turn off the table of contents on a single page, write `toc: false` in its frontmatter. Headings with the `m3e-toc-ignore` attribute are left out of the table of contents.
 
+## loadingBar
+
+| Field | Type | Default | Description |
+| --- | --- | --- | --- |
+| `enabled` | `boolean` | `true` | Whether a progress bar shows at the top of the window while a page loads |
+
 ## footer
 
 | Field | Type | Default | Description |
@@ -78,6 +84,8 @@ Override them in your site styles, for example on `:root`:
 | `--akari-wavy-divider-color` | `--md-sys-color-outline-variant` | Color of the wavy divider above the footer |
 | `--akari-doc-app-bar-height` | `64px` | Height of the app bar; read-only, used to work out sticky positions |
 | `--akari-doc-rail-width` | `96px` | Width of the rail; read-only |
+| `--akari-loading-bar-height` | `4px` | Height of the loading bar |
+| `--akari-loading-bar-color` | `--md-sys-color-primary` | Color of the loading bar |
 
 ```css
 :root {

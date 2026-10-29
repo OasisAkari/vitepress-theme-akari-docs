@@ -24,11 +24,11 @@ Les résultats sont listés par page et par section, chacun avec un extrait de l
 
 ## Index local
 
-Par défaut, aucun backend n'est nécessaire. Pendant le développement et les builds, le thème parcourt chaque page Markdown et écrit `docs/public/search-index.json` : une entrée par page, plus une pour chaque titre de niveau 2 et de niveau 3. L'index n'est pas versionné dans le dépôt ; `npm run dev` et `npm run build` le régénèrent automatiquement.
+Par défaut, aucun backend n'est nécessaire. Le thème utilise l'index que construit la recherche locale de VitePress, un par langue, téléchargé seulement à la première recherche dans cette langue. Les pages sont découpées en sections à leurs titres, et [MiniSearch](https://lucaong.github.io/minisearch/) fait la correspondance : le chinois et le japonais sont découpés en mots, un mot peut n'être saisi qu'en partie, et les mots plus longs tolèrent une faute de frappe ou deux. Tant que le serveur de développement tourne, l'index suit vos modifications.
 
 ## Utiliser une autre recherche
 
-Si vous avez besoin de correction orthographique, de recherche sémantique ou de contenu extérieur au site, passez à un endpoint HTTP ou à une fonction JS de votre choix :
+Si vous avez besoin de recherche sémantique ou de contenu extérieur au site, passez à un endpoint HTTP ou à une fonction JS de votre choix :
 
 ```ts
 // docs/config.ts

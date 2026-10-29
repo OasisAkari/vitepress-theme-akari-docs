@@ -19,15 +19,15 @@ function defineAkariConfig(config: AkariSiteConfig): AkariDirectoryConfig;
 | الحقل | النوع | القيمة الافتراضية | الوصف |
 | --- | --- | --- | --- |
 | `rootLanguage` | `string` | أول مجلد لغة بالترتيب الأبجدي | لا يسري إلا في التهيئة المشتركة: مجلد اللغة الذي يُقدَّم في جذر الموقع. تبدأ مسارات اللغات الأخرى باسم مجلدها |
-| `lang` | `string` | اسم مجلد اللغة | رمز اللغة. يُستخدم في `<html lang>`، ويختار نصوص الواجهة المدمجة في السمة |
-| `label` | `string` | `lang` | الاسم في قائمة اللغات |
-| `dir` | `"ltr" \| "rtl" \| "auto"` | `"ltr"` | اتجاه النص. اضبط `rtl` للغة تُكتب من اليمين إلى اليسار |
+| `lang` | `string` | اسم مجلد اللغة | رمز اللغة. يُستخدم في `<html lang>`، ويختار [حزمة اللغة](/ar-SA/theme/i18n/api#akarilanguage) |
+| `label` | `string` | اسم اللغة بلغتها نفسها | الاسم في قائمة اللغات |
+| `dir` | `"ltr" \| "rtl" \| "auto"` | قيمة حزمة اللغة | اتجاه النص |
 | `title` | `string` | لا يوجد | عنوان الموقع؛ وهو أيضًا العنوان الافتراضي لشريط التطبيق |
 | `titleTemplate` | `string \| boolean` | لا يوجد | لاحقة عناوين الصفحات أو قالبها، كما في VitePress |
 | `description` | `string` | لا يوجد | وصف الموقع |
 | `head` | `HeadConfig[]` | `[]` | وسوم `<head>` إضافية، تُدمج مع المستوى الأعلى |
 | `logo` | `string` | لا يوجد | صورة العلامة في شريط التطبيق والتذييل |
-| `markdown` | `MarkdownLocaleOptions` | لا يوجد | نصوص اللغة في Markdown، مثل تلميح زر نسخ كتلة الشيفرة |
+| `markdown` | `MarkdownLocaleOptions` | قيمة حزمة اللغة | نصوص اللغة في Markdown، مثل تلميح زر نسخ كتلة الشيفرة، وتُطبَّق فوق نصوص حزمة اللغة |
 
 الحقول `lang` و`label` و`dir` و`markdown` تصف اللغة، ومكانها تهيئة اللغة. أما بقية الحقول فيمكن وضعها في التهيئة المشتركة قيمًا افتراضية، ويمكن لتهيئة اللغة تجاوزها.
 
@@ -37,12 +37,14 @@ function defineAkariConfig(config: AkariSiteConfig): AkariDirectoryConfig;
 | --- | --- | --- |
 | `appBar` | عنوان شريط التطبيق والإصدار والشعار والأزرار والروابط الاجتماعية | [التخطيط وشريط التطبيق](/ar-SA/theme/layout/api#appbar) |
 | `toc` | جدول المحتويات على اليسار | [التخطيط وشريط التطبيق](/ar-SA/theme/layout/api#toc) |
+| `loadingBar` | الشريط في أعلى النافذة أثناء تحميل الصفحة | [التخطيط وشريط التطبيق](/ar-SA/theme/layout/api#loadingbar) |
 | `footer` | بطاقات التنقل بين الصفحات والتذييل | [التخطيط وشريط التطبيق](/ar-SA/theme/layout/api#footer) |
 | `sidebar` | الفئات والتنقل المكتوب يدويًا وعرض الدرج | [التنقل الجانبي](/ar-SA/theme/sidebar/api#sidebar) |
 | `settings` | مربع حوار الإعدادات وزر المظهر | [الإعدادات والمظهر](/ar-SA/theme/settings/api#settings) |
 | `search` | مدخل البحث وخدماته | [البحث](/ar-SA/theme/search/api#search) |
 | `messages` | نصوص الواجهة | [التدويل](/ar-SA/theme/i18n/api#messages) |
 | `fonts` | هل تُحمَّل الخطوط من Google Fonts، وقائمة الخطوط | [الطباعة](/ar-SA/styles/typography/api#fonts) |
+| `languages` | حزم لغات إضافة إلى الحزم المدمجة، أو تعديلات عليها | [التدويل](/ar-SA/theme/i18n/api#akarilanguage) |
 
 لا يجري استبدال مكونات الواجهة في ملفات التهيئة؛ راجع [توسيع السمة](/ar-SA/theme/extending/api#provideakaricomponents).
 
@@ -54,7 +56,6 @@ function defineAkariConfig(config: AkariSiteConfig): AkariDirectoryConfig;
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitepress";
 import { akariContent } from "./content";
-import { searchIndexPlugin } from "./search/indexPlugin";
 import { akariHead } from "./theme/head";
 import { akariMarkdown } from "./theme/markdown";
 
@@ -73,21 +74,20 @@ export default defineConfig({
     },
   },
   vite: {
-    plugins: [content.plugin, searchIndexPlugin({ docsDir, route: content.route })],
+    plugins: [content.plugin],
   },
 });
 ```
 
 | الخيار | الغرض |
 | --- | --- |
-| `...content.site` | `locales` و`rewrites` و`lang` و`title` و`description` على مستوى الموقع، مولَّدة من المجلدات |
+| `...content.site` | `locales` و`rewrites` و`lang` و`title` و`description` على مستوى الموقع، مولَّدة من المجلدات؛ ومع البحث المحلي أيضًا `themeConfig.search`، الذي يشغّل فهرس البحث المحلي في VitePress |
 | `cleanUrls: true` | مسارات بلا `.html`؛ لمتطلبات الاستضافة راجع [التثبيت](/ar-SA/getting-started/installation#deployment) |
 | `appearance: false` | يوقف مفتاح التبديل بين الوضع الفاتح والداكن المدمج في VitePress؛ فالسمة تتولى ذلك |
 | `head: akariHead()` | برنامج نصي يطبّق الوضع الفاتح أو الداكن قبل الإطار الأول |
 | `akariMarkdown` | حدود M3 للجداول وأبعاد للصور البعيدة |
 | `isCustomElement` | يجعل Vue يعامل `m3e-*` عناصرَ مخصصة |
 | `content.plugin` | أثناء التطوير، يحدّث التنقل عند إضافة ملفات Markdown أو حذفها وعند تغيّر البيانات الأمامية (frontmatter) |
-| `searchIndexPlugin` | يولّد فهرس البحث المحلي؛ ويجعل `route` الفهرس يستخدم مسارات الصفحات الفعلية |
 
 ## akariContent
 

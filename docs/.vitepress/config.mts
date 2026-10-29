@@ -1,7 +1,6 @@
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitepress";
 import { akariContent } from "./content";
-import { searchIndexPlugin } from "./search/indexPlugin";
 import { akariHead } from "./theme/head";
 import { akariMarkdown } from "./theme/markdown";
 
@@ -32,9 +31,6 @@ export default defineConfig({
     },
   },
   vite: {
-    plugins: [
-      content.plugin,
-      searchIndexPlugin({ docsDir, route: content.route }),
-    ],
+    plugins: [content.plugin],
   },
 });

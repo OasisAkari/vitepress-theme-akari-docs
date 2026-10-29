@@ -20,7 +20,6 @@ export const SETTINGS_STORAGE_KEY = "akari-docs-settings";
 export const AKARI_NAV_RAIL_QUERY = "(min-width: 960px)";
 export const AKARI_NAV_DRAWER_PINNED_QUERY = "(min-width: 1600px)";
 
-export const DEFAULT_SEARCH_ENDPOINT = "/search-index.json";
 export const DEFAULT_SEARCH_SHORTCUT = "k";
 export const DEFAULT_SEARCH_MAX_RESULTS = 8;
 export const DEFAULT_SEARCH_DEBOUNCE = 180;

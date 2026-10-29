@@ -1,15 +1,16 @@
 import type { HeadConfig } from "vitepress";
 
-import type { AkariFontsConfig, ResolvedAkariFonts } from "./types";
+import type {
+  AkariFontsConfig,
+  AkariLanguage,
+  AkariLanguageFonts,
+  ResolvedAkariFonts,
+} from "./types";
 
 const GOOGLE_FONTS = "https://fonts.googleapis.com/css2";
-const ROBOTO = "Roboto:ital,wght@0,100..900;1,100..900";
 
-/** A language's default fonts: Google Fonts families and the font stack. */
-export interface AkariFontDefaults {
-  google: string[];
-  family: string[];
-}
+/** Roboto with variable weight, both styles, for the languages to share. */
+export const ROBOTO = "Roboto:ital,wght@0,100..900;1,100..900";
 
 /** The CSS custom property the text's `font-family` is read from. */
 export const AKARI_FONT_FAMILY_PROPERTY = "--akari-font-family";
@@ -19,7 +20,7 @@ export const AKARI_FONT_FAMILY_PROPERTY = "--akari-font-family";
  * Noto Sans SC (思源黑体) from Google Fonts, both with variable weight,
  * then the system's fonts for Chinese.
  */
-export const AKARI_DEFAULT_FONTS: Readonly<AkariFontDefaults> = {
+export const AKARI_DEFAULT_FONTS: AkariLanguageFonts = {
   google: [ROBOTO, "Noto Sans SC:wght@100..900"],
   family: [
     "Roboto",
@@ -29,52 +30,6 @@ export const AKARI_DEFAULT_FONTS: Readonly<AkariFontDefaults> = {
     "system-ui",
     "sans-serif",
   ],
-};
-
-/**
- * The fonts of the languages that need their own, by primary language
- * subtag: Japanese kanji and kana, Korean hangul and Arabic script would
- * otherwise take Chinese or system shapes.
- */
-export const AKARI_LANGUAGE_FONTS: Readonly<
-  Record<string, Readonly<AkariFontDefaults>>
-> = {
-  ja: {
-    google: [ROBOTO, "Noto Sans JP:wght@100..900"],
-    family: [
-      "Roboto",
-      "Noto Sans JP",
-      "Hiragino Sans",
-      "Hiragino Kaku Gothic ProN",
-      "Yu Gothic UI",
-      "Yu Gothic",
-      "Meiryo",
-      "system-ui",
-      "sans-serif",
-    ],
-  },
-  ko: {
-    google: [ROBOTO, "Noto Sans KR:wght@100..900"],
-    family: [
-      "Roboto",
-      "Noto Sans KR",
-      "Apple SD Gothic Neo",
-      "Malgun Gothic",
-      "system-ui",
-      "sans-serif",
-    ],
-  },
-  ar: {
-    google: [ROBOTO, "Noto Sans Arabic:wght@100..900"],
-    family: [
-      "Roboto",
-      "Noto Sans Arabic",
-      "Geeza Pro",
-      "Tahoma",
-      "system-ui",
-      "sans-serif",
-    ],
-  },
 };
 
 /** CSS keywords that name a kind of font rather than a family. */
@@ -128,16 +83,32 @@ export function googleFontsStylesheet(
 }
 
 /**
- * The fonts of a language: what its config sets, the rest from the
- * language's defaults (AKARI_LANGUAGE_FONTS, else AKARI_DEFAULT_FONTS).
- * `google: false` loads nothing from Google Fonts, `true` the defaults.
+ * The rules giving text marked as another language (`lang="ja"`) the
+ * fonts of that language, on pages in any other: a name in the language
+ * menu, a quotation. Only the page's own language's fonts are loaded, so
+ * these take what the device has.
+ */
+export function markedFontRules(languages: readonly AkariLanguage[]): string {
+  return languages
+    .flatMap((language) => {
+      const code = language.code.trim().toLowerCase().replace(/_/g, "-");
+      const family = fontFamilyValue(language.fonts?.family ?? []);
+      if (!family || !/^[a-z0-9-]+$/.test(code)) return [];
+      return `html:not(:lang(${code})) [lang|="${code}"] { font-family: ${family}; }`;
+    })
+    .join("\n");
+}
+
+/**
+ * The fonts of a page: what its config sets, the rest from its language's
+ * (`defaults`). `google: false` loads nothing from Google Fonts, `true` the
+ * language's. `languages` are the site's, for text marked as another.
  */
 export function resolveFonts(
-  lang: string | undefined,
-  config: AkariFontsConfig = {},
+  config: AkariFontsConfig | undefined = {},
+  defaults: AkariLanguageFonts = AKARI_DEFAULT_FONTS,
+  languages: readonly AkariLanguage[] = [],
 ): ResolvedAkariFonts {
-  const primary = lang?.trim().toLowerCase().split(/[-_]/)[0] ?? "";
-  const defaults = AKARI_LANGUAGE_FONTS[primary] ?? AKARI_DEFAULT_FONTS;
   const google = Array.isArray(config.google)
     ? config.google
     : config.google === false
@@ -149,8 +120,15 @@ export function resolveFonts(
 
   return {
     stylesheet: googleFontsStylesheet(google),
-    family: family || fontFamilyValue(defaults.family),
+    family: family || fontFamilyValue(AKARI_DEFAULT_FONTS.family),
+    marked: markedFontRules(languages),
   };
+}
+
+/** The CSS of a page's fonts: its font family, and marked text's. */
+function fontStyle(fonts: ResolvedAkariFonts): string {
+  const root = `:root { ${AKARI_FONT_FAMILY_PROPERTY}: ${fonts.family}; }`;
+  return fonts.marked ? `${root}\n${fonts.marked}` : root;
 }
 
 /**
@@ -161,9 +139,7 @@ export function resolveFonts(
  * noscript copy applies it directly.
  */
 export function fontHead(fonts: ResolvedAkariFonts): HeadConfig[] {
-  const head: HeadConfig[] = [
-    ["style", {}, `:root { ${AKARI_FONT_FAMILY_PROPERTY}: ${fonts.family}; }`],
-  ];
+  const head: HeadConfig[] = [["style", {}, fontStyle(fonts)]];
   const href = fonts.stylesheet;
   if (!href) return head;
 
@@ -180,15 +156,21 @@ export function fontHead(fonts: ResolvedAkariFonts): HeadConfig[] {
 }
 
 /**
- * Applies a language's fonts in the page: its font family, and its Google
+ * Applies a page's fonts: its font family and marked text's, and its Google
  * Fonts stylesheet if it has one. A stylesheet inserted by script does not
  * block rendering, unlike one written in the page head; one already in the
  * page stays, for a later visit to its language.
  */
 export function applyFonts(fonts: ResolvedAkariFonts): void {
   if (typeof document === "undefined") return;
-  const root = document.documentElement;
-  root.style.setProperty(AKARI_FONT_FAMILY_PROPERTY, fonts.family);
+  let style = document.getElementById("akari-fonts");
+  if (!style) {
+    style = document.createElement("style");
+    style.id = "akari-fonts";
+    document.head.append(style);
+  }
+  const css = fontStyle(fonts);
+  if (style.textContent !== css) style.textContent = css;
 
   const href = fonts.stylesheet;
   if (!href) return;

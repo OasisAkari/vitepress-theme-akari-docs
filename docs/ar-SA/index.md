@@ -7,7 +7,7 @@ icon: home
 
 # نظرة عامة
 
-Vitepress Theme Akari Docs سمة توثيق مبنية على VitePress `2.0.0-alpha.21` و`@m3e/web` `2.10.2`. تحتفظ بما يقدمه VitePress من Markdown والتوليد الثابت والتوجيه، وتعيد بناء واجهة التوثيق بمكونات الويب Material 3 Expressive.
+Vitepress Theme Akari Docs سمة توثيق مبنية على VitePress و`@m3e/web`.
 
 <div class="demo-row">
   <m3e-button id="overview-demo-button" variant="filled">
@@ -65,7 +65,7 @@ npm run dev
 
 اقرأ بعد ذلك:
 
-- [التثبيت](/ar-SA/getting-started/installation): المتطلبات وبنية المجلدات والبناء والنشر.
+- [التثبيت](/ar-SA/getting-started/installation): إنشاء مستودع من القالب والمتطلبات والنشر.
 - [التهيئة](/ar-SA/getting-started/configuration): التهيئة المشتركة وتهيئة اللغة.
 - [كتابة الصفحات](/ar-SA/getting-started/writing): المقالات الجديدة والبيانات الأمامية وMarkdown.
 - [التخطيط وشريط التطبيق](/ar-SA/theme/layout)، [التنقل الجانبي](/ar-SA/theme/sidebar): أجزاء واجهة السمة.

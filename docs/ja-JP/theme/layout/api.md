@@ -33,6 +33,12 @@ tab: API
 
 1 つのページだけ目次をオフにするには、そのページのフロントマターに `toc: false` と書きます。`m3e-toc-ignore` 属性を持つ見出しは目次から除外されます。
 
+## loadingBar
+
+| フィールド | 型 | デフォルト | 説明 |
+| --- | --- | --- | --- |
+| `enabled` | `boolean` | `true` | ページの読み込み中に、ウィンドウの上端に進行状況バーを表示するかどうか |
+
 ## footer
 
 | フィールド | 型 | デフォルト | 説明 |
@@ -78,6 +84,8 @@ footer: {
 | `--akari-wavy-divider-color` | `--md-sys-color-outline-variant` | フッターの上の波線の区切り線の色 |
 | `--akari-doc-app-bar-height` | `64px` | アプリバーの高さ。読み取り専用で、追従位置の計算に使われます |
 | `--akari-doc-rail-width` | `96px` | レールの幅。読み取り専用 |
+| `--akari-loading-bar-height` | `4px` | ローディングバーの高さ |
+| `--akari-loading-bar-color` | `--md-sys-color-primary` | ローディングバーの色 |
 
 ```css
 :root {

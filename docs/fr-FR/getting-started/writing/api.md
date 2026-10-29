@@ -101,7 +101,7 @@ pnpm install
 :::
 ````
 
-Les conteneurs personnalisés sont `info`, `tip`, `warning`, `danger` et `details`. Un bloc de code avec un langage reçoit la coloration syntaxique et un bouton de copie. Le texte du bouton de copie vient de `markdown.codeCopyButton` dans la configuration de langue.
+Les conteneurs personnalisés sont `info`, `tip`, `warning`, `danger` et `details`. Un bloc de code avec un langage reçoit la coloration syntaxique et un bouton de copie. Le texte du bouton de copie et les titres des conteneurs écrits sans titre viennent du `markdown` du pack de langue, et la configuration de langue peut les remplacer.
 
 ## Classes utilitaires des démos
 

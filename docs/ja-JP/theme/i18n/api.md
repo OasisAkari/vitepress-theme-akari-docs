@@ -9,17 +9,32 @@ tab: API
 | フィールド | 型 | デフォルト | 説明 |
 | --- | --- | --- | --- |
 | `rootLanguage` | `string` | アルファベット順で最初の言語フォルダー | 共通設定でのみ有効。サイトのルートで配信する言語 |
-| `lang` | `string` | 言語フォルダーの名前 | 言語コード。`<html lang>` と、組み込みのインターフェース文字列の選択に使われます |
-| `label` | `string` | `lang` | 言語メニューに表示する名前 |
-| `dir` | `"ltr" \| "rtl" \| "auto"` | `"ltr"` | 文字の方向。右から左に書く言語では `rtl` を設定します。文字の方向の設定が「言語に合わせる」のときに使われます |
-| `markdown` | `MarkdownLocaleOptions` | なし | Markdown 内のこの言語の文字列。たとえば `codeCopyButton: { tooltipText, copiedText }` |
+| `lang` | `string` | 言語フォルダーの名前 | 言語コード。`<html lang>` と、言語パックの選択に使われます |
+| `label` | `string` | その言語自身による呼び名 | 言語メニューに表示する名前。たとえば `ja-JP` のデフォルトは「日本語」です |
+| `dir` | `"ltr" \| "rtl" \| "auto"` | 言語パックの値 | 文字の方向。文字の方向の設定が「言語に合わせる」のときに使われます |
+| `markdown` | `MarkdownLocaleOptions` | 言語パックの値 | Markdown 内のこの言語の文字列。言語パックの値の上に重ねられます。たとえば `codeCopyButton: { tooltipText, copiedText }` |
 | `messages` | `Partial<AkariMessages>` | なし | インターフェースの文字列を上書き、または補います |
+| `languages` | `AkariLanguage[]` | なし | 組み込み以外の言語パック、または組み込みの言語パックへの変更。通常は共通設定に書きます |
 
 ほかのフィールド（`title`、`description`、`appBar`、`footer`、`search` など）も言語設定に書けます。[構成](/ja-JP/getting-started/configuration/api)を参照してください。
 
+## AkariLanguage
+
+言語パックの形です。`defineAkariLanguage`（`docs/.vitepress/theme/define.ts` からインポート）で書きます。
+
+| フィールド | 型 | 説明 |
+| --- | --- | --- |
+| `code` | `string` | 必須。言語コード。ページはまず完全なコード (`pt-BR`) の言語パックを探し、次に主言語 (`pt`) の言語パックを探します |
+| `dir` | `"ltr" \| "rtl"` | 文字の方向。デフォルトは `"ltr"` |
+| `fonts` | `{ google: string[]; family: string[] }` | フォント。どちらのフィールドも [`fonts`](/ja-JP/styles/typography/api#fonts) と同じように書きます。デフォルトはテーマのフォント（Roboto と Noto Sans SC） |
+| `messages` | `Partial<AkariMessages>` | インターフェースの文字列。ない項目は英語になります |
+| `markdown` | `MarkdownLocaleOptions` | Markdown 内の文字列。`codeCopyButton` はコードブロックのコピーボタンのツールチップ、`container` はコンテナのデフォルトのタイトル（`tipLabel`、`warningLabel`、`dangerLabel`、`infoLabel`、`detailsLabel` など）です |
+
+組み込みの言語パックは `docs/.vitepress/theme/i18n/languages/` に 1 言語 1 ファイルで置かれ、同じフォルダーの `index.ts` に列挙されています。テーマ自体に組み込みの言語を追加するには、そこにファイルを追加し、`AKARI_LANGUAGES` に加えます。
+
 ## messages
 
-テーマには、簡体字中国語 (`zh`)、英語 (`en`)、日本語 (`ja`)、韓国語 (`ko`)、フランス語 (`fr`)、アラビア語 (`ar`) の 6 セットのインターフェース文字列が組み込まれています。`messages` に書いた項目は組み込みの文字列を置き換え、書かなかった項目は組み込みの値のままです。`{name}` を含む項目には、実行時に対応する値が入ります。
+組み込みの 6 つの言語パック、簡体字中国語 (`zh`)、英語 (`en`)、日本語 (`ja`)、韓国語 (`ko`)、フランス語 (`fr`)、アラビア語 (`ar`) は、どれもすべてのインターフェース文字列を持っています。言語設定の `messages` に書いた項目は言語パックの文字列を置き換え、書かなかった項目は言語パックの値のままです。`{name}` を含む項目には、実行時に対応する値が入ります。
 
 ### ナビゲーションとアプリバー
 
@@ -37,6 +52,7 @@ tab: API
 | `languageLabel` | 言語を切り替え |
 | `languageDialogTitle` | 言語を選択 |
 | `languageDialogClose` | 閉じる |
+| `loadingLabel` | ページを読み込み中 |
 
 ### 目次、ページ送り、フッター
 
@@ -109,7 +125,7 @@ tab: API
 | `searchHintOpen` | 開く |
 | `searchHintClose` | 閉じる |
 | `searchFailed` | 検索に失敗しました。しばらくしてからもう一度お試しください。 |
-| `searchIndexUnavailable` | ローカル検索インデックスを読み込めませんでした（HTTP {status}）。 |
+| `searchIndexUnavailable` | ローカル検索インデックスを読み込めませんでした。 |
 | `searchIndexInvalid` | ローカル検索インデックスの形式が正しくありません。 |
 | `searchRequestFailed` | 検索リクエストに失敗しました（HTTP {status}）。 |
 | `searchBackendMissing` | 検索バックエンド「{id}」は登録されていません。 |
@@ -145,6 +161,16 @@ const { locales, homeHref } = useAkariLocales();
 | `homeHref` | 現在の言語のホームページの URL。`base` が付いています |
 
 どちらの関数も、レイアウト内のコンポーネントでのみ呼び出してください。
+
+## 言語パックの関数
+
+すべてテーマのエントリーからエクスポートされており (`import { … } from "@theme"`)、どこからでも呼び出せます。
+
+| エクスポート | 説明 |
+| --- | --- |
+| `AKARI_LANGUAGES` | 組み込みの言語パック |
+| `resolveLanguage(lang, languages?)` | ある言語が最終的に使う言語パック。`{ code, dir, fonts, messages, markdown }` を返し、足りない部分は上記の規則で補われます。`languages` はサイト独自の言語パックです |
+| `defineAkariLanguage(language)` | 言語パックを書くための型ヘルパー |
 
 ## 検索での言語
 

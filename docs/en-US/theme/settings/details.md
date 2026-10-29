@@ -48,7 +48,7 @@ document.documentElement.dir =
 document.documentElement.style.fontSize = settings.textSize;
 ```
 
-- `auto` (Follow language) takes the `dir` of the current language config (`useData().dir`) and changes with it when you switch to another language. A language that sets `dir: "rtl"`, such as Arabic, is therefore right to left by default.
+- `auto` (Follow language) takes the `dir` of the current language (`useData().dir`, from the language config, or the language pack when the config doesn't set it) and changes with it when you switch to another language. A right-to-left language, such as Arabic, is therefore right to left by default.
 - Switching the direction affects the bidirectional layout and icon direction of m3e components, and the page-switch animation of parallel pages mirrors with it.
 - Switching the text size affects every size computed in `rem`: body text, headings, spacing, code blocks and the rest scale proportionally. The text size of m3e components is set by component tokens, so it does not simply double, but the layout stays usable.
 - Layout syncs the palette that `m3e-theme` generates to the root element. `html` and `body`, the app bar, the navigation, the document surface, the table of contents and every dialog follow the seed color, variant, light and dark mode and contrast. There is no separate set of fixed colors.

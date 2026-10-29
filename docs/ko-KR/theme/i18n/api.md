@@ -9,17 +9,32 @@ tab: API
 | 필드 | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `rootLanguage` | `string` | 알파벳순으로 첫 번째 언어 폴더 | 공통 구성에서만 유효합니다. 사이트 루트에서 제공할 언어 |
-| `lang` | `string` | 언어 폴더 이름 | 언어 코드. `<html lang>`과 기본 제공 인터페이스 문자열 선택에 씁니다 |
-| `label` | `string` | `lang` | 언어 메뉴에 표시할 이름 |
-| `dir` | `"ltr" \| "rtl" \| "auto"` | `"ltr"` | 텍스트 방향. 오른쪽에서 왼쪽으로 쓰는 언어는 `rtl`로 설정합니다. 텍스트 방향 설정이 “언어에 따름”일 때 쓰입니다 |
-| `markdown` | `MarkdownLocaleOptions` | 없음 | Markdown에서 쓰는 이 언어의 문자열. 예: `codeCopyButton: { tooltipText, copiedText }` |
+| `lang` | `string` | 언어 폴더 이름 | 언어 코드. `<html lang>`과 언어 팩 선택에 씁니다 |
+| `label` | `string` | 그 언어로 표기한 언어 이름 | 언어 메뉴에 표시할 이름. 예를 들어 `ja-JP`의 기본값은 “日本語”입니다 |
+| `dir` | `"ltr" \| "rtl" \| "auto"` | 언어 팩의 값 | 텍스트 방향. 텍스트 방향 설정이 “언어에 따름”일 때 쓰입니다 |
+| `markdown` | `MarkdownLocaleOptions` | 언어 팩의 값 | Markdown에서 쓰는 이 언어의 문자열. 언어 팩의 문자열 위에 겹쳐집니다. 예: `codeCopyButton: { tooltipText, copiedText }` |
 | `messages` | `Partial<AkariMessages>` | 없음 | 인터페이스 문자열을 재정의하거나 채웁니다 |
+| `languages` | `AkariLanguage[]` | 없음 | 기본 제공 언어 팩 외의 언어 팩, 또는 기본 제공 언어 팩의 변경. 보통 공통 구성에 씁니다 |
 
 그 밖의 필드(`title`, `description`, `appBar`, `footer`, `search` 등)도 언어 구성에 쓸 수 있습니다. [구성](/ko-KR/getting-started/configuration/api)을 참고하세요.
 
+## AkariLanguage
+
+언어 팩의 형태입니다. `defineAkariLanguage`(`docs/.vitepress/theme/define.ts`에서 가져옵니다)로 작성합니다.
+
+| 필드 | 타입 | 설명 |
+| --- | --- | --- |
+| `code` | `string` | 필수. 언어 코드. 페이지는 먼저 전체 코드(`pt-BR`)가 같은 언어 팩을 찾고, 없으면 주 언어(`pt`)가 같은 언어 팩을 찾습니다 |
+| `dir` | `"ltr" \| "rtl"` | 텍스트 방향. 기본값은 `"ltr"`입니다 |
+| `fonts` | `{ google: string[]; family: string[] }` | 글꼴. 두 필드 모두 [`fonts`](/ko-KR/styles/typography/api#fonts)와 같은 형식으로 씁니다. 기본값은 테마의 글꼴(Roboto와 Noto Sans SC)입니다 |
+| `messages` | `Partial<AkariMessages>` | 인터페이스 문자열. 빠진 항목은 영어로 표시됩니다 |
+| `markdown` | `MarkdownLocaleOptions` | Markdown에서 쓰는 문자열. `codeCopyButton`은 코드 블록 복사 버튼의 툴팁이고, `container`에는 컨테이너의 기본 제목(`tipLabel`, `warningLabel`, `dangerLabel`, `infoLabel`, `detailsLabel` 등)이 들어갑니다 |
+
+기본 제공 언어 팩은 `docs/.vitepress/theme/i18n/languages/`에 언어마다 파일 하나씩 있으며, 같은 폴더의 `index.ts`가 이들을 나열합니다. 테마 자체에 기본 제공 언어를 추가하려면 그 폴더에 파일을 추가하고 `AKARI_LANGUAGES`에 나열합니다.
+
 ## messages
 
-테마에는 인터페이스 문자열 세트 6개가 기본 제공됩니다. 중국어 간체(`zh`), 영어(`en`), 일본어(`ja`), 한국어(`ko`), 프랑스어(`fr`), 아랍어(`ar`)입니다. `messages`에 쓴 항목은 기본 제공 문자열을 대체하고, 쓰지 않은 항목은 기본 제공 값을 유지합니다. `{name}`이 들어 있는 항목은 런타임에 해당 값으로 채워집니다.
+기본 제공 언어 팩은 중국어 간체(`zh`), 영어(`en`), 일본어(`ja`), 한국어(`ko`), 프랑스어(`fr`), 아랍어(`ar`)의 6개이며, 모두 인터페이스 문자열을 빠짐없이 갖추고 있습니다. 언어 구성의 `messages`에 쓴 항목은 언어 팩의 문자열을 대체하고, 쓰지 않은 항목은 언어 팩의 값을 유지합니다. `{name}`이 들어 있는 항목은 런타임에 해당 값으로 채워집니다.
 
 ### 내비게이션과 앱 바
 
@@ -37,6 +52,7 @@ tab: API
 | `languageLabel` | 언어 변경 |
 | `languageDialogTitle` | 언어 선택 |
 | `languageDialogClose` | 닫기 |
+| `loadingLabel` | 페이지 로드 중 |
 
 ### 목차, 페이지 이동 카드, 푸터
 
@@ -109,7 +125,7 @@ tab: API
 | `searchHintOpen` | 열기 |
 | `searchHintClose` | 닫기 |
 | `searchFailed` | 검색에 실패했습니다. 잠시 후 다시 시도하세요. |
-| `searchIndexUnavailable` | 로컬 검색 색인을 불러오지 못했습니다(HTTP {status}). |
+| `searchIndexUnavailable` | 로컬 검색 색인을 불러오지 못했습니다. |
 | `searchIndexInvalid` | 로컬 검색 색인 형식이 올바르지 않습니다. |
 | `searchRequestFailed` | 검색 요청에 실패했습니다(HTTP {status}). |
 | `searchBackendMissing` | \"{id}\"(으)로 등록된 검색 백엔드가 없습니다. |
@@ -145,6 +161,16 @@ const { locales, homeHref } = useAkariLocales();
 | `homeHref` | 현재 언어 홈 페이지의 URL. `base`가 붙어 있습니다 |
 
 두 함수 모두 레이아웃 안의 컴포넌트에서만 호출하세요.
+
+## 언어 팩 함수
+
+모두 테마 엔트리에서 내보내며(`import { … } from "@theme"`), 어디서든 호출할 수 있습니다.
+
+| 내보내기 | 설명 |
+| --- | --- |
+| `AKARI_LANGUAGES` | 기본 제공 언어 팩 |
+| `resolveLanguage(lang, languages?)` | 한 언어가 최종적으로 쓰는 언어 팩. 위의 규칙으로 빈 곳을 채운 `{ code, dir, fonts, messages, markdown }`을 반환합니다. `languages`는 사이트 자체의 언어 팩입니다 |
+| `defineAkariLanguage(language)` | 언어 팩을 작성할 때 쓰는 타입 도우미 |
 
 ## 검색의 언어
 

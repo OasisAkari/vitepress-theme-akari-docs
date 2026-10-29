@@ -21,7 +21,7 @@ tab: 技术细节
 
 1. 读取 `docs/config.ts`，在 `docs` 的顶层文件夹中找出带有 `config.ts` 的语言文件夹；`public`、`node_modules` 与以 `.` 开头的文件夹除外。配置文件由 Vite 的配置加载器打包执行，与 VitePress 加载它们的方式相同。
 2. 确定根语言：`rootLanguage` 指定的文件夹；没有指定或不存在时（会给出提示），取按字母顺序的第一个。其余语言按字母顺序排在后面。
-3. 为每种语言生成一项 VitePress 的 `locales`：根语言的键为 `root`，其余为文件夹名。每项带着语言配置的内容（`head` 除外，它已经由目录级配置加入，再加一次会重复；locale 的 `head` 是这种语言的字体标签，见[排版](/styles/typography/api#fonts)），`lang` 缺省为文件夹名，`label` 缺省为 `lang`，并带上生成的导航（`themeConfig.akari.sidebar.items`）。
+3. 为每种语言生成一项 VitePress 的 `locales`：根语言的键为 `root`，其余为文件夹名。每项带着语言配置的内容（`head` 除外，它已经由目录级配置加入，再加一次会重复；locale 的 `head` 是这种语言的字体标签，见[排版](/styles/typography/api#fonts)），`lang` 缺省为文件夹名，并带上生成的导航（`themeConfig.akari.sidebar.items`）。语言配置没写的 `label`、`dir` 与 `markdown` 来自 `lang` 对应的语言包，见[国际化 · 技术细节](/theme/i18n/details#语言包用在哪里)。
 4. 站点级的 `lang`、`title`、`description` 取自根语言。
 
 语言配置既作为目录级配置作用于自己的页面，又作为 locale 出现，各有用处：locale 让语言菜单列出这种语言、让代码块复制按钮等 Markdown 文字按语言渲染，也让 404 页这类语言文件夹之外的页面得到根语言的设置。两处的值相同，叠加结果不受影响。

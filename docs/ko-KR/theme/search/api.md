@@ -20,28 +20,24 @@ tab: API
 ## 로컬 백엔드
 
 ```ts
-backend: { type: "local", endpoint: "/search-index.json" },
+backend: { type: "local" },
 ```
 
-`endpoint`는 같은 출처의 다른 정적 JSON 파일을 가리킬 수 있으며, 상대 경로에는 `base`가 자동으로 붙습니다. 파일 형식은 다음과 같습니다.
+VitePress의 로컬 검색(`provider: "local"`)이 만드는 색인을 씁니다. 언어마다 하나씩 있으며, VitePress 로캘 키(루트 언어는 `root`)로 불러옵니다. 어느 언어든 로컬 백엔드를 쓰면 `akariContent`가 사이트 구성에서 이를 켜고, 결과의 발췌문에 쓸 수 있도록 색인이 각 섹션의 텍스트를 보관하게 합니다.
 
 ```ts
-interface SearchIndexFile {
-  version: 1;
-  generatedAt: string;          // ISO 시간
-  entries: SearchIndexEntry[];
-}
-
-interface SearchIndexEntry {
-  id: string;                   // "/ko-KR/theme/layout::page" 또는 "/ko-KR/theme/layout::앱-바"
-  pageTitle: string;            // 페이지 제목
-  title: string;                // 페이지 항목이면 페이지 제목, 섹션 항목이면 섹션 제목
-  heading: string;              // 섹션 제목. 페이지 항목이면 빈 문자열
-  href: string;                 // "/ko-KR/theme/layout#앱-바"
-  content: string;              // 마크업을 제거한 본문 텍스트, 최대 4000자
-  level: number;                // 페이지 항목은 0, 섹션은 2 또는 3
-}
+// akariContent가 생성하는 사이트 구성
+themeConfig: {
+  search: {
+    provider: "local",
+    options: { miniSearch: { options: { storeFields: ["title", "titles", "text"] } } },
+  },
+},
 ```
+
+각 섹션은 색인의 문서 하나입니다. `id`는 페이지 경로에 제목의 앵커를 붙인 것이고, `title`은 섹션의 제목, `titles`는 그 위의 제목들(페이지 제목이 맨 앞), `text`는 태그를 제거한 본문 텍스트입니다. 페이지의 1단계 제목 아래 섹션은 페이지 자체를 나타내며, 그 결과는 페이지 맨 위로 연결됩니다.
+
+`.vitepress/config.mts`에 `themeConfig`가 없으면 `...content.site`가 이 설정을 함께 가져옵니다. 있으면 `content.site.themeConfig`를 그 안에 병합하세요.
 
 ## HTTP 백엔드
 

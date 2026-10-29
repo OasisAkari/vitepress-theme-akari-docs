@@ -110,6 +110,12 @@ export interface AkariSettingsConfig {
   storageKey?: string;
 }
 
+/** The bar at the top of the window while a page loads. */
+export interface AkariLoadingBarConfig {
+  /** Defaults to `true`. */
+  enabled?: boolean;
+}
+
 export interface AkariTocConfig {
   enabled?: boolean;
   maxDepth?: number;
@@ -203,10 +209,15 @@ export interface AkariSearchResult {
   pageTitle?: string;
   heading?: string;
   excerpt?: string;
+  /**
+   * The words that matched, highlighted along with the query's: one the
+   * query only started, or misspelled.
+   */
+  terms?: string[];
 }
 
 export type AkariSearchBackendConfig =
-  | { type: "local"; endpoint?: string }
+  | { type: "local" }
   | {
       type: "http";
       endpoint: string;
@@ -324,13 +335,14 @@ export interface AkariMessages {
   searchHintOpen: string;
   searchHintClose: string;
   searchFailed: string;
-  /** Placeholders: `{status}`. */
   searchIndexUnavailable: string;
   searchIndexInvalid: string;
   /** Placeholders: `{status}`. */
   searchRequestFailed: string;
   /** Placeholders: `{id}`. */
   searchBackendMissing: string;
+  /** The loading bar's name for assistive technology. */
+  loadingLabel: string;
 }
 
 /**
@@ -356,6 +368,52 @@ export interface ResolvedAkariFonts {
   stylesheet?: string;
   /** The `font-family` value. */
   family: string;
+  /**
+   * CSS giving text marked as another language (`lang="ja"`) that
+   * language's fonts, as far as the device has them.
+   */
+  marked: string;
+}
+
+/** A language's fonts: what to load from Google Fonts, and the stack. */
+export interface AkariLanguageFonts {
+  /** Families in the Google Fonts css2 API's `family` form. */
+  google: readonly string[];
+  /** The `font-family` list, in order. */
+  family: readonly string[];
+}
+
+/**
+ * Everything the theme knows about a language, for the pages in it: its
+ * interface strings, its fonts, its direction and its strings in rendered
+ * Markdown. The theme comes with some (`AKARI_LANGUAGES`); a site adds
+ * others, or changes those, with `languages` in its config. Write one with
+ * `defineAkariLanguage`.
+ */
+export interface AkariLanguage {
+  /**
+   * The BCP 47 tag it serves. A page takes the language of its full tag
+   * (`pt-BR`), else of its primary subtag (`pt`), else English.
+   */
+  code: string;
+  /** Its writing direction. Defaults to `"ltr"`. */
+  dir?: "ltr" | "rtl";
+  /** Its fonts. Defaults to the theme's: Roboto and Noto Sans SC. */
+  fonts?: AkariLanguageFonts;
+  /** Its interface strings. Missing ones are English. */
+  messages?: Partial<AkariMessages>;
+  /** Its strings in rendered Markdown: code blocks' copy button, containers' titles. */
+  markdown?: MarkdownLocaleOptions;
+}
+
+/** A page's language, its gaps filled. */
+export interface ResolvedAkariLanguage {
+  /** The code of the language serving the page. */
+  code: string;
+  dir: "ltr" | "rtl";
+  fonts: AkariLanguageFonts;
+  messages: AkariMessages;
+  markdown: MarkdownLocaleOptions;
 }
 
 export interface AkariThemeConfig {
@@ -363,9 +421,15 @@ export interface AkariThemeConfig {
   sidebar?: AkariSidebarConfig;
   settings?: AkariSettingsConfig;
   toc?: AkariTocConfig;
+  loadingBar?: AkariLoadingBarConfig;
   footer?: AkariFooterConfig;
   search?: AkariSearchConfig;
   fonts?: AkariFontsConfig;
+  /**
+   * Languages besides the theme's own, or changes to them: one with the
+   * code of a built-in language is laid over it.
+   */
+  languages?: AkariLanguage[];
   /** Overrides for the interface strings of the current locale. */
   messages?: Partial<AkariMessages>;
   components?: Partial<Record<AkariComponentSlot, Component>>;
@@ -386,12 +450,17 @@ export interface AkariSiteConfig extends Omit<AkariThemeConfig, "components"> {
    */
   rootLanguage?: string;
   /**
-   * The language, e.g. `zh-CN`; it also picks the theme's built-in strings.
-   * Defaults to the name of the language folder.
+   * The language, e.g. `zh-CN`; it also picks the language the theme
+   * takes strings, fonts and direction from. Defaults to the name of the
+   * language folder.
    */
   lang?: string;
-  /** The language's name in the language menu. Defaults to `lang`. */
+  /**
+   * The language's name in the language menu. Defaults to its name for
+   * itself ("日本語").
+   */
   label?: string;
+  /** Defaults to the language's direction. */
   dir?: "ltr" | "rtl" | "auto";
   title?: string;
   titleTemplate?: string | boolean;
@@ -399,7 +468,10 @@ export interface AkariSiteConfig extends Omit<AkariThemeConfig, "components"> {
   head?: HeadConfig[];
   /** The brand image of the app bar. */
   logo?: string;
-  /** The language's strings in rendered markdown, such as code blocks' copy button. */
+  /**
+   * The language's strings in rendered markdown, such as code blocks' copy
+   * button, laid over the language's own.
+   */
   markdown?: MarkdownLocaleOptions;
 }
 
@@ -479,6 +551,9 @@ export interface ResolvedAkariThemeConfig {
     enabled: boolean;
     maxDepth: number;
     overline: string;
+  };
+  loadingBar: {
+    enabled: boolean;
   };
   footer: {
     message: string;

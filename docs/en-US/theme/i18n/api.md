@@ -9,17 +9,32 @@ tab: API
 | Field | Type | Default | Description |
 | --- | --- | --- | --- |
 | `rootLanguage` | `string` | The first language folder in alphabetical order | Only valid in the shared config: the language served at the site root |
-| `lang` | `string` | The language folder's name | Language code, used for `<html lang>` and to choose the built-in interface strings |
-| `label` | `string` | `lang` | Name in the language menu |
-| `dir` | `"ltr" \| "rtl" \| "auto"` | `"ltr"` | Text direction. Set `rtl` for a right-to-left language. Used when the text direction setting is Follow language |
-| `markdown` | `MarkdownLocaleOptions` | None | This language's strings in Markdown, such as `codeCopyButton: { tooltipText, copiedText }` |
+| `lang` | `string` | The language folder's name | Language code, used for `<html lang>` and to choose the language pack |
+| `label` | `string` | The language's own name | Name in the language menu; `ja-JP`, for example, defaults to "日本語" |
+| `dir` | `"ltr" \| "rtl" \| "auto"` | The language pack's | Text direction. Used when the text direction setting is Follow language |
+| `markdown` | `MarkdownLocaleOptions` | The language pack's | This language's strings in Markdown, laid over the language pack's, such as `codeCopyButton: { tooltipText, copiedText }` |
 | `messages` | `Partial<AkariMessages>` | None | Overrides or fills in interface strings |
+| `languages` | `AkariLanguage[]` | None | Language packs besides the built-in ones, or changes to them; usually in the shared config |
 
 The other fields (`title`, `description`, `appBar`, `footer`, `search` and so on) can also go in a language config; see [Configuration](/en-US/getting-started/configuration/api).
 
+## AkariLanguage
+
+The shape of a language pack, written with `defineAkariLanguage` (imported from `docs/.vitepress/theme/define.ts`):
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `code` | `string` | Required. The language code. A page first looks for a pack with its full code (`pt-BR`), then for one with its primary language (`pt`) |
+| `dir` | `"ltr" \| "rtl"` | Text direction. Defaults to `"ltr"` |
+| `fonts` | `{ google: string[]; family: string[] }` | Fonts; both fields are written as in [`fonts`](/en-US/styles/typography/api#fonts). Defaults to the theme's fonts (Roboto and Noto Sans SC) |
+| `messages` | `Partial<AkariMessages>` | Interface strings. Missing entries are English |
+| `markdown` | `MarkdownLocaleOptions` | Strings in Markdown: `codeCopyButton` is the code block copy button's tooltip, and `container` holds the containers' default titles (`tipLabel`, `warningLabel`, `dangerLabel`, `infoLabel`, `detailsLabel` and so on) |
+
+The built-in packs are in `docs/.vitepress/theme/i18n/languages/`, one file per language, listed by the `index.ts` in the same folder. To give the theme itself another built-in language, add a file there and list it in `AKARI_LANGUAGES`.
+
 ## messages
 
-The theme has six built-in sets of interface strings: Simplified Chinese (`zh`), English (`en`), Japanese (`ja`), Korean (`ko`), French (`fr`) and Arabic (`ar`). Entries you write in `messages` replace the built-in strings; entries you leave out keep the built-in values. Entries with `{name}` get the matching value filled in at runtime.
+The six built-in language packs, Simplified Chinese (`zh`), English (`en`), Japanese (`ja`), Korean (`ko`), French (`fr`) and Arabic (`ar`), all have every interface string. Entries you write in the language config's `messages` replace the pack's strings; entries you leave out keep the pack's. Entries with `{name}` get the matching value filled in at runtime.
 
 ### Navigation and app bar
 
@@ -37,6 +52,7 @@ The theme has six built-in sets of interface strings: Simplified Chinese (`zh`),
 | `languageLabel` | Change language |
 | `languageDialogTitle` | Choose a language |
 | `languageDialogClose` | Close |
+| `loadingLabel` | Loading page |
 
 ### Table of contents, pager and footer
 
@@ -109,7 +125,7 @@ The theme has six built-in sets of interface strings: Simplified Chinese (`zh`),
 | `searchHintOpen` | Open |
 | `searchHintClose` | Close |
 | `searchFailed` | Search failed. Please try again later. |
-| `searchIndexUnavailable` | Couldn't load the local search index (HTTP {status}). |
+| `searchIndexUnavailable` | Couldn't load the local search index. |
 | `searchIndexInvalid` | The local search index is not valid. |
 | `searchRequestFailed` | The search request failed (HTTP {status}). |
 | `searchBackendMissing` | No search backend is registered as \"{id}\". |
@@ -145,6 +161,16 @@ const { locales, homeHref } = useAkariLocales();
 | `homeHref` | URL of the current language's home page, with `base` added |
 
 Call both functions only in components inside the layout.
+
+## Language pack functions
+
+All are exported from the theme entry (`import { … } from "@theme"`) and can be called anywhere.
+
+| Export | Description |
+| --- | --- |
+| `AKARI_LANGUAGES` | The built-in language packs |
+| `resolveLanguage(lang, languages?)` | The pack a language ends up with: returns `{ code, dir, fonts, messages, markdown }`, with the gaps filled by the rules above. `languages` are the site's own packs |
+| `defineAkariLanguage(language)` | Type helper for writing a language pack |
 
 ## Languages in search
 

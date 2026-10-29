@@ -52,4 +52,4 @@ When you switch language, the theme moves the current path into the target langu
 
 ## Search index
 
-The local search index computes paths by the same rules: the index plugin calls `content.route` for each source file, so the links in its entries match the actual page paths. Each page gets one page entry, each h2 and h3 heading gets a section entry, and parallel pages get their own entries too.
+VitePress builds the local search index, so its links are the pages' actual paths (after the rewrites above). There is one index per language. Each page is split into sections at its headings; the part under the level-1 heading stands for the page itself, and parallel pages are pages of their own.

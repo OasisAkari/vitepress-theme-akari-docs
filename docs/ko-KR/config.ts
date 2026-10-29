@@ -1,12 +1,8 @@
 import { defineAkariConfig } from "../.vitepress/theme/define.ts";
 
 export default defineAkariConfig({
-  label: "한국어",
   title: "Vitepress Theme Akari Docs",
   description: "VitePress와 M3E Web Components로 만든 문서 테마",
-  markdown: {
-    codeCopyButton: { tooltipText: "코드 복사", copiedText: "복사됨" },
-  },
   appBar: { title: "Vitepress Theme Akari Docs" },
   sidebar: {
     categories: {

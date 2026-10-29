@@ -6,7 +6,7 @@ tab: API
 
 ## Polices par langue
 
-Les polices du texte dépendent de la langue de la page. Les valeurs par défaut figurent ci-dessous, et [`fonts`](#fonts) permet de toutes les changer :
+Les polices du texte dépendent de la langue de la page. Les valeurs par défaut viennent des `fonts` du [pack de langue](/fr-FR/theme/i18n/api#akarilanguage) ; celles des packs intégrés figurent ci-dessous, et [`fonts`](#fonts) permet de toutes les changer :
 
 | Langue | Chargées depuis Google Fonts | Pile de polices |
 | --- | --- | --- |
@@ -15,12 +15,12 @@ Les polices du texte dépendent de la langue de la page. Les valeurs par défaut
 | `ar` | Roboto, Noto Sans Arabic | Roboto, Noto Sans Arabic, Geeza Pro, Tahoma, system-ui, sans-serif |
 | Autres | Roboto, Noto Sans SC | Roboto, Noto Sans SC, PingFang SC, Microsoft YaHei, system-ui, sans-serif |
 
-La langue est déterminée d'après la langue principale de `<html lang>` : `ja-JP` prend donc la ligne `ja`.
+La langue est déterminée selon les règles des packs de langue : d'abord le code complet, puis la langue principale ; `ja-JP` prend donc la ligne `ja`. Les packs sans `fonts`, comme l'anglais et le français, prennent la ligne « Autres ».
 
 - Ces polices Google Fonts sont toutes à graisse variable. Noto Sans SC et les polices japonaise et coréenne sont découpées par plages Unicode : une page ne télécharge que les caractères qu'elle utilise.
 - Chaque langue ne charge que ses propres polices : les polices japonaise, coréenne et arabe ne se chargent que sur les pages de cette langue, et sont téléchargées quand vous passez à cette langue.
 - Les polices ne bloquent pas l'affichage de la page. `<head>` ne contient que des préconnexions et un `preload` ; le script du thème insère la feuille de style, et `display=swap` affiche d'abord le texte dans une police de secours. Sans scripts, c'est la feuille de style dans `<noscript>` qui s'applique. Quand Google Fonts est inaccessible, le texte utilise les polices système situées plus loin dans la pile.
-- Les parties d'une page marquées comme étant dans une autre langue (comme les noms des langues dans la boîte de dialogue des langues) utilisent celles des polices de la pile par défaut de cette langue qui sont présentes sur l'appareil.
+- Les parties d'une page marquées comme étant dans une autre langue (comme les noms des langues dans la boîte de dialogue des langues) utilisent celles des polices de la pile du pack de cette langue qui sont présentes sur l'appareil.
 
 ## fonts
 
@@ -55,7 +55,9 @@ export default defineAkariConfig({
 });
 ```
 
-`akariContent` écrit, d'après sa configuration, la pile de polices de chaque langue (la variable CSS `--akari-font-family`) et les balises de préchargement dans le `<head>` de ses pages : le premier affichage utilise donc déjà les bonnes polices ; quand vous changez de langue, le thème les remplace. Le code se trouve dans `docs/.vitepress/theme/fonts.ts` : `resolveFonts(lang, fonts)` calcule l'URL de la feuille de style et la `font-family`, `fontHead` produit les balises `<head>`, et `applyFonts` les applique dans la page. Les valeurs par défaut sont `AKARI_DEFAULT_FONTS` et `AKARI_LANGUAGE_FONTS`.
+Pour changer les polices par défaut d'une langue sur tous les sites, changez les `fonts` de son pack de langue ; pour ce site uniquement, la configuration `fonts` suffit.
+
+`akariContent` écrit, d'après son pack de langue et sa configuration, la pile de polices de chaque langue (la variable CSS `--akari-font-family`), les règles de polices des parties marquées avec `lang` et les balises de préchargement dans le `<head>` de ses pages : le premier affichage utilise donc déjà les bonnes polices ; quand vous changez de langue, le thème les remplace. Le code se trouve dans `docs/.vitepress/theme/fonts.ts` : `resolveFonts(fonts, defaults, languages)` calcule l'URL de la feuille de style et la `font-family` à partir de la configuration et des polices du pack, `markedFontRules(languages)` produit les règles de polices des parties marquées, `fontHead` produit les balises `<head>`, et `applyFonts` les applique dans la page. Les packs sans `fonts` utilisent `AKARI_DEFAULT_FONTS`.
 
 ## Tokens typographiques
 
@@ -125,5 +127,5 @@ Les éléments qui ont un fond dans l'article portent un motif presque invisible
 ## Blocs de code
 
 - La coloration syntaxique utilise les thèmes `github-light` et `github-dark` et suit le mode clair ou sombre.
-- Le bouton de copie est le `button.copy` de VitePress. Le texte de son info-bulle vient de `markdown.codeCopyButton` dans la configuration de langue.
+- Le bouton de copie est le `button.copy` de VitePress. Le texte de son info-bulle vient du `markdown.codeCopyButton` du pack de langue, et la configuration de langue peut le remplacer.
 - Sous 600px, le rayon d'angle des blocs de code passe à 12px.

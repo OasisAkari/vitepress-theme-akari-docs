@@ -24,11 +24,11 @@ Results are listed by page and section, each with an excerpt of the match. Openi
 
 ## Local index
 
-By default you need no backend. During development and builds, the theme scans every Markdown page and writes `docs/public/search-index.json`: one entry per page, plus one for each level-2 and level-3 heading. The index is not committed to the repository; `npm run dev` and `npm run build` refresh it automatically.
+By default you need no backend. The theme uses the index that VitePress' local search builds, one per language, downloaded only on the first search in that language. Pages are split into sections at their headings, and [MiniSearch](https://lucaong.github.io/minisearch/) does the matching: Chinese and Japanese are split into words, a word can be typed only partly, and longer words may have a typo or two. While the dev server runs, the index follows your edits.
 
 ## Using another search
 
-When you need spelling correction, semantic search or content from outside the site, switch to an HTTP endpoint or a JS function of your own:
+When you need semantic search or content from outside the site, switch to an HTTP endpoint or a JS function of your own:
 
 ```ts
 // docs/config.ts

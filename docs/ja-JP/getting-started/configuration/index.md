@@ -62,19 +62,15 @@ export default defineAkariConfig({
 
 ## 言語設定
 
-その言語自身の名前、タイトル、テキスト。`lang` のデフォルトはフォルダー名で、テーマはこれをもとに対応する組み込みのインターフェーステキストを選びます。右から左に書く言語では、さらに `dir: "rtl"` を設定します。
+このサイトでのその言語のタイトルとテキスト。`lang` のデフォルトはフォルダー名で、テーマはこれをもとに[言語パック](/ja-JP/theme/i18n#language-packs)を選びます。言語メニューでの名前、文字の方向、インターフェーステキスト、コードブロックのコピーボタンのテキストはすべて言語パックから取り、必要に応じてここで上書きします。
 
 ```ts
 // docs/ja-JP/config.ts
 import { defineAkariConfig } from "../.vitepress/theme/define.ts";
 
 export default defineAkariConfig({
-  label: "日本語",
   title: "Vitepress Theme Akari Docs",
   description: "VitePress と M3E Web Components で作られたドキュメントテーマ",
-  markdown: {
-    codeCopyButton: { tooltipText: "コードをコピー", copiedText: "コピーしました" },
-  },
   appBar: { title: "Vitepress Theme Akari Docs" },
   sidebar: {
     categories: {

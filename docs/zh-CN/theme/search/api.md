@@ -20,28 +20,24 @@ tab: 接口
 ## 本地后端
 
 ```ts
-backend: { type: "local", endpoint: "/search-index.json" },
+backend: { type: "local" },
 ```
 
-`endpoint` 可以换成其他同源的静态 JSON；相对路径自动加上 `base`。文件的格式：
+使用 VitePress 本地搜索（`provider: "local"`）生成的索引：每种语言一个，按 VitePress 的语言键（根语言为 `root`）加载。有语言使用本地后端时，`akariContent` 在站点配置中开启它，并让索引保存每一节的正文，用于结果中的摘要：
 
 ```ts
-interface SearchIndexFile {
-  version: 1;
-  generatedAt: string;          // ISO 时间
-  entries: SearchIndexEntry[];
-}
-
-interface SearchIndexEntry {
-  id: string;                   // "/theme/layout::page" 或 "/theme/layout::顶栏"
-  pageTitle: string;            // 页面标题
-  title: string;                // 页面条目为页面标题，章节条目为章节标题
-  heading: string;              // 章节标题；页面条目为空
-  href: string;                 // "/theme/layout#顶栏"
-  content: string;              // 去掉标记的正文，最多 4000 字
-  level: number;                // 页面条目为 0，章节为 2 或 3
-}
+// akariContent 生成的站点配置
+themeConfig: {
+  search: {
+    provider: "local",
+    options: { miniSearch: { options: { storeFields: ["title", "titles", "text"] } } },
+  },
+},
 ```
+
+索引中每一节是一条文档：`id` 是页面地址加标题的锚点，`title` 是这一节的标题，`titles` 是它上面的各级标题（第一项为页面标题），`text` 是去掉标签的正文。页面一级标题下的那一节代表页面本身，结果链接到页面顶部。
+
+没有在 `.vitepress/config.mts` 中写 `themeConfig` 时，`...content.site` 带上这项设置；写了的话，要把 `content.site.themeConfig` 合并进去。
 
 ## HTTP 后端
 

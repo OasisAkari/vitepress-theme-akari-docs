@@ -5,21 +5,35 @@ order: 1
 
 # 安装
 
-主题就放在仓库的 `docs/.vitepress/theme` 中，不需要另外安装主题包。
+Vitepress Theme Akari Docs 是一个 GitHub 模板仓库。从它创建自己的仓库，就得到主题源码、配置与示例文档，不需要另外安装主题包。
+
+## 从模板创建仓库
+
+1. 打开 [OasisAkari/vitepress-theme-akari-docs](https://github.com/OasisAkari/vitepress-theme-akari-docs)，点击 **Use this template** → **Create a new repository**。
+2. 填写仓库名称与可见性后创建。新仓库带有模板的全部文件，提交历史从头开始，与模板之间没有分叉关系。
+3. 克隆到本地，安装依赖并启动：
+
+   ```bash
+   git clone https://github.com/<账号>/<仓库名>.git
+   cd <仓库名>
+   npm install
+   npm run dev
+   ```
+
+用 GitHub CLI 可以一步创建并克隆：
+
+```bash
+gh repo create my-docs --template OasisAkari/vitepress-theme-akari-docs --public --clone
+```
 
 ## 环境要求
 
-- Node.js `>=22.12.0`（`package.json` 的 `engines`）；本仓库在 Node.js `24.21.0`、npm `12.2.1` 下验证。
-- npm，仓库只保留一份 `package-lock.json`。
+- Node.js `>=22.12.0`（`package.json` 的 `engines`）；模板在 Node.js `24.21.0`、npm `12.2.1` 下验证。
+- npm，仓库只保留一份 `package-lock.json`；持续集成中用 `npm ci` 按锁文件安装。
 
-## 安装与启动
+## 常用命令
 
-```bash
-npm install
-npm run dev
-```
-
-开发服务器默认在 `http://localhost:5173`。持续集成中用 `npm ci` 按锁文件安装。
+开发服务器默认在 `http://localhost:5173`。
 
 | 命令 | 作用 |
 | --- | --- |
@@ -28,6 +42,24 @@ npm run dev
 | `npm run preview` | 本地预览构建结果 |
 | `npm run typecheck` | 用 `vue-tsc --noEmit` 检查主题与测试 |
 | `npm test` | 运行 Vitest 单元测试 |
+
+## 换成自己的站点
+
+- 站点名称、版本号、社交链接与页尾在 `docs/config.ts` 与各语言的 `config.ts` 中，见[配置](/getting-started/configuration)。
+- logo 是 `docs/public/logo.svg`。
+- 语言文件夹中是本站的文档。保留需要的语言，删去其余的文件夹，再在留下的文件夹中写自己的页面，见[撰写页面](/getting-started/writing)。
+
+## 同步模板的更新
+
+从模板创建的仓库与模板之间没有关联，模板之后的更新不会自动进来。需要时把模板加为远程仓库，取回主题所在的 `docs/.vitepress`：
+
+```bash
+git remote add template https://github.com/OasisAkari/vitepress-theme-akari-docs.git
+git fetch template
+git checkout template/main -- docs/.vitepress
+```
+
+这会用模板的版本覆盖这个目录，自己对主题的修改要重新合并；`package.json` 中依赖的变化也要一并对照。
 
 ## 版本基线
 
@@ -56,7 +88,6 @@ VitePress 仍处于 alpha 阶段，升级时需要一并检查主题代码、配
 │   └── .vitepress/
 │       ├── config.mts             把主题接入 VitePress
 │       ├── content/               由目录生成语言、地址与导航
-│       ├── search/                本地搜索索引
 │       └── theme/                 主题源码
 ├── tests/                         单元测试
 └── package.json
@@ -70,7 +101,7 @@ VitePress 仍处于 alpha 阶段，升级时需要一并检查主题代码、配
 
 - **无扩展名地址**：站点开启了 `cleanUrls`，`/theme/layout` 对应文件 `theme/layout.html`。托管服务需要在找不到文件时补上 `.html` 再找：GitHub Pages、Netlify 与 Cloudflare Pages 默认如此；Vercel 需要在 `vercel.json` 中设置 `"cleanUrls": true`；Nginx 写 `try_files $uri $uri.html $uri/ =404;`。
 - **部署在子路径**：例如 `https://example.com/docs/`，在 `.vitepress/config.mts` 中设置 `base: "/docs/"`。导航、头图、logo 与搜索索引的站内地址都会自动加上它。
-- **搜索索引**：`search-index.json` 在构建时生成并复制到产物根目录，不需要额外步骤。
+- **搜索索引**：每种语言的索引在构建时打包进产物的 `assets/chunks/`，不需要额外步骤。
 
 ## 常见问题
 

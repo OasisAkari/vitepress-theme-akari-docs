@@ -5,29 +5,61 @@ order: 1
 
 # Installation
 
-Le thème se trouve dans le dépôt, dans `docs/.vitepress/theme`. Il n'y a pas de paquet de thème séparé à installer.
+Vitepress Theme Akari Docs est un dépôt modèle GitHub. Créez votre propre dépôt à partir de lui pour obtenir le code source du thème, la configuration et les pages d'exemple ; il n'y a pas de paquet de thème séparé à installer.
+
+## Créer un dépôt à partir du modèle
+
+1. Ouvrez [OasisAkari/vitepress-theme-akari-docs](https://github.com/OasisAkari/vitepress-theme-akari-docs) et cliquez sur **Use this template** → **Create a new repository**.
+2. Renseignez le nom et la visibilité du dépôt, puis créez-le. Le nouveau dépôt contient tous les fichiers du modèle, son historique de commits repart de zéro et ce n'est pas un fork du modèle.
+3. Clonez-le, installez les dépendances et démarrez :
+
+   ```bash
+   git clone https://github.com/<compte>/<dépôt>.git
+   cd <dépôt>
+   npm install
+   npm run dev
+   ```
+
+La CLI GitHub le crée et le clone en une seule étape :
+
+```bash
+gh repo create my-docs --template OasisAkari/vitepress-theme-akari-docs --public --clone
+```
 
 ## Prérequis
 
-- Node.js `>=22.12.0` (le champ `engines` de `package.json`). Le dépôt est vérifié avec Node.js `24.21.0` et npm `12.2.1`.
-- npm. Le dépôt ne contient qu'un seul `package-lock.json`.
+- Node.js `>=22.12.0` (le champ `engines` de `package.json`). Le modèle est vérifié avec Node.js `24.21.0` et npm `12.2.1`.
+- npm. Le dépôt ne contient qu'un seul `package-lock.json` ; en intégration continue, installez à partir de ce fichier avec `npm ci`.
 
-## Installer et démarrer
+## Commandes
 
-```bash
-npm install
-npm run dev
-```
-
-Le serveur de développement tourne par défaut sur `http://localhost:5173`. En intégration continue, utilisez `npm ci` pour installer à partir du fichier de verrouillage.
+Le serveur de développement tourne par défaut sur `http://localhost:5173`.
 
 | Commande | Rôle |
 | --- | --- |
-| `npm run dev` | Serveur de développement. Les modifications du Markdown s'appliquent immédiatement ; modifier `config.ts` le redémarre automatiquement |
+| `npm run dev` | Serveur de développement. Les modifications du Markdown s'appliquent immédiatement ; modifier un `config.ts` le redémarre |
 | `npm run build` | Génère le site statique dans `docs/.vitepress/dist` |
 | `npm run preview` | Prévisualise le build en local |
 | `npm run typecheck` | Vérifie le thème et les tests avec `vue-tsc --noEmit` |
 | `npm test` | Lance les tests unitaires Vitest |
+
+## Faire de ce modèle votre site
+
+- Le nom du site, la version, les liens sociaux et le pied de page se trouvent dans `docs/config.ts` et dans le `config.ts` de chaque langue ; voir [Configuration](/fr-FR/getting-started/configuration).
+- Le logo est `docs/public/logo.svg`.
+- Les dossiers de langue contiennent la documentation de ce site. Gardez les langues dont vous avez besoin, supprimez les autres dossiers et écrivez vos propres pages dans ceux qui restent ; voir [Rédiger des pages](/fr-FR/getting-started/writing).
+
+## Récupérer les mises à jour du modèle
+
+Un dépôt créé à partir du modèle n'a aucun lien avec lui : les mises à jour ultérieures du modèle n'arrivent donc pas toutes seules. Quand vous les voulez, ajoutez le modèle comme dépôt distant et récupérez `docs/.vitepress`, où se trouve le thème :
+
+```bash
+git remote add template https://github.com/OasisAkari/vitepress-theme-akari-docs.git
+git fetch template
+git checkout template/main -- docs/.vitepress
+```
+
+Cela remplace le dossier par la version du modèle ; les modifications que vous avez apportées au thème doivent donc être fusionnées à nouveau. Comparez aussi les dépendances de `package.json`.
 
 ## Versions de référence
 
@@ -56,7 +88,6 @@ VitePress est encore en alpha. Quand vous le mettez à jour, vérifiez ensemble 
 │   └── .vitepress/
 │       ├── config.mts             branche le thème sur VitePress
 │       ├── content/               langues, chemins et navigation tirés des dossiers
-│       ├── search/                index de recherche local
 │       └── theme/                 code source du thème
 ├── tests/                         tests unitaires
 └── package.json
@@ -70,7 +101,7 @@ Pour savoir où placer les pages et la configuration, voir [Configuration](/fr-F
 
 - **Chemins sans extension** : le site active `cleanUrls`, donc `/theme/layout` correspond au fichier `theme/layout.html`. Quand un fichier est introuvable, l'hébergeur doit réessayer en ajoutant `.html`. GitHub Pages, Netlify et Cloudflare Pages le font par défaut ; Vercel a besoin de `"cleanUrls": true` dans `vercel.json` ; pour Nginx, écrivez `try_files $uri $uri.html $uri/ =404;`.
 - **Sous un sous-chemin** : par exemple `https://example.com/docs/`, définissez `base: "/docs/"` dans `.vitepress/config.mts`. Il est ajouté automatiquement aux chemins internes de la navigation, du hero, du logo et de l'index de recherche.
-- **Index de recherche** : `search-index.json` est généré au moment du build et copié à la racine du résultat. Aucune étape supplémentaire n'est nécessaire.
+- **Index de recherche** : l'index de chaque langue est regroupé dans `assets/chunks/` de la sortie au moment du build. Aucune étape supplémentaire n'est nécessaire.
 
 ## Questions fréquentes
 

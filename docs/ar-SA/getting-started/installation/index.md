@@ -5,21 +5,35 @@ order: 1
 
 # التثبيت
 
-توجد السمة في المستودع في `docs/.vitepress/theme`. لا توجد حزمة سمة منفصلة لتثبيتها.
+السمة Vitepress Theme Akari Docs هي مستودع قالب على GitHub. أنشئ مستودعك الخاص منه لتحصل على الشيفرة المصدرية للسمة والتهيئة وصفحات التوثيق النموذجية؛ لا توجد حزمة سمة منفصلة لتثبيتها.
+
+## إنشاء مستودع من القالب
+
+1. افتح [OasisAkari/vitepress-theme-akari-docs](https://github.com/OasisAkari/vitepress-theme-akari-docs) وانقر **Use this template** ← **Create a new repository**.
+2. أدخل اسم المستودع ومستوى ظهوره، ثم أنشئه. يحتوي المستودع الجديد على كل ملفات القالب، ويبدأ سجل الإيداعات فيه من جديد، وليس نسخة متفرعة (fork) من القالب.
+3. استنسخه، ثم ثبّت الاعتماديات وشغّل الموقع:
+
+   ```bash
+   git clone https://github.com/<account>/<repository>.git
+   cd <repository>
+   npm install
+   npm run dev
+   ```
+
+تنشئ أداة GitHub CLI المستودع وتستنسخه في خطوة واحدة:
+
+```bash
+gh repo create my-docs --template OasisAkari/vitepress-theme-akari-docs --public --clone
+```
 
 ## المتطلبات
 
-- Node.js `>=22.12.0` (الحقل `engines` في `package.json`). جرى التحقق من المستودع باستخدام Node.js `24.21.0` وnpm `12.2.1`.
-- npm. يحتفظ المستودع بملف `package-lock.json` واحد فقط.
+- Node.js `>=22.12.0` (الحقل `engines` في `package.json`). جرى التحقق من القالب باستخدام Node.js `24.21.0` وnpm `12.2.1`.
+- npm. يحتفظ المستودع بملف `package-lock.json` واحد فقط؛ في التكامل المستمر، ثبّت منه باستخدام `npm ci`.
 
-## التثبيت والتشغيل
+## الأوامر
 
-```bash
-npm install
-npm run dev
-```
-
-يعمل خادم التطوير افتراضيًا على `http://localhost:5173`. في التكامل المستمر، استخدم `npm ci` للتثبيت من ملف القفل.
+يعمل خادم التطوير افتراضيًا على `http://localhost:5173`.
 
 | الأمر | الغرض |
 | --- | --- |
@@ -28,6 +42,24 @@ npm run dev
 | `npm run preview` | يعاين نتيجة البناء محليًا |
 | `npm run typecheck` | يفحص أنواع السمة والاختبارات باستخدام `vue-tsc --noEmit` |
 | `npm test` | يشغّل اختبارات الوحدة في Vitest |
+
+## تحويله إلى موقعك
+
+- اسم الموقع والإصدار وروابط التواصل والتذييل موجودة في `docs/config.ts` وفي `config.ts` الخاص بكل لغة؛ راجع [التهيئة](/ar-SA/getting-started/configuration).
+- الشعار هو `docs/public/logo.svg`.
+- تحتوي مجلدات اللغات على صفحات توثيق هذا الموقع. احتفظ باللغات التي تحتاج إليها، واحذف المجلدات الأخرى، واكتب صفحاتك في المجلدات المتبقية؛ راجع [كتابة الصفحات](/ar-SA/getting-started/writing).
+
+## الحصول على تحديثات القالب
+
+ليس للمستودع المنشأ من القالب أي ارتباط به، لذا لا تصل تحديثات القالب اللاحقة من تلقاء نفسها. عندما تريدها، أضف القالب مستودعًا بعيدًا (remote) وخذ `docs/.vitepress`، حيث توجد السمة:
+
+```bash
+git remote add template https://github.com/OasisAkari/vitepress-theme-akari-docs.git
+git fetch template
+git checkout template/main -- docs/.vitepress
+```
+
+يستبدل هذا المجلد بنسخة القالب، لذا يجب دمج التغييرات التي أجريتها على السمة من جديد. قارن أيضًا الاعتماديات في `package.json`.
 
 ## الإصدارات المعتمدة
 
@@ -56,7 +88,6 @@ npm run dev
 │   └── .vitepress/
 │       ├── config.mts             يربط السمة بـ VitePress
 │       ├── content/               اللغات والمسارات والتنقل من المجلدات
-│       ├── search/                فهرس البحث المحلي
 │       └── theme/                 الشيفرة المصدرية للسمة
 ├── tests/                         اختبارات الوحدة
 └── package.json
@@ -70,7 +101,7 @@ npm run dev
 
 - **مسارات بلا امتدادات**: يفعّل الموقع `cleanUrls`، لذا يقابل المسار `/theme/layout` الملف `theme/layout.html`. وعندما لا يُعثر على ملف، يجب أن تعيد الاستضافة المحاولة بعد إضافة `.html`. تفعل GitHub Pages وNetlify وCloudflare Pages ذلك افتراضيًا؛ ويحتاج Vercel إلى `"cleanUrls": true` في `vercel.json`؛ وفي Nginx اكتب `try_files $uri $uri.html $uri/ =404;`.
 - **تحت مسار فرعي**: مثل `https://example.com/docs/`، اضبط `base: "/docs/"` في `.vitepress/config.mts`. تُضاف هذه البادئة تلقائيًا إلى المسارات الداخلية في التنقل وقسم الواجهة والشعار وفهرس البحث.
-- **فهرس البحث**: يُولَّد `search-index.json` وقت البناء ويُنسخ إلى جذر المخرجات. لا حاجة إلى أي خطوة إضافية.
+- **فهرس البحث**: يُجمَّع فهرس كل لغة وقت البناء داخل `assets/chunks/` في المخرجات. لا حاجة إلى أي خطوة إضافية.
 
 ## الأسئلة الشائعة
 

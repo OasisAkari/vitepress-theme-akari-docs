@@ -73,6 +73,9 @@ const config = useAkariConfig();
 | `defineAkariConfig` | `(config: AkariSiteConfig) => AkariDirectoryConfig` | 구성 파일 작성. [구성](/ko-KR/getting-started/configuration/api#defineakariconfig) 참고 |
 | `defineAkariThemeConfig` | `(config: AkariThemeConfig) => AkariThemeConfig` | 테마 필드만 작성할 때 쓰는 타입 도우미 |
 | `registerSearchBackend` | `(id, handler) => void` | 검색 백엔드 등록. [검색](/ko-KR/theme/search/api#registered-backends) 참고 |
+| `defineAkariLanguage` | `(language: AkariLanguage) => AkariLanguage` | 언어 팩 작성. [국제화](/ko-KR/theme/i18n/api#akarilanguage) 참고 |
+| `AKARI_LANGUAGES` | `AkariLanguage[]` | 기본 제공 언어 팩 |
+| `resolveLanguage` | `(lang, languages?) => ResolvedAkariLanguage` | 한 언어가 최종적으로 쓰는 언어 팩 |
 | `AKARI_CONTENT_ID` | `"akari-doc-content"` | 콘텐츠 컨테이너의 id |
 | `AKARI_SIDEBAR_ID` | `"akari-sidebar"` | 좁은 화면 내비게이션 드로어의 id |
 | `AKARI_SETTINGS_ID` | `"akari-settings"` | 설정 패널의 id |
@@ -96,25 +99,26 @@ const config = useAkariConfig();
 docs/.vitepress/
 ├── config.mts             테마를 VitePress에 연결
 ├── content/               폴더에서 언어, 경로, 내비게이션 생성 (Node)
-├── search/                로컬 검색 색인의 파싱, 생성, Vite 플러그인 (Node)
 └── theme/
     ├── index.ts           테마 엔트리와 공개 내보내기
-    ├── define.ts          defineAkariConfig
+    ├── define.ts          defineAkariConfig와 defineAkariLanguage
     ├── config.ts          구성 기본값과 검증
     ├── types.ts           타입 정의
     ├── constants.ts       기본값, 브레이크포인트, id
-    ├── i18n.ts            기본 제공 인터페이스 문자열
+    ├── i18n/              언어 팩과 언어 결정
+    │   └── languages/     기본 제공 언어 팩, 언어마다 파일 하나
     ├── locales.ts         언어 전환용 경로 매핑
     ├── sidebar.ts         내비게이션 정규화, 매칭, 페이지 이동
     ├── settings.ts        설정 검증과 저장
     ├── scheme.ts          라이트 모드와 다크 모드 판정, 첫 프레임 스크립트
     ├── hero.ts            히어로 프런트매터 파싱
+    ├── loading.ts         로딩 바 진행률 계산
     ├── head.ts / fonts.ts akariHead와 글꼴
     ├── markdown.ts        akariMarkdown
     ├── m3e.ts / icons.ts  컴포넌트와 아이콘의 필요 시 등록
     ├── layouts/           AkariLayout.vue
     ├── components/
-    │   ├── shell/         앱 바, "더보기" 메뉴, 화면 모드 버튼과 언어 버튼, 대화상자
+    │   ├── shell/         앱 바, "더보기" 메뉴, 화면 모드 버튼과 언어 버튼, 대화상자, 로딩 바
     │   ├── sidebar/       레일, 데스크톱 내비게이션 드로어, 좁은 화면 내비게이션
     │   ├── content/       히어로, 탭 바, 목차, 페이지 이동 카드, FAB, 푸터
     │   └── settings/      설정 대화상자와 패널
