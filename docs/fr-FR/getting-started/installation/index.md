@@ -83,7 +83,7 @@ VitePress est encore en alpha. Quand vous le mettez à jour, vérifiez ensemble 
 │   │   └── getting-started/       catégorie du rail
 │   │       └── installation/
 │   │           └── index.md       article /getting-started/installation
-│   ├── en-US/                     anglais, sous /en-US/
+│   ├── en-US/                     anglais, sous /
 │   ├── public/                    ressources statiques
 │   └── .vitepress/
 │       ├── config.mts             branche le thème sur VitePress

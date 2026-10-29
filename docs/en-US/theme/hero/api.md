@@ -48,4 +48,4 @@ You can set the first three on `:root`. The two pattern variables are defined on
 
 ## Replacing the hero component
 
-You can replace the hero with your own component; see [Extending the theme](/en-US/theme/extending/api#provideakaricomponents). The layout renders this component only when the page sets a `hero` with an image, and it hides the first `h1` of the content, so a custom component must render the page title itself. Give the title the `data-akari-page-title` attribute, and the app bar's title swap follows it. In the component, read the frontmatter with VitePress's `useData()`.
+You can replace the hero with your own component; see [Extending the theme](/theme/extending/api#provideakaricomponents). The layout renders this component only when the page sets a `hero` with an image, and it hides the first `h1` of the content, so a custom component must render the page title itself. Give the title the `data-akari-page-title` attribute, and the app bar's title swap follows it. In the component, read the frontmatter with VitePress's `useData()`.

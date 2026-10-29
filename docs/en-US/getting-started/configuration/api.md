@@ -19,7 +19,7 @@ Both levels of config file export their config with it. VitePress fields stay as
 | Field | Type | Default | Description |
 | --- | --- | --- | --- |
 | `rootLanguage` | `string` | The first language folder in alphabetical order | Only takes effect in the shared config: the language folder served at the site root. Paths of the other languages start with their folder name |
-| `lang` | `string` | The language folder name | Language code. Used for `<html lang>`, and picks the [language pack](/en-US/theme/i18n/api#akarilanguage) |
+| `lang` | `string` | The language folder name | Language code. Used for `<html lang>`, and picks the [language pack](/theme/i18n/api#akarilanguage) |
 | `label` | `string` | The language's own name | Name in the language menu |
 | `dir` | `"ltr" \| "rtl" \| "auto"` | The language pack's | Text direction |
 | `title` | `string` | None | Site title; also the default app bar title |
@@ -35,18 +35,18 @@ Both levels of config file export their config with it. VitePress fields stay as
 
 | Field | Contents | See |
 | --- | --- | --- |
-| `appBar` | App bar title, version, logo, buttons and social links | [Layout and app bar](/en-US/theme/layout/api#appbar) |
-| `toc` | Table of contents on the right | [Layout and app bar](/en-US/theme/layout/api#toc) |
-| `loadingBar` | The bar at the top of the window while a page loads | [Layout and app bar](/en-US/theme/layout/api#loadingbar) |
-| `footer` | Pager cards and footer | [Layout and app bar](/en-US/theme/layout/api#footer) |
-| `sidebar` | Categories, navigation written by hand and drawer width | [Side navigation](/en-US/theme/sidebar/api#sidebar) |
-| `settings` | Settings dialog and appearance button | [Settings and appearance](/en-US/theme/settings/api#settings) |
-| `search` | Search entry and backends | [Search](/en-US/theme/search/api#search) |
-| `messages` | Interface text | [Internationalization](/en-US/theme/i18n/api#messages) |
-| `fonts` | Whether to load fonts from Google Fonts, and the font stack | [Typography](/en-US/styles/typography/api#fonts) |
-| `languages` | Language packs besides the built-in ones, or changes to them | [Internationalization](/en-US/theme/i18n/api#akarilanguage) |
+| `appBar` | App bar title, version, logo, buttons and social links | [Layout and app bar](/theme/layout/api#appbar) |
+| `toc` | Table of contents on the right | [Layout and app bar](/theme/layout/api#toc) |
+| `loadingBar` | The bar at the top of the window while a page loads | [Layout and app bar](/theme/layout/api#loadingbar) |
+| `footer` | Pager cards and footer | [Layout and app bar](/theme/layout/api#footer) |
+| `sidebar` | Categories, navigation written by hand and drawer width | [Side navigation](/theme/sidebar/api#sidebar) |
+| `settings` | Settings dialog and appearance button | [Settings and appearance](/theme/settings/api#settings) |
+| `search` | Search entry and backends | [Search](/theme/search/api#search) |
+| `messages` | Interface text | [Internationalization](/theme/i18n/api#messages) |
+| `fonts` | Whether to load fonts from Google Fonts, and the font stack | [Typography](/styles/typography/api#fonts) |
+| `languages` | Language packs besides the built-in ones, or changes to them | [Internationalization](/theme/i18n/api#akarilanguage) |
 
-Replacing interface components is not done in the config files; see [Extending the theme](/en-US/theme/extending/api#provideakaricomponents).
+Replacing interface components is not done in the config files; see [Extending the theme](/theme/extending/api#provideakaricomponents).
 
 ## .vitepress/config.mts
 
@@ -82,7 +82,7 @@ export default defineConfig({
 | Option | Purpose |
 | --- | --- |
 | `...content.site` | `locales`, `rewrites` and the site-level `lang`, `title`, `description`, generated from the folders; with local search, also `themeConfig.search`, which turns on VitePress' local search index |
-| `cleanUrls: true` | Paths without `.html`; for hosting requirements see [Installation](/en-US/getting-started/installation#deployment) |
+| `cleanUrls: true` | Paths without `.html`; for hosting requirements see [Installation](/getting-started/installation#deployment) |
 | `appearance: false` | Turns off the light and dark toggle built into VitePress; the theme manages it |
 | `head: akariHead()` | A script that applies light or dark mode before the first frame |
 | `akariMarkdown` | M3 borders for tables and sizes for remote images |
@@ -117,7 +117,7 @@ function akariHead(options?: {
 }): HeadConfig[];
 ```
 
-Returns an inline script that applies light or dark mode before the first frame is painted. The fonts' `<head>` tags differ by language, so `akariContent` writes them into each language's locale; see [Typography](/en-US/styles/typography/api#fonts). If you change `settings.storageKey` or `settings.defaults.scheme`, pass the same values here so the script reads the same settings.
+Returns an inline script that applies light or dark mode before the first frame is painted. The fonts' `<head>` tags differ by language, so `akariContent` writes them into each language's locale; see [Typography](/styles/typography/api#fonts). If you change `settings.storageKey` or `settings.defaults.scheme`, pass the same values here so the script reads the same settings.
 
 ## akariMarkdown
 
@@ -131,7 +131,7 @@ function akariMarkdown(
 Call it in `markdown.config`. It does two things:
 
 - Wraps every Markdown table in `<div class="akari-table">`, which gives the table an M3 outlined border and horizontal scrolling.
-- Writes the width and height of remote images with [markdown-it-image-size](https://github.com/boyum/markdown-it-image-size). VitePress writes them for local images itself. See [Writing pages](/en-US/getting-started/writing/api#images).
+- Writes the width and height of remote images with [markdown-it-image-size](https://github.com/boyum/markdown-it-image-size). VitePress writes them for local images itself. See [Writing pages](/getting-started/writing/api#images).
 
 | Option | Default | Description |
 | --- | --- | --- |

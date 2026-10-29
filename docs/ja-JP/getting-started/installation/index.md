@@ -83,7 +83,7 @@ VitePress はまだアルファ版です。アップグレードするときは�
 │   │   └── getting-started/       レールのカテゴリ
 │   │       └── installation/
 │   │           └── index.md       記事 /getting-started/installation
-│   ├── en-US/                     英語。/en-US/ 以下で配信
+│   ├── en-US/                     英語。/ 以下で配信
 │   ├── public/                    静的アセット
 │   └── .vitepress/
 │       ├── config.mts             テーマを VitePress に組み込む

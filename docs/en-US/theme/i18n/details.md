@@ -6,9 +6,9 @@ tab: Details
 
 ## Which language a page belongs to
 
-The path decides the language: a page whose path starts with `/<language folder>/` belongs to that language, and every other page belongs to the root language. In the source, the root language's pages sit in their own folder (`docs/zh-CN/`), and they are served without the folder name; see [Writing pages: Details](/en-US/getting-started/writing/details#path-rules).
+The path decides the language: a page whose path starts with `/<language folder>/` belongs to that language, and every other page belongs to the root language. In the source, the root language's pages sit in their own folder (`docs/zh-CN/`), and they are served without the folder name; see [Writing pages: Details](/getting-started/writing/details#path-rules).
 
-The config a page ends up with is the `config.ts` of its language folder layered over the shared config and the VitePress locale config; see [Configuration: Details](/en-US/getting-started/configuration/details#how-the-two-levels-layer).
+The config a page ends up with is the `config.ts` of its language folder layered over the shared config and the VitePress locale config; see [Configuration: Details](/getting-started/configuration/details#how-the-two-levels-layer).
 
 ## Choosing a language pack
 
@@ -29,7 +29,7 @@ When `settings.title`, `settings.labels`, `toc.overline`, `footer.message` and `
 
 ## Where switching language goes
 
-1. Move the current path into the target language: `/getting-started/installation` → `/en-US/getting-started/installation`, and remove the prefix in the other direction.
+1. Move the current path into the target language: `/getting-started/installation` → `/getting-started/installation`, and remove the prefix in the other direction.
 2. If the target language's navigation has this path, open it. The navigation includes every page of a parallel page group.
 3. Otherwise, open the target language's home page: `/` for the root language, `/<language folder>/` for the others.
 

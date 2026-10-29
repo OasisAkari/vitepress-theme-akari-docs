@@ -14,7 +14,7 @@ Vitepress Theme Akari Docs is a documentation theme built with VitePress and `@m
     <m3e-icon slot="icon" name="rocket_launch"></m3e-icon>
     Get started
   </m3e-button>
-  <m3e-button variant="outlined" href="/en-US/getting-started/installation">Installation guide</m3e-button>
+  <m3e-button variant="outlined" href="/getting-started/installation">Installation guide</m3e-button>
   <m3e-chip>
     <m3e-icon slot="icon" name="check"></m3e-icon>
     Theme ready
@@ -65,9 +65,9 @@ npm run dev
 
 Read next:
 
-- [Installation](/en-US/getting-started/installation): creating a repository from the template, requirements and deployment.
-- [Configuration](/en-US/getting-started/configuration): shared config and language config.
-- [Writing pages](/en-US/getting-started/writing): new articles, frontmatter and Markdown.
-- [Layout and app bar](/en-US/theme/layout), [Side navigation](/en-US/theme/sidebar): the parts of the theme shell.
+- [Installation](/getting-started/installation): creating a repository from the template, requirements and deployment.
+- [Configuration](/getting-started/configuration): shared config and language config.
+- [Writing pages](/getting-started/writing): new articles, frontmatter and Markdown.
+- [Layout and app bar](/theme/layout), [Side navigation](/theme/sidebar): the parts of the theme shell.
 
 This site comes in Chinese, English, Japanese, Korean, French and Arabic. Switch with the language button at the bottom of the rail.

@@ -13,8 +13,8 @@ VitePress は、`akariContent` が生成する `rewrites` 関数で各ページ�
 | `zh-CN/index.md` | `index.md` | `/` |
 | `zh-CN/theme/layout/index.md` | `theme/layout.md` | `/theme/layout` |
 | `zh-CN/styles/icons/using.md` | `styles/icons/using.md` | `/styles/icons/using` |
-| `en-US/index.md` | `en-US/index.md` | `/en-US/` |
-| `en-US/theme/i18n/index.md` | `en-US/theme/i18n.md` | `/en-US/theme/i18n` |
+| `en-US/index.md` | `en-US/index.md` | `/` |
+| `en-US/theme/i18n/index.md` | `en-US/theme/i18n.md` | `/theme/i18n` |
 | `404.md`（言語フォルダーの外） | 変更なし | 変更なし |
 
 - ルート言語のフォルダー名はパスから取り除かれます。ほかの言語はフォルダー名を接頭辞として残します。
@@ -48,7 +48,7 @@ VitePress は、`akariContent` が生成する `rewrites` 関数で各ページ�
 
 ## 対応するページ
 
-言語を切り替えると、テーマは現在のパスを切り替え先の言語に移します（`/theme/i18n` ↔ `/en-US/theme/i18n`）。切り替え先の言語のナビゲーションにそのパスがあればそれを開き、なければその言語のホームページを開きます。つまり、2 つのページがそれぞれの言語フォルダーで同じパスにあり、切り替え先のページがその言語のナビゲーションに含まれていれば、言語を切り替えても同じページにとどまります。
+言語を切り替えると、テーマは現在のパスを切り替え先の言語に移します（`/theme/i18n` ↔ `/theme/i18n`）。切り替え先の言語のナビゲーションにそのパスがあればそれを開き、なければその言語のホームページを開きます。つまり、2 つのページがそれぞれの言語フォルダーで同じパスにあり、切り替え先のページがその言語のナビゲーションに含まれていれば、言語を切り替えても同じページにとどまります。
 
 ## 検索インデックス
 

@@ -16,7 +16,7 @@ tab: API
 | `tab` | `string` | Title in the tab bar; defaults to the page title |
 | `category` | `string` | Only for a language's home page: which category it joins |
 
-For every frontmatter field, see [Writing pages](/en-US/getting-started/writing/api#frontmatter).
+For every frontmatter field, see [Writing pages](/getting-started/writing/api#frontmatter).
 
 ## sidebar
 
@@ -125,4 +125,4 @@ Call it only from components inside the layout.
 
 ## Icons
 
-Icons used in the navigation must first be registered in `docs/.vitepress/theme/icons.ts`. See [Using icons](/en-US/styles/icons/using). Icons that are not registered show as blank.
+Icons used in the navigation must first be registered in `docs/.vitepress/theme/icons.ts`. See [Using icons](/styles/icons/using). Icons that are not registered show as blank.

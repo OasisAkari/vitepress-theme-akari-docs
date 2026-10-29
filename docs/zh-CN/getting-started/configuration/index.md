@@ -22,7 +22,7 @@ docs/
 ├─ zh-CN/                    简体中文，放在站点根路径
 │  ├─ config.ts              语言配置
 │  └─ …                      页面，见「撰写页面」
-├─ en-US/                    English，放在 /en-US/
+├─ en-US/                    English，放在 /
 │  ├─ config.ts
 │  └─ …
 └─ .vitepress/config.mts

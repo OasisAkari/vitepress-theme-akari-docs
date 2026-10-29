@@ -83,7 +83,7 @@ git checkout template/main -- docs/.vitepress
 │   │   └── getting-started/       فئة في شريط التنقل
 │   │       └── installation/
 │   │           └── index.md       المقالة /getting-started/installation
-│   ├── en-US/                     الإنجليزية، تحت /en-US/
+│   ├── en-US/                     الإنجليزية، تحت /
 │   ├── public/                    الملفات الثابتة
 │   └── .vitepress/
 │       ├── config.mts             يربط السمة بـ VitePress

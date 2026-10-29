@@ -75,4 +75,4 @@ settings: {
 },
 ```
 
-You can also show only some of the options, or hide the appearance button. See [API](/en-US/theme/settings/api). For how light and dark mode takes effect before the first frame, and where each option applies, see [Details](/en-US/theme/settings/details).
+You can also show only some of the options, or hide the appearance button. See [API](/theme/settings/api). For how light and dark mode takes effect before the first frame, and where each option applies, see [Details](/theme/settings/details).

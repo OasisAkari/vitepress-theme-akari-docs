@@ -65,4 +65,4 @@ A page with a hero takes a color from the image as its theme color, and the app 
 
 Illustrations with a transparent background go well with `fit: contain`: the image shows in full, with a margin inside the card. Both cards carry a very faint pattern, and when the pointer rests on a card, a soft glow lights up around it. The pattern also shows behind transparent images. Choose the pattern with `pattern`, or write `none` to turn it off.
 
-For all fields, see [API](/en-US/theme/hero/api). For how color extraction, layout and patterns work, see [Details](/en-US/theme/hero/details).
+For all fields, see [API](/theme/hero/api). For how color extraction, layout and patterns work, see [Details](/theme/hero/details).

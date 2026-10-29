@@ -16,7 +16,7 @@ tab: API
 | `messages` | `Partial<AkariMessages>` | None | Overrides or fills in interface strings |
 | `languages` | `AkariLanguage[]` | None | Language packs besides the built-in ones, or changes to them; usually in the shared config |
 
-The other fields (`title`, `description`, `appBar`, `footer`, `search` and so on) can also go in a language config; see [Configuration](/en-US/getting-started/configuration/api).
+The other fields (`title`, `description`, `appBar`, `footer`, `search` and so on) can also go in a language config; see [Configuration](/getting-started/configuration/api).
 
 ## AkariLanguage
 
@@ -26,7 +26,7 @@ The shape of a language pack, written with `defineAkariLanguage` (imported from 
 | --- | --- | --- |
 | `code` | `string` | Required. The language code. A page first looks for a pack with its full code (`pt-BR`), then for one with its primary language (`pt`) |
 | `dir` | `"ltr" \| "rtl"` | Text direction. Defaults to `"ltr"` |
-| `fonts` | `{ google: string[]; family: string[] }` | Fonts; both fields are written as in [`fonts`](/en-US/styles/typography/api#fonts). Defaults to the theme's fonts (Roboto and Noto Sans SC) |
+| `fonts` | `{ google: string[]; family: string[] }` | Fonts; both fields are written as in [`fonts`](/styles/typography/api#fonts). Defaults to the theme's fonts (Roboto and Noto Sans SC) |
 | `messages` | `Partial<AkariMessages>` | Interface strings. Missing entries are English |
 | `markdown` | `MarkdownLocaleOptions` | Strings in Markdown: `codeCopyButton` is the code block copy button's tooltip, and `container` holds the containers' default titles (`tipLabel`, `warningLabel`, `dangerLabel`, `infoLabel`, `detailsLabel` and so on) |
 
@@ -174,4 +174,4 @@ All are exported from the theme entry (`import { … } from "@theme"`) and can b
 
 ## Languages in search
 
-A registered search backend receives `lang` (such as `zh-CN`) and `locale` (the VitePress locale key, `root` for the root language) in its second argument; see [Search](/en-US/theme/search/api#registered-backends).
+A registered search backend receives `lang` (such as `zh-CN`) and `locale` (the VitePress locale key, `root` for the root language) in its second argument; see [Search](/theme/search/api#registered-backends).

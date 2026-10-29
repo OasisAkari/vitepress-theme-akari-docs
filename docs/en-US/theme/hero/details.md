@@ -36,4 +36,4 @@ Dates are formatted for the page language: `2026-05-19` shows as "2026年5月19�
 - The pattern is picked in the browser. Server-side rendering has no pattern, and the pattern fades in after mount, so the server and browser pages match and there is no hydration mismatch.
 - Touch devices show only the static pattern, and forced colors mode shows no decoration. The decoration sits under the text and images, so it does not get in the way of selecting or clicking.
 
-Elements with a background in the content use the same set of patterns; see [Typography](/en-US/styles/typography/api#patterns).
+Elements with a background in the content use the same set of patterns; see [Typography](/styles/typography/api#patterns).

@@ -13,8 +13,8 @@ VitePress decides where each page is served with the `rewrites` function that `a
 | `zh-CN/index.md` | `index.md` | `/` |
 | `zh-CN/theme/layout/index.md` | `theme/layout.md` | `/theme/layout` |
 | `zh-CN/styles/icons/using.md` | `styles/icons/using.md` | `/styles/icons/using` |
-| `en-US/index.md` | `en-US/index.md` | `/en-US/` |
-| `en-US/theme/i18n/index.md` | `en-US/theme/i18n.md` | `/en-US/theme/i18n` |
+| `en-US/index.md` | `en-US/index.md` | `/` |
+| `en-US/theme/i18n/index.md` | `en-US/theme/i18n.md` | `/theme/i18n` |
 | `404.md` (outside the language folders) | Unchanged | Unchanged |
 
 - The root language's folder name is dropped from the path. Other languages keep their folder name as a prefix.
@@ -48,7 +48,7 @@ While generating the navigation, the terminal shows a notice in the following ca
 
 ## Counterpart pages
 
-When you switch language, the theme moves the current path into the target language (`/theme/i18n` ↔ `/en-US/theme/i18n`). If the target language's navigation has that path, the theme opens it; otherwise it opens the target language's home page. So switching language stays on the same page when both pages have the same path in their language folders and the target page is in the target language's navigation.
+When you switch language, the theme moves the current path into the target language (`/theme/i18n` ↔ `/theme/i18n`). If the target language's navigation has that path, the theme opens it; otherwise it opens the target language's home page. So switching language stays on the same page when both pages have the same path in their language folders and the target page is in the target language's navigation.
 
 ## Search index
 

@@ -115,4 +115,4 @@ Override them in your site styles, for example on `:root`:
 
 ## Replacing components
 
-You can replace the app bar, the desktop navigation, the mobile drawer, the hero, the TOC, the pager cards, the footer and the content container; see [Extending the theme](/en-US/theme/extending/api#provideakaricomponents).
+You can replace the app bar, the desktop navigation, the mobile drawer, the hero, the TOC, the pager cards, the footer and the content container; see [Extending the theme](/theme/extending/api#provideakaricomponents).

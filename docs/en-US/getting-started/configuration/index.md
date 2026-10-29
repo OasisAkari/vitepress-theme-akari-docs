@@ -12,7 +12,7 @@ parallel:
 Config lives in the `docs` folder, at two levels:
 
 - `docs/config.ts`: config shared by every language.
-- `docs/<language code>/config.ts`: the config of one language, for example `docs/en-US/config.ts`. A folder with this file is a language folder.
+- `docs/<language code>/config.ts`: the config of one language, for example `docs/config.ts`. A folder with this file is a language folder.
 
 A field in a language config replaces the field of the same name in the shared config, and objects merge field by field, so a language config only holds what differs for that language. `docs/.vitepress/config.mts` only wires the theme into VitePress; you rarely need to change it.
 
@@ -22,7 +22,7 @@ docs/
 ├─ zh-CN/                    Simplified Chinese, at the site root
 │  ├─ config.ts              language config
 │  └─ …                      pages, see "Writing pages"
-├─ en-US/                    English, under /en-US/
+├─ en-US/                    English, under /
 │  ├─ config.ts
 │  └─ …
 └─ .vitepress/config.mts
@@ -62,10 +62,10 @@ export default defineAkariConfig({
 
 ## Language config
 
-The language's titles and text on this site. `lang` defaults to the folder name, and the theme picks the [language pack](/en-US/theme/i18n#language-packs) from it: the name in the language menu, the text direction, the interface strings and the code block copy button's text all come from the pack, and you override them here when needed.
+The language's titles and text on this site. `lang` defaults to the folder name, and the theme picks the [language pack](/theme/i18n#language-packs) from it: the name in the language menu, the text direction, the interface strings and the code block copy button's text all come from the pack, and you override them here when needed.
 
 ```ts
-// docs/en-US/config.ts
+// docs/config.ts
 import { defineAkariConfig } from "../.vitepress/theme/define.ts";
 
 export default defineAkariConfig({
@@ -94,6 +94,6 @@ export default defineAkariConfig({
 | Turn off search or connect a search backend | Shared config | `search` |
 | Change the footer message and copyright | Language config / shared config | `footer.message`, `footer.copyright` |
 | Rewrite interface text | Language config | `messages` |
-| Add a language | A new language folder | See [Internationalization](/en-US/theme/i18n) |
+| Add a language | A new language folder | See [Internationalization](/theme/i18n) |
 
-For the type and default of every field, see [API](/en-US/getting-started/configuration/api). For how the config layers and how languages and navigation are generated, see [Details](/en-US/getting-started/configuration/details).
+For the type and default of every field, see [API](/getting-started/configuration/api). For how the config layers and how languages and navigation are generated, see [Details](/getting-started/configuration/details).

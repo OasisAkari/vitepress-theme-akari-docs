@@ -47,7 +47,7 @@ The content below comes from the component metadata of `@m3e/web` 2.10.2.
 | `selected` | Boolean | `false` | The current tab; only one is allowed |
 | `disabled` | Boolean | `false` | Disabled |
 
-Write `m3e-tab` and `m3e-tab-panel` directly inside `m3e-tabs`, as in the example in [Overview](/en-US/components/navigation#tabs). The `prev-icon` and `next-icon` slots replace the pagination icons. Switching tabs fires `beforeinput` (can be canceled), `input` and `change`. `m3e-tab` also has an `icon` slot.
+Write `m3e-tab` and `m3e-tab-panel` directly inside `m3e-tabs`, as in the example in [Overview](/components/navigation#tabs). The `prev-icon` and `next-icon` slots replace the pagination icons. Switching tabs fires `beforeinput` (can be canceled), `input` and `change`. `m3e-tab` also has an `icon` slot.
 
 ## m3e-chip and m3e-filter-chip
 

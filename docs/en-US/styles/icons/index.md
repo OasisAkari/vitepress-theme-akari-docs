@@ -14,7 +14,7 @@ parallel:
 
 # Icons
 
-All icons in the theme are [Material Symbols](https://fonts.google.com/icons). `@m3e/icons` provides them as SVG paths, and `<m3e-icon>` displays them. [Choosing icons](/en-US/styles/icons/choosing) covers styles, fill and size; [Using icons](/en-US/styles/icons/using) covers registration and accessibility requirements.
+All icons in the theme are [Material Symbols](https://fonts.google.com/icons). `@m3e/icons` provides them as SVG paths, and `<m3e-icon>` displays them. [Choosing icons](/styles/icons/choosing) covers styles, fill and size; [Using icons](/styles/icons/using) covers registration and accessibility requirements.
 
 <div class="demo-row">
   <m3e-icon name="home"></m3e-icon>
@@ -46,4 +46,4 @@ All icons in the theme are [Material Symbols](https://fonts.google.com/icons). `
 
 ## Pages in this group
 
-These three pages are a set of parallel pages: they appear as a single "Icons" item in the sidebar, and the tab bar at the top of the page switches between them. They are `index.md`, `choosing.md` and `using.md` in the `styles/icons/` folder. To write pages like these, see [Writing pages](/en-US/getting-started/writing#parallel-pages).
+These three pages are a set of parallel pages: they appear as a single "Icons" item in the sidebar, and the tab bar at the top of the page switches between them. They are `index.md`, `choosing.md` and `using.md` in the `styles/icons/` folder. To write pages like these, see [Writing pages](/getting-started/writing#parallel-pages).

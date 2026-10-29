@@ -6,7 +6,7 @@ tab: API
 
 ## Fonts by language
 
-The text's fonts depend on the page's language. The defaults come from the `fonts` of the [language pack](/en-US/theme/i18n/api#akarilanguage); the built-in packs' are below, and [`fonts`](#fonts) can change all of them:
+The text's fonts depend on the page's language. The defaults come from the `fonts` of the [language pack](/theme/i18n/api#akarilanguage); the built-in packs' are below, and [`fonts`](#fonts) can change all of them:
 
 | Language | Loaded from Google Fonts | Font stack |
 | --- | --- | --- |

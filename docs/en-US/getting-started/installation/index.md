@@ -45,9 +45,9 @@ The dev server runs at `http://localhost:5173` by default.
 
 ## Making it your site
 
-- The site name, version, social links and footer are in `docs/config.ts` and each language's `config.ts`; see [Configuration](/en-US/getting-started/configuration).
+- The site name, version, social links and footer are in `docs/config.ts` and each language's `config.ts`; see [Configuration](/getting-started/configuration).
 - The logo is `docs/public/logo.svg`.
-- The language folders hold this site's docs. Keep the languages you need, delete the other folders, and write your own pages in the ones left; see [Writing pages](/en-US/getting-started/writing).
+- The language folders hold this site's docs. Keep the languages you need, delete the other folders, and write your own pages in the ones left; see [Writing pages](/getting-started/writing).
 
 ## Getting updates from the template
 
@@ -83,7 +83,7 @@ VitePress is still in alpha. When you upgrade it, check the theme code, the conf
 │   │   └── getting-started/       rail category
 │   │       └── installation/
 │   │           └── index.md       article /getting-started/installation
-│   ├── en-US/                     English, under /en-US/
+│   ├── en-US/                     English, under /
 │   ├── public/                    static assets
 │   └── .vitepress/
 │       ├── config.mts             wires the theme into VitePress
@@ -93,7 +93,7 @@ VitePress is still in alpha. When you upgrade it, check the theme code, the conf
 └── package.json
 ```
 
-For where pages and config go, see [Configuration](/en-US/getting-started/configuration) and [Writing pages](/en-US/getting-started/writing). For the structure of the theme source, see [Extending the theme](/en-US/theme/extending/api#source-layout).
+For where pages and config go, see [Configuration](/getting-started/configuration) and [Writing pages](/getting-started/writing). For the structure of the theme source, see [Extending the theme](/theme/extending/api#source-layout).
 
 ## Deployment
 

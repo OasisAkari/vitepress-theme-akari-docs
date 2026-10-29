@@ -22,16 +22,16 @@ The m3e components for navigation fall into three groups: `m3e-nav-menu` organiz
       <span slot="label">Components</span>
       <m3e-nav-menu-item>
         <m3e-icon slot="icon" name="radio_button_checked"></m3e-icon>
-        <a slot="label" href="/en-US/components/button">Buttons</a>
+        <a slot="label" href="/components/button">Buttons</a>
       </m3e-nav-menu-item>
       <m3e-nav-menu-item selected>
         <m3e-icon slot="icon" name="language"></m3e-icon>
-        <a slot="label" href="/en-US/components/navigation">Navigation</a>
+        <a slot="label" href="/components/navigation">Navigation</a>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>
     <m3e-nav-menu-item>
       <m3e-icon slot="icon" name="dashboard"></m3e-icon>
-      <a slot="label" href="/en-US/components/card">Cards</a>
+      <a slot="label" href="/components/card">Cards</a>
       <span slot="badge">New</span>
     </m3e-nav-menu-item>
   </m3e-nav-menu>
@@ -44,12 +44,12 @@ The m3e components for navigation fall into three groups: `m3e-nav-menu` organiz
     <span slot="label">Components</span>
     <m3e-nav-menu-item selected>
       <m3e-icon slot="icon" name="language"></m3e-icon>
-      <a slot="label" href="/en-US/components/navigation">Navigation</a>
+      <a slot="label" href="/components/navigation">Navigation</a>
     </m3e-nav-menu-item>
   </m3e-nav-menu-item>
   <m3e-nav-menu-item>
     <m3e-icon slot="icon" name="dashboard"></m3e-icon>
-    <a slot="label" href="/en-US/components/card">Cards</a>
+    <a slot="label" href="/components/card">Cards</a>
     <span slot="badge">New</span>
   </m3e-nav-menu-item>
 </m3e-nav-menu>
@@ -233,4 +233,4 @@ The anchor inside an m3e button or icon button lives in its Shadow DOM, where Vi
 - Keep visible text on filter chips. Do not rely on color alone to show the selected state.
 - An icon-only button must have an `aria-label` and a tooltip.
 
-For all attributes, slots and events, see [API](/en-US/components/navigation/api).
+For all attributes, slots and events, see [API](/components/navigation/api).

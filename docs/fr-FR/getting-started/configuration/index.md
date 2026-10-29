@@ -22,7 +22,7 @@ docs/
 ├─ zh-CN/                    chinois simplifié, à la racine du site
 │  ├─ config.ts              configuration de langue
 │  └─ …                      pages, voir « Rédiger des pages »
-├─ en-US/                    anglais, sous /en-US/
+├─ en-US/                    anglais, sous /
 │  ├─ config.ts
 │  └─ …
 └─ .vitepress/config.mts

@@ -105,4 +105,4 @@ Call both functions only from components inside the layout.
 
 ## Replacing the settings panel
 
-You can replace the panel in the settings dialog with your own component (slot `Settings`). The title, the close button and the motion are still provided by the dialog. See [Extending the theme](/en-US/theme/extending/api#provideakaricomponents).
+You can replace the panel in the settings dialog with your own component (slot `Settings`). The title, the close button and the motion are still provided by the dialog. See [Extending the theme](/theme/extending/api#provideakaricomponents).

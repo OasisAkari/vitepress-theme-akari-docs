@@ -83,7 +83,7 @@ VitePress는 아직 알파 단계입니다. 업그레이드할 때는 테마 코
 │   │   └── getting-started/       레일 카테고리
 │   │       └── installation/
 │   │           └── index.md       글 /getting-started/installation
-│   ├── en-US/                     영어, /en-US/ 아래에 배치
+│   ├── en-US/                     영어, / 아래에 배치
 │   ├── public/                    정적 자산
 │   └── .vitepress/
 │       ├── config.mts             테마를 VitePress에 연결

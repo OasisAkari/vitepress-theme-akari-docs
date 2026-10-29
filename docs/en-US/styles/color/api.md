@@ -64,7 +64,7 @@ Each accent color also has fixed colors that don't change between light and dark
 
 ## Local palettes
 
-Wrap content on a page in `m3e-theme` to generate a separate palette for it. The demos on the [Color](/en-US/styles/color) overview do exactly this:
+Wrap content on a page in `m3e-theme` to generate a separate palette for it. The demos on the [Color](/styles/color) overview do exactly this:
 
 ```html
 <m3e-theme color="#006A6A" scheme="dark" variant="vibrant" contrast="high">
@@ -76,8 +76,8 @@ Wrap content on a page in `m3e-theme` to generate a separate palette for it. The
 | --- | --- |
 | `color` | The seed color, as a six-digit hex value |
 | `scheme` | `light`, `dark`, `auto` |
-| `variant` | See [Variants](/en-US/styles/color#variants) |
+| `variant` | See [Variants](/styles/color#variants) |
 | `contrast` | `standard`, `medium`, `high` |
 | `motion` | `standard`, `expressive` |
 
-The settings decide the seed color, variant and contrast for the whole site; see [Settings and appearance](/en-US/theme/settings/api#akarithemesettings).
+The settings decide the seed color, variant and contrast for the whole site; see [Settings and appearance](/theme/settings/api#akarithemesettings).

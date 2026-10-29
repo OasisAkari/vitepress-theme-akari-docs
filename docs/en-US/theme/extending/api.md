@@ -57,12 +57,12 @@ All of them are exported from the theme entry (`import { … } from "@theme"`) a
 | Function | Returns | See |
 | --- | --- | --- |
 | `useAkariConfig()` | `ComputedRef<ResolvedAkariThemeConfig>`: the theme config merged with defaults | Below |
-| `useSidebar()` | `{ items, prevNext, tabGroup, isActive, hasActive }` | [Side navigation](/en-US/theme/sidebar/api#usesidebar) |
-| `useAkariSettings()` | `{ settings, setSetting, reset, isDefault, defaults, sections, labels }` | [Settings](/en-US/theme/settings/api#useakarisettings) |
-| `useAkariColorScheme()` | `{ mode, resolved, cycle }` | [Settings](/en-US/theme/settings/api#useakaricolorscheme) |
-| `useAkariI18n()` | `{ lang, messages, t }` | [Internationalization](/en-US/theme/i18n/api#useakarii18n) |
-| `useAkariLocales()` | `{ locales, homeHref }` | [Internationalization](/en-US/theme/i18n/api#useakarilocales) |
-| `useAkariSearch()` | State and actions of the search panel | [Search](/en-US/theme/search/api#useakarisearch) |
+| `useSidebar()` | `{ items, prevNext, tabGroup, isActive, hasActive }` | [Side navigation](/theme/sidebar/api#usesidebar) |
+| `useAkariSettings()` | `{ settings, setSetting, reset, isDefault, defaults, sections, labels }` | [Settings](/theme/settings/api#useakarisettings) |
+| `useAkariColorScheme()` | `{ mode, resolved, cycle }` | [Settings](/theme/settings/api#useakaricolorscheme) |
+| `useAkariI18n()` | `{ lang, messages, t }` | [Internationalization](/theme/i18n/api#useakarii18n) |
+| `useAkariLocales()` | `{ locales, homeHref }` | [Internationalization](/theme/i18n/api#useakarilocales) |
+| `useAkariSearch()` | State and actions of the search panel | [Search](/theme/search/api#useakarisearch) |
 
 The result of `useAkariConfig()` contains `lang`, `messages`, `appBar`, `sidebar`, `settings`, `toc`, `footer`, `search`, `fonts` and `components`. Each group has its defaults filled in and has been validated (for example, `toc.maxDepth` is clamped between 1 and 6).
 
@@ -70,10 +70,10 @@ The result of `useAkariConfig()` contains `lang`, `messages`, `appBar`, `sidebar
 
 | Export | Type | Purpose |
 | --- | --- | --- |
-| `defineAkariConfig` | `(config: AkariSiteConfig) => AkariDirectoryConfig` | Writing config files; see [Configuration](/en-US/getting-started/configuration/api#defineakariconfig) |
+| `defineAkariConfig` | `(config: AkariSiteConfig) => AkariDirectoryConfig` | Writing config files; see [Configuration](/getting-started/configuration/api#defineakariconfig) |
 | `defineAkariThemeConfig` | `(config: AkariThemeConfig) => AkariThemeConfig` | Type helper when you write only theme fields |
-| `registerSearchBackend` | `(id, handler) => void` | Registers a search backend; see [Search](/en-US/theme/search/api#registered-backends) |
-| `defineAkariLanguage` | `(language: AkariLanguage) => AkariLanguage` | Writes a language pack; see [Internationalization](/en-US/theme/i18n/api#akarilanguage) |
+| `registerSearchBackend` | `(id, handler) => void` | Registers a search backend; see [Search](/theme/search/api#registered-backends) |
+| `defineAkariLanguage` | `(language: AkariLanguage) => AkariLanguage` | Writes a language pack; see [Internationalization](/theme/i18n/api#akarilanguage) |
 | `AKARI_LANGUAGES` | `AkariLanguage[]` | The built-in language packs |
 | `resolveLanguage` | `(lang, languages?) => ResolvedAkariLanguage` | The pack a language ends up with |
 | `AKARI_CONTENT_ID` | `"akari-doc-content"` | id of the content container |
@@ -86,11 +86,11 @@ Types (`AkariThemeConfig`, `AkariSidebarItem`, `AkariSearchResult` and others) a
 
 | Scope | Variables | See |
 | --- | --- | --- |
-| Document surface, TOC, footer | `--akari-doc-*`, `--akari-toc-width`, `--akari-wavy-divider-color` | [Layout and app bar](/en-US/theme/layout/api#css-variables) |
-| Tab bar of parallel pages | `--akari-app-bar-tabs-gap`, `--akari-page-tabs-docked-max-width` | [Side navigation](/en-US/theme/sidebar/api#tab-bar-css-variables) |
-| Hero and patterns | `--akari-doc-hero-*`, `--akari-pattern-*` | [Hero](/en-US/theme/hero/api#css-variables) |
-| Color | `--md-sys-color-*` | [Color](/en-US/styles/color/api) |
-| Typography | `--md-sys-typescale-*` | [Typography](/en-US/styles/typography/api) |
+| Document surface, TOC, footer | `--akari-doc-*`, `--akari-toc-width`, `--akari-wavy-divider-color` | [Layout and app bar](/theme/layout/api#css-variables) |
+| Tab bar of parallel pages | `--akari-app-bar-tabs-gap`, `--akari-page-tabs-docked-max-width` | [Side navigation](/theme/sidebar/api#tab-bar-css-variables) |
+| Hero and patterns | `--akari-doc-hero-*`, `--akari-pattern-*` | [Hero](/theme/hero/api#css-variables) |
+| Color | `--md-sys-color-*` | [Color](/styles/color/api) |
+| Typography | `--md-sys-typescale-*` | [Typography](/styles/typography/api) |
 | m3e components | Such as `--m3e-card-shape`, `--m3e-button-*` | m3e component docs |
 
 ## Source layout

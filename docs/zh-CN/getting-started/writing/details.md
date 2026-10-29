@@ -13,8 +13,8 @@ VitePress 用 `akariContent` 生成的 `rewrites` 函数决定每个页面在哪
 | `zh-CN/index.md` | `index.md` | `/` |
 | `zh-CN/theme/layout/index.md` | `theme/layout.md` | `/theme/layout` |
 | `zh-CN/styles/icons/using.md` | `styles/icons/using.md` | `/styles/icons/using` |
-| `en-US/index.md` | `en-US/index.md` | `/en-US/` |
-| `en-US/theme/i18n/index.md` | `en-US/theme/i18n.md` | `/en-US/theme/i18n` |
+| `en-US/index.md` | `en-US/index.md` | `/` |
+| `en-US/theme/i18n/index.md` | `en-US/theme/i18n.md` | `/theme/i18n` |
 | `404.md`（语言文件夹之外） | 不变 | 不变 |
 
 - 根语言的文件夹名从路径中去掉，其他语言保留文件夹名作为前缀。
@@ -48,7 +48,7 @@ VitePress 用 `akariContent` 生成的 `rewrites` 函数决定每个页面在哪
 
 ## 对应页面
 
-切换语言时，主题把当前地址换到目标语言下（`/theme/i18n` ↔ `/en-US/theme/i18n`），如果目标语言的导航中有这个地址就打开它，否则打开目标语言的首页。所以切换语言能停留在同一页的条件是：两个页面在各自语言文件夹中的路径相同，并且目标页面在目标语言的导航中。
+切换语言时，主题把当前地址换到目标语言下（`/theme/i18n` ↔ `/theme/i18n`），如果目标语言的导航中有这个地址就打开它，否则打开目标语言的首页。所以切换语言能停留在同一页的条件是：两个页面在各自语言文件夹中的路径相同，并且目标页面在目标语言的导航中。
 
 ## 搜索索引
 

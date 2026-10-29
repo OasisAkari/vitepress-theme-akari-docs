@@ -37,4 +37,4 @@ search: {
 },
 ```
 
-See [API](/en-US/theme/search/api) for how to write a backend and the result format, and [Details](/en-US/theme/search/details) for the panel's motion and how the index is built and ranked.
+See [API](/theme/search/api) for how to write a backend and the result format, and [Details](/theme/search/details) for the panel's motion and how the index is built and ranked.

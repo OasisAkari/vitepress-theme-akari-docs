@@ -23,17 +23,17 @@ On desktop, a 96px-wide rail on the left lists the categories, and the navigatio
       <m3e-icon slot="icon" name="rocket_launch"></m3e-icon>
       <span slot="label">Getting started</span>
       <m3e-nav-menu-item selected>
-        <a slot="label" href="/en-US/">Overview</a>
+        <a slot="label" href="/">Overview</a>
       </m3e-nav-menu-item>
       <m3e-nav-menu-item>
-        <a slot="label" href="/en-US/getting-started/installation">Installation</a>
+        <a slot="label" href="/getting-started/installation">Installation</a>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>
     <m3e-nav-menu-item>
       <m3e-icon slot="icon" name="palette"></m3e-icon>
       <span slot="label">Theme</span>
       <m3e-nav-menu-item>
-        <a slot="label" href="/en-US/theme/extending">Extending the theme</a>
+        <a slot="label" href="/theme/extending">Extending the theme</a>
         <span slot="badge">Extend</span>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>
@@ -42,7 +42,7 @@ On desktop, a 96px-wide rail on the left lists the categories, and the navigatio
 
 ## Where the navigation comes from
 
-The navigation is generated from the folders in the language folder: each category folder is a category in the rail, and the article folders in a category are its pages. Names, icons and order are set in each article's frontmatter. See [Writing pages](/en-US/getting-started/writing).
+The navigation is generated from the folders in the language folder: each category folder is a category in the rail, and the article folders in a category are its pages. Names, icons and order are set in each article's frontmatter. See [Writing pages](/getting-started/writing).
 
 Category names and icons go in `sidebar.categories` in the config:
 
@@ -55,7 +55,7 @@ sidebar: {
   },
 },
 
-// docs/en-US/config.ts
+// docs/config.ts
 sidebar: {
   categories: {
     "getting-started": { text: "Getting started" },
@@ -64,7 +64,7 @@ sidebar: {
 },
 ```
 
-You can also write the whole navigation by hand with `sidebar.items` in the config. See [API](/en-US/theme/sidebar/api#navigation-written-by-hand).
+You can also write the whole navigation by hand with `sidebar.items` in the config. See [API](/theme/sidebar/api#navigation-written-by-hand).
 
 ## Parallel pages
 
@@ -75,6 +75,6 @@ An article can be split into several pages, the way Icons on [m3.material.io](ht
 - When you switch pages within the group, the content slides left or right. If the tab bar is docked in the app bar, it stays put, and the new page starts right at the body text.
 - Previous and next page step through every page in the group.
 
-The [Icons](/en-US/styles/icons) pages and every theme document on this site are organized this way. See [Writing pages](/en-US/getting-started/writing#parallel-pages).
+The [Icons](/styles/icons) pages and every theme document on this site are organized this way. See [Writing pages](/getting-started/writing#parallel-pages).
 
-For each field, see [API](/en-US/theme/sidebar/api). For when the drawer opens, how the tab bar flies and more, see [Details](/en-US/theme/sidebar/details).
+For each field, see [API](/theme/sidebar/api). For when the drawer opens, how the tab bar flies and more, see [Details](/theme/sidebar/details).

@@ -18,7 +18,7 @@ What belongs to the language itself (its interface strings, fonts, text directio
 1. Create a folder in `docs` named by the language code, and write a `config.ts` in it:
 
    ```ts
-   // docs/en-US/config.ts
+   // docs/config.ts
    import { defineAkariConfig } from "../.vitepress/theme/define.ts";
 
    export default defineAkariConfig({
@@ -34,7 +34,7 @@ What belongs to the language itself (its interface strings, fonts, text directio
    });
    ```
 
-2. Add pages with the same structure as the root language: `docs/en-US/index.md` is this language's home page, and `docs/en-US/getting-started/installation/index.md` pairs with the Chinese `/getting-started/installation`.
+2. Add pages with the same structure as the root language: `docs/index.md` is this language's home page, and `docs/getting-started/installation/index.md` pairs with the Chinese `/getting-started/installation`.
 3. If needed, set `rootLanguage` in the shared config to choose the language served at the root.
 
 A language config is layered over the shared config, so it only needs the language's titles and category names. The version, social links, category icons and so on come from the shared config. The name in the language menu defaults to the language's own name for itself (English, 日本語), and the text direction, interface strings, code block copy button and container titles come from the language pack. The language config can override any of them.
@@ -86,4 +86,4 @@ From then on, `de-DE`, `de-AT` and any other German language folder use this pac
 
 This site has six versions of every page: Chinese (served at the root), English, Japanese, Korean, French and Arabic. Switching language stays on the same page. The Arabic version is laid out right to left, so you can use it to see the theme's RTL layout.
 
-See [API](/en-US/theme/i18n/api) for all interface strings and the language functions, and [Details](/en-US/theme/i18n/details) for how languages are detected and switched.
+See [API](/theme/i18n/api) for all interface strings and the language functions, and [Details](/theme/i18n/details) for how languages are detected and switched.

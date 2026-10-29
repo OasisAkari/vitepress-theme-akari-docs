@@ -46,7 +46,7 @@ appBar: {
 - When the window is narrower than 960px, the table of contents is hidden, and a TOC button at the bottom right opens it instead.
 - Write `toc: false` in a page's frontmatter, and that page has no table of contents.
 
-A page that belongs to a group of parallel pages has a tab bar at the top of the surface; see [Side navigation](/en-US/theme/sidebar#parallel-pages). On a page with a hero, the title and the image show at the top of the surface; see [Hero](/en-US/theme/hero).
+A page that belongs to a group of parallel pages has a tab bar at the top of the surface; see [Side navigation](/theme/sidebar#parallel-pages). On a page with a hero, the title and the image show at the top of the surface; see [Hero](/theme/hero).
 
 ## Floating action buttons
 
@@ -59,7 +59,7 @@ After the pager cards come a wavy divider and the footer: the logo, site name an
 
 ## Loading bar
 
-While a page is still loading, a thin bar in the primary color runs along the top of the window: on opening the site it waits for the scripts, images and fonts, and on navigating within the site for the next page's script and its images and fonts. A quick load shows nothing. The config can turn it off; see [API](/en-US/theme/layout/api#loadingbar).
+While a page is still loading, a thin bar in the primary color runs along the top of the window: on opening the site it waits for the scripts, images and fonts, and on navigating within the site for the next page's script and its images and fonts. A quick load shows nothing. The config can turn it off; see [API](/theme/layout/api#loadingbar).
 
 ## Window sizes
 
@@ -70,4 +70,4 @@ While a page is still loading, a thin bar in the primary color runs along the to
 | Below 960px | The menu button in the app bar opens the navigation drawer | Button at the bottom right |
 | Below 600px | Same as above; the document surface reaches the window edges | Button at the bottom right |
 
-For every option, the CSS variables and the page state, see [API](/en-US/theme/layout/api). For how scrolling, the title swap, button collapsing and other behavior work, see [Details](/en-US/theme/layout/details).
+For every option, the CSS variables and the page state, see [API](/theme/layout/api). For how scrolling, the title swap, button collapsing and other behavior work, see [Details](/theme/layout/details).

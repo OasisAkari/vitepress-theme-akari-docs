@@ -22,7 +22,7 @@ docs/
 ├─ zh-CN/                    簡体字中国語。サイトのルートで配信
 │  ├─ config.ts              言語設定
 │  └─ …                      ページ。「ページの作成」を参照
-├─ en-US/                    英語。/en-US/ 以下で配信
+├─ en-US/                    英語。/ 以下で配信
 │  ├─ config.ts
 │  └─ …
 └─ .vitepress/config.mts

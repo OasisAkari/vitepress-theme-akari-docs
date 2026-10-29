@@ -22,7 +22,7 @@ docs/
 ├─ zh-CN/                    중국어 간체, 사이트 루트에 배치
 │  ├─ config.ts              언어 구성
 │  └─ …                      페이지, "페이지 작성" 참고
-├─ en-US/                    영어, /en-US/ 아래에 배치
+├─ en-US/                    영어, / 아래에 배치
 │  ├─ config.ts
 │  └─ …
 └─ .vitepress/config.mts

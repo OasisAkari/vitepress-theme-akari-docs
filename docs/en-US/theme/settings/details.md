@@ -21,7 +21,7 @@ In Time of day mode, and in System mode when the browser cannot report a system 
 
 ## Switch snackbar
 
-Each press of the appearance button shows an `m3e-snackbar` at the bottom of the screen, which disappears after about 2.5 seconds. Pressing again replaces the old snackbar with a new one. The text comes from the UI strings `schemeChanged` ("Theme switched to: {mode}") and `schemeChangedFollowing` ("Theme switched to: {mode} ({scheme})"). See [Internationalization](/en-US/theme/i18n/api#messages).
+Each press of the appearance button shows an `m3e-snackbar` at the bottom of the screen, which disappears after about 2.5 seconds. Pressing again replaces the old snackbar with a new one. The text comes from the UI strings `schemeChanged` ("Theme switched to: {mode}") and `schemeChangedFollowing` ("Theme switched to: {mode} ({scheme})"). See [Internationalization](/theme/i18n/api#messages).
 
 ## Where each option applies
 
@@ -63,7 +63,7 @@ document.documentElement.style.fontSize = settings.textSize;
 
 ## Settings dialog
 
-The settings dialog uses the same M3 container transform as search and the language picker. The button expands into a centered panel, and the gear icon before the panel title is the button itself. Closing reverses the same path. With expressive motion, both expanding and collapsing have a slight bounce. `Escape`, a click on the scrim or the close button at the top right all close it, and focus returns to the button that opened it. For details of the motion, see [Search](/en-US/theme/search/details#container-transform).
+The settings dialog uses the same M3 container transform as search and the language picker. The button expands into a centered panel, and the gear icon before the panel title is the button itself. Closing reverses the same path. With expressive motion, both expanding and collapsing have a slight bounce. `Escape`, a click on the scrim or the close button at the top right all close it, and focus returns to the button that opened it. For details of the motion, see [Search](/theme/search/details#container-transform).
 
 - Color uses a native `<input type="color">`. Picking a color generates a new palette at once.
 - Variant uses `m3e-filter-chip-set` (multi-select look, single-select behavior). Contrast, motion, direction and text size use `m3e-segmented-button`.

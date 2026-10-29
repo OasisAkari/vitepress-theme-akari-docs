@@ -64,7 +64,7 @@ The app bar arranges the buttons on the right by its actual width:
 
 ## Page transitions
 
-When you go to another group of pages, the whole document surface first fades out (about 250ms). Once the new page has loaded, it fades in (about 450ms) and rises 16px from below into place on m3e's slow spatial spring. The fade-out runs while the new page loads, so it does not slow down navigation. Anchor jumps within a page play no animation. Switching between pages of the same parallel group slides sideways instead; see [Side navigation](/en-US/theme/sidebar/details#switching-pages). When "reduce motion" is turned on in the system, pages switch without animation.
+When you go to another group of pages, the whole document surface first fades out (about 250ms). Once the new page has loaded, it fades in (about 450ms) and rises 16px from below into place on m3e's slow spatial spring. The fade-out runs while the new page loads, so it does not slow down navigation. Anchor jumps within a page play no animation. Switching between pages of the same parallel group slides sideways instead; see [Side navigation](/theme/sidebar/details#switching-pages). When "reduce motion" is turned on in the system, pages switch without animation.
 
 ## Loading bar
 

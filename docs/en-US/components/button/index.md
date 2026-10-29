@@ -154,7 +154,7 @@ By default, a disabled button cannot take keyboard focus. `disabled-interactive`
     Open Material 3
     <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
   </m3e-button>
-  <m3e-button variant="outlined" href="/en-US/components/card">
+  <m3e-button variant="outlined" href="/components/card">
     View cards
     <m3e-icon slot="trailing-icon" name="chevron_right"></m3e-icon>
   </m3e-button>
@@ -172,13 +172,13 @@ By default, a disabled button cannot take keyboard focus. `disabled-interactive`
   Open Material 3
   <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
 </m3e-button>
-<m3e-button variant="outlined" href="/en-US/components/card">
+<m3e-button variant="outlined" href="/components/card">
   View cards
   <m3e-icon slot="trailing-icon" name="chevron_right"></m3e-icon>
 </m3e-button>
 ```
 
-With `href` set, the button renders with link semantics and supports `target`, `rel` and `download`. The anchor of an m3e button sits inside its Shadow DOM, so VitePress's global handling of internal links does not take it over, and an internal `m3e-button` link loads the full page. When you need SPA navigation, prefer a real `<a>` (you can give it m3e styling), or call `useRouter().go()` in a click handler. See [Navigation](/en-US/components/navigation).
+With `href` set, the button renders with link semantics and supports `target`, `rel` and `download`. The anchor of an m3e button sits inside its Shadow DOM, so VitePress's global handling of internal links does not take it over, and an internal `m3e-button` link loads the full page. When you need SPA navigation, prefer a real `<a>` (you can give it m3e styling), or call `useRouter().go()` in a click handler. See [Navigation](/components/navigation).
 
 ## Selection state
 
@@ -222,4 +222,4 @@ When the button is selected, `m3e-icon` switches to the filled glyph automatical
 - Use `href` for link buttons. Do not bind routing logic to a plain button and lose the link semantics.
 - Use `filled` for the main action, and avoid several high-emphasis buttons in the same visual area.
 
-For all attributes, slots and events, see [API](/en-US/components/button/api).
+For all attributes, slots and events, see [API](/components/button/api).

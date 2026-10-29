@@ -328,7 +328,7 @@ describe("akariContent", () => {
     const content = await akariContent(docs, { warn() {} });
     expect(content.route("zh-CN/start/install/index.md")).toBe("/start/install");
     expect(content.route("en-US/start/install/index.md")).toBe(
-      "/en-US/start/install",
+      "/start/install",
     );
     expect(content.site.locales!.root!.themeConfig.akari.sidebar.items).toEqual([
       {

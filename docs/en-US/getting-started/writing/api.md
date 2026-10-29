@@ -16,7 +16,7 @@ tab: API
 | `parallel` | `string[]` | Articles | Parallel pages: the file names of other `.md` files in the same folder (`.md` can be left out), placed after the article in tab bar order |
 | `tab` | `string` | Articles and parallel pages | Title in the tab bar; defaults to the page title |
 | `category` | `string` | Language home page | The home page is not in the navigation by default. Give it a category's folder name and it joins that category, first unless it has an `order` |
-| `hero` | `string \| object` | All pages | The hero at the top of the page; for its fields see [Hero](/en-US/theme/hero/api) |
+| `hero` | `string \| object` | All pages | The hero at the top of the page; for its fields see [Hero](/theme/hero/api) |
 | `toc` | `boolean` | All pages | With `false`, hides the table of contents on the right and the TOC button on narrow screens |
 
 An article is the `index.md` of a folder in a category folder. The frontmatter fields of VitePress itself (such as `head` and `titleTemplate`) work as usual.
@@ -69,7 +69,7 @@ When a page renders, every Markdown image gets its own `width` and `height`. The
 - A local image with only `width` or only `height` gets the other filled in to scale. An image with both is left as it is.
 - When a remote image fails to download (offline, wrong URL), the terminal shows a notice, the image gets no width or height, and the page is generated as usual. The download is synchronous, so the dev server pauses briefly when it renders a page with a new remote image; after that, the cache answers directly.
 - An `<img>` written directly in HTML is not measured. Write its width and height yourself.
-- You can turn off measuring remote images, or adjust its cache, in `.vitepress/config.mts`; see [Configuration](/en-US/getting-started/configuration/api#akarimarkdown).
+- You can turn off measuring remote images, or adjust its cache, in `.vitepress/config.mts`; see [Configuration](/getting-started/configuration/api#akarimarkdown).
 
 ## Links
 
@@ -130,4 +130,4 @@ You can write registered m3e components directly in Markdown. The theme register
 To use another component, import its subpath in `m3e.ts`, for example `import "@m3e/web/slider";`.
 
 - For a heading inside a component, use `<m3e-heading>`. With the `m3e-toc-ignore` attribute, it stays out of the table of contents.
-- Write an icon as `<m3e-icon name="search"></m3e-icon>`. The icon must be registered in `icons.ts` first; see [Using icons](/en-US/styles/icons/using).
+- Write an icon as `<m3e-icon name="search"></m3e-icon>`. The icon must be registered in `icons.ts` first; see [Using icons](/styles/icons/using).

@@ -83,7 +83,7 @@ VitePress 仍处于 alpha 阶段，升级时需要一并检查主题代码、配
 │   │   └── getting-started/       rail 分类
 │   │       └── installation/
 │   │           └── index.md       文章 /getting-started/installation
-│   ├── en-US/                     English，放在 /en-US/
+│   ├── en-US/                     English，放在 /
 │   ├── public/                    静态资源
 │   └── .vitepress/
 │       ├── config.mts             把主题接入 VitePress

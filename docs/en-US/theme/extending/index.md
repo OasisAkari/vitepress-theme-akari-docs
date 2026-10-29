@@ -13,7 +13,7 @@ There are three ways to adjust the theme, and none of them needs changes to the 
 
 | Way | Good for | Where |
 | --- | --- | --- |
-| Config | Titles, navigation, settings options, TOC, footer, interface strings | `docs/config.ts` and each language's `config.ts`; see [Configuration](/en-US/getting-started/configuration) |
+| Config | Titles, navigation, settings options, TOC, footer, interface strings | `docs/config.ts` and each language's `config.ts`; see [Configuration](/getting-started/configuration) |
 | Replacing components | A branded app bar, a special footer, a custom content container | `enhanceApp` in the theme entry |
 | CSS variables | Corner radius, spacing, surface colors, TOC width | Site styles |
 
@@ -35,7 +35,7 @@ export default {
 } satisfies Theme;
 ```
 
-Custom components read config and state through the theme's composables, such as `useAkariConfig()` and `useSidebar()`. See [API](/en-US/theme/extending/api) for the parts you can replace and the functions available.
+Custom components read config and state through the theme's composables, such as `useAkariConfig()` and `useSidebar()`. See [API](/theme/extending/api) for the parts you can replace and the functions available.
 
 ## CSS variables
 

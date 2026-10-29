@@ -21,7 +21,7 @@ tab: Details
 
 1. It reads `docs/config.ts` and finds the language folders: the top-level folders of `docs` that contain a `config.ts`, except `public`, `node_modules` and folders starting with `.`. The config files are bundled and run by the Vite config loader, the same way VitePress loads them.
 2. It picks the root language: the folder that `rootLanguage` names. If it is not set or does not exist (which gives a notice), it takes the first folder in alphabetical order. The other languages follow in alphabetical order.
-3. It generates one VitePress `locales` entry per language. The root language's key is `root`; the others use the folder name. Each entry carries the content of the language config (except `head`, which the directory config already adds; adding it again would duplicate it. The locale's `head` holds the language's font tags; see [Typography](/en-US/styles/typography/api#fonts)). `lang` defaults to the folder name, and the entry carries the generated navigation (`themeConfig.akari.sidebar.items`). The `label`, `dir` and `markdown` the language config leaves out come from the language pack for `lang`; see [Internationalization: Details](/en-US/theme/i18n/details#where-language-packs-are-used).
+3. It generates one VitePress `locales` entry per language. The root language's key is `root`; the others use the folder name. Each entry carries the content of the language config (except `head`, which the directory config already adds; adding it again would duplicate it. The locale's `head` holds the language's font tags; see [Typography](/styles/typography/api#fonts)). `lang` defaults to the folder name, and the entry carries the generated navigation (`themeConfig.akari.sidebar.items`). The `label`, `dir` and `markdown` the language config leaves out come from the language pack for `lang`; see [Internationalization: Details](/theme/i18n/details#where-language-packs-are-used).
 4. The site-level `lang`, `title` and `description` come from the root language.
 
 A language config acts both as a directory config for its own pages and as a locale, and each role has a purpose. The locale lists the language in the language menu, renders Markdown text such as the code block copy button in that language, and gives pages outside the language folders, such as the 404 page, the root language's settings. Both hold the same values, so the layered result is not affected.
@@ -30,7 +30,7 @@ Without any language folder, `akariContent` generates no locales and no rewrites
 
 ## Paths and navigation
 
-`akariContent` also returns the VitePress `rewrites` function, and reads the Markdown frontmatter of each language to generate its navigation. For the exact rules, see [Writing pages · Details](/en-US/getting-started/writing/details). When the language config or the shared config sets `sidebar.items`, that language uses the hand-written navigation and none is generated.
+`akariContent` also returns the VitePress `rewrites` function, and reads the Markdown frontmatter of each language to generate its navigation. For the exact rules, see [Writing pages · Details](/getting-started/writing/details). When the language config or the shared config sets `sidebar.items`, that language uses the hand-written navigation and none is generated.
 
 ## Updates during development
 
@@ -44,7 +44,7 @@ Without any language folder, `akariContent` generates no locales and no rewrites
 
 ## What a config file can hold
 
-Config files run in Node.js, and the result is serialized and sent to the browser with the site data, so they only suit data. Objects that depend on imports, such as Vue components, cannot get through. To replace components, call `provideAkariComponents` in the theme entry; see [Extending the theme](/en-US/theme/extending/api#provideakaricomponents).
+Config files run in Node.js, and the result is serialized and sent to the browser with the site data, so they only suit data. Objects that depend on imports, such as Vue components, cannot get through. To replace components, call `provideAkariComponents` in the theme entry; see [Extending the theme](/theme/extending/api#provideakaricomponents).
 
 ## Importing defineAkariConfig
 

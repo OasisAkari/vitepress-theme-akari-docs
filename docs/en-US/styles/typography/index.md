@@ -35,7 +35,7 @@ Fourth-level headings suit added notes on edge cases, version differences or par
 
 - Keep paragraphs to three to five lines. Split long paragraphs into lists or subheadings.
 - Use inline code for commands, field names and tag names, such as `npm run build`, `appBar.title` and `m3e-card`.
-- Link text should say where the link goes, such as [installation and system requirements](/en-US/getting-started/installation). Don't write "click here".
+- Link text should say where the link goes, such as [installation and system requirements](/getting-started/installation). Don't write "click here".
 - Use bold sparingly for emphasis. Don't bold whole paragraphs.
 
 > Use quotes for conclusions taken from specifications or official sources. Quotes and callout blocks in body text carry the same faint pattern as code blocks.
@@ -65,4 +65,4 @@ The text size setting has three steps, which set the font size of the root eleme
 | 150% | `24px` | Low vision or reading from a distance |
 | 200% | `32px` | Demos and accessibility checks |
 
-For fonts, body element styles and typography tokens, see [API](/en-US/styles/typography/api).
+For fonts, body element styles and typography tokens, see [API](/styles/typography/api).

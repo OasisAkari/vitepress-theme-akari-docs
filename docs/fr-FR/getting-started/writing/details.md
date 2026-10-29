@@ -13,8 +13,8 @@ VitePress décide où chaque page est servie grâce à la fonction `rewrites` qu
 | `zh-CN/index.md` | `index.md` | `/` |
 | `zh-CN/theme/layout/index.md` | `theme/layout.md` | `/theme/layout` |
 | `zh-CN/styles/icons/using.md` | `styles/icons/using.md` | `/styles/icons/using` |
-| `en-US/index.md` | `en-US/index.md` | `/en-US/` |
-| `en-US/theme/i18n/index.md` | `en-US/theme/i18n.md` | `/en-US/theme/i18n` |
+| `en-US/index.md` | `en-US/index.md` | `/` |
+| `en-US/theme/i18n/index.md` | `en-US/theme/i18n.md` | `/theme/i18n` |
 | `404.md` (hors des dossiers de langue) | Inchangé | Inchangé |
 
 - Le nom du dossier de la langue racine disparaît du chemin. Les autres langues gardent le nom de leur dossier comme préfixe.
@@ -48,7 +48,7 @@ Pendant la génération de la navigation, le terminal affiche un avertissement d
 
 ## Pages correspondantes
 
-Quand vous changez de langue, le thème transpose le chemin actuel dans la langue cible (`/theme/i18n` ↔ `/en-US/theme/i18n`). Si la navigation de la langue cible contient ce chemin, le thème l'ouvre ; sinon, il ouvre la page d'accueil de la langue cible. Changer de langue reste donc sur la même page quand les deux pages ont le même chemin dans leurs dossiers de langue et que la page cible figure dans la navigation de la langue cible.
+Quand vous changez de langue, le thème transpose le chemin actuel dans la langue cible (`/theme/i18n` ↔ `/theme/i18n`). Si la navigation de la langue cible contient ce chemin, le thème l'ouvre ; sinon, il ouvre la page d'accueil de la langue cible. Changer de langue reste donc sur la même page quand les deux pages ont le même chemin dans leurs dossiers de langue et que la page cible figure dans la navigation de la langue cible.
 
 ## Index de recherche
 

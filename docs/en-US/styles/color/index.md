@@ -35,7 +35,7 @@ The seed color sets the relationship between hue and tone, and Material 3's tone
   </div>
 </m3e-theme>
 
-The site's default seed color is set in `settings.defaults.color` in the shared config. Readers can change it to a color they like in the settings. Pages with a hero use a color taken from the image; see [Hero](/en-US/theme/hero).
+The site's default seed color is set in `settings.defaults.color` in the shared config. Readers can change it to a color they like in the settings. Pages with a hero use a color taken from the image; see [Hero](/theme/hero).
 
 ## Variants
 
@@ -82,7 +82,7 @@ The same palette, mapped to light and dark:
   </m3e-theme>
 </div>
 
-Contrast has three levels: Default, Medium and High. It affects the lightness difference between foreground and background, and the strength of outlines. Light and dark mode has four options; see [Settings and appearance](/en-US/theme/settings).
+Contrast has three levels: Default, Medium and High. It affects the lightness difference between foreground and background, and the strength of outlines. Light and dark mode has four options; see [Settings and appearance](/theme/settings).
 
 ## Usage guidelines
 
@@ -93,4 +93,4 @@ Contrast has three levels: Default, Medium and High. It affects the lightness di
 - When you need a fixed brand color, make it the seed color instead of overriding it component by component.
 - Check custom backgrounds, shadows and translucent scrims separately in dark mode and high contrast.
 
-For all color tokens, see [API](/en-US/styles/color/api).
+For all color tokens, see [API](/styles/color/api).

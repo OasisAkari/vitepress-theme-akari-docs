@@ -13,8 +13,8 @@ VitePress는 `akariContent`가 생성한 `rewrites` 함수로 각 페이지를 �
 | `zh-CN/index.md` | `index.md` | `/` |
 | `zh-CN/theme/layout/index.md` | `theme/layout.md` | `/theme/layout` |
 | `zh-CN/styles/icons/using.md` | `styles/icons/using.md` | `/styles/icons/using` |
-| `en-US/index.md` | `en-US/index.md` | `/en-US/` |
-| `en-US/theme/i18n/index.md` | `en-US/theme/i18n.md` | `/en-US/theme/i18n` |
+| `en-US/index.md` | `en-US/index.md` | `/` |
+| `en-US/theme/i18n/index.md` | `en-US/theme/i18n.md` | `/theme/i18n` |
 | `404.md`(언어 폴더 밖) | 변경 없음 | 변경 없음 |
 
 - 루트 언어의 폴더 이름은 경로에서 빠집니다. 다른 언어는 폴더 이름을 접두사로 유지합니다.
@@ -48,7 +48,7 @@ VitePress는 `akariContent`가 생성한 `rewrites` 함수로 각 페이지를 �
 
 ## 대응 페이지
 
-언어를 바꾸면 테마는 현재 경로를 대상 언어의 경로로 옮깁니다(`/theme/i18n` ↔ `/en-US/theme/i18n`). 대상 언어의 내비게이션에 그 경로가 있으면 그 페이지를 열고, 없으면 대상 언어의 홈 페이지를 엽니다. 따라서 두 페이지가 각 언어 폴더에서 같은 경로에 있고, 대상 페이지가 대상 언어의 내비게이션에 포함되어 있을 때 언어를 바꿔도 같은 페이지에 머뭅니다.
+언어를 바꾸면 테마는 현재 경로를 대상 언어의 경로로 옮깁니다(`/theme/i18n` ↔ `/theme/i18n`). 대상 언어의 내비게이션에 그 경로가 있으면 그 페이지를 열고, 없으면 대상 언어의 홈 페이지를 엽니다. 따라서 두 페이지가 각 언어 폴더에서 같은 경로에 있고, 대상 페이지가 대상 언어의 내비게이션에 포함되어 있을 때 언어를 바꿔도 같은 페이지에 머뭅니다.
 
 ## 검색 색인
 
