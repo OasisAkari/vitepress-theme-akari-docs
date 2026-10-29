@@ -70,8 +70,8 @@ Chaque page définit son titre dans la barre d'onglets avec son propre `tab` ; 
 
 - Une image utilisée par une seule page va dans le dossier de l'article et se référence avec `![Description](./image.png)`. Les images partagées par plusieurs pages vont dans `docs/public` et se référencent par un chemin absolu comme `/hero/image.svg`.
 - La largeur et la hauteur des images sont écrites automatiquement au rendu, y compris pour les images distantes : la page ne saute donc pas pendant le chargement des images ; voir [API](/fr-FR/getting-started/writing/api#images).
-- Les liens internes utilisent le chemin de la page et commencent par `/` : `[Navigation latérale](/theme/sidebar)`. N'écrivez ni le chemin du fichier (`/zh-CN/theme/sidebar/index.md`) ni un chemin relatif.
-- Les liens entre pages françaises portent le préfixe `/fr-FR/`.
+- Les liens internes utilisent le chemin de la page et commencent par `/`, sans `.html`, que VitePress ajoute selon `cleanUrls` : `[Navigation latérale](/fr-FR/theme/sidebar)`. N'écrivez ni le chemin du fichier (`/fr-FR/theme/sidebar/index.md`) ni un chemin relatif.
+- Les liens entre pages françaises portent le préfixe `/fr-FR/` ; la langue racine est l'anglais.
 
 ## Markdown
 

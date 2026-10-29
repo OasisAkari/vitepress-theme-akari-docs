@@ -22,16 +22,16 @@ parallel:
       <span slot="label">컴포넌트</span>
       <m3e-nav-menu-item>
         <m3e-icon slot="icon" name="radio_button_checked"></m3e-icon>
-        <a slot="label" href="/ko-KR/components/button">버튼</a>
+        <a slot="label" href="/ko-KR/components/button.html">버튼</a>
       </m3e-nav-menu-item>
       <m3e-nav-menu-item selected>
         <m3e-icon slot="icon" name="language"></m3e-icon>
-        <a slot="label" href="/ko-KR/components/navigation">내비게이션</a>
+        <a slot="label" href="/ko-KR/components/navigation.html">내비게이션</a>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>
     <m3e-nav-menu-item>
       <m3e-icon slot="icon" name="dashboard"></m3e-icon>
-      <a slot="label" href="/ko-KR/components/card">카드</a>
+      <a slot="label" href="/ko-KR/components/card.html">카드</a>
       <span slot="badge">New</span>
     </m3e-nav-menu-item>
   </m3e-nav-menu>
@@ -44,12 +44,12 @@ parallel:
     <span slot="label">컴포넌트</span>
     <m3e-nav-menu-item selected>
       <m3e-icon slot="icon" name="language"></m3e-icon>
-      <a slot="label" href="/ko-KR/components/navigation">내비게이션</a>
+      <a slot="label" href="/ko-KR/components/navigation.html">내비게이션</a>
     </m3e-nav-menu-item>
   </m3e-nav-menu-item>
   <m3e-nav-menu-item>
     <m3e-icon slot="icon" name="dashboard"></m3e-icon>
-    <a slot="label" href="/ko-KR/components/card">카드</a>
+    <a slot="label" href="/ko-KR/components/card.html">카드</a>
     <span slot="badge">New</span>
   </m3e-nav-menu-item>
 </m3e-nav-menu>

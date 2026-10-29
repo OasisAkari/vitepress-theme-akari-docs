@@ -1,24 +1,26 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useRouter, withBase } from "vitepress";
+import { useRouter } from "vitepress";
 
 import { useAkariI18n } from "../../composables/useI18n";
 import { useAkariConfig } from "../../composables/useAkariConfig";
+import { usePageHref } from "../../composables/usePageHref";
 import { useSidebar } from "../../composables/useSidebar";
 
 const config = useAkariConfig();
 const { t } = useAkariI18n();
 const { prevNext } = useSidebar();
+const pageHref = usePageHref();
 const router = useRouter();
 
 const prev = computed(() => prevNext.value.prev);
 const next = computed(() => prevNext.value.next);
 
 const prevHref = computed(() =>
-  prev.value?.link ? withBase(prev.value.link) : undefined,
+  prev.value?.link ? pageHref(prev.value.link) : undefined,
 );
 const nextHref = computed(() =>
-  next.value?.link ? withBase(next.value.link) : undefined,
+  next.value?.link ? pageHref(next.value.link) : undefined,
 );
 
 const showPrevNext = computed(

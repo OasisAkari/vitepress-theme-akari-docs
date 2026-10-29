@@ -22,16 +22,16 @@ parallel:
       <span slot="label">组件</span>
       <m3e-nav-menu-item>
         <m3e-icon slot="icon" name="radio_button_checked"></m3e-icon>
-        <a slot="label" href="/components/button">按钮</a>
+        <a slot="label" href="/zh-CN/components/button.html">按钮</a>
       </m3e-nav-menu-item>
       <m3e-nav-menu-item selected>
         <m3e-icon slot="icon" name="language"></m3e-icon>
-        <a slot="label" href="/components/navigation">导航</a>
+        <a slot="label" href="/zh-CN/components/navigation.html">导航</a>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>
     <m3e-nav-menu-item>
       <m3e-icon slot="icon" name="dashboard"></m3e-icon>
-      <a slot="label" href="/components/card">卡片</a>
+      <a slot="label" href="/zh-CN/components/card.html">卡片</a>
       <span slot="badge">New</span>
     </m3e-nav-menu-item>
   </m3e-nav-menu>
@@ -44,12 +44,12 @@ parallel:
     <span slot="label">组件</span>
     <m3e-nav-menu-item selected>
       <m3e-icon slot="icon" name="language"></m3e-icon>
-      <a slot="label" href="/components/navigation">导航</a>
+      <a slot="label" href="/zh-CN/components/navigation.html">导航</a>
     </m3e-nav-menu-item>
   </m3e-nav-menu-item>
   <m3e-nav-menu-item>
     <m3e-icon slot="icon" name="dashboard"></m3e-icon>
-    <a slot="label" href="/components/card">卡片</a>
+    <a slot="label" href="/zh-CN/components/card.html">卡片</a>
     <span slot="badge">New</span>
   </m3e-nav-menu-item>
 </m3e-nav-menu>
@@ -233,4 +233,4 @@ m3e 按钮或图标按钮内部的锚点位于 Shadow DOM，VitePress 的全局�
 - Filter Chip 保持可见文本，不用颜色单独表达选中状态。
 - 纯图标按钮必须提供 `aria-label`，并配合工具提示。
 
-全部属性、插槽与事件见[接口](/components/navigation/api)。
+全部属性、插槽与事件见[接口](/zh-CN/components/navigation/api)。

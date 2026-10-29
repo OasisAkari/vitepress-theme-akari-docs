@@ -37,4 +37,4 @@ search: {
 },
 ```
 
-后端的写法与结果格式见[接口](/theme/search/api)；面板的动效、索引的生成与排序见[技术细节](/theme/search/details)。
+后端的写法与结果格式见[接口](/zh-CN/theme/search/api)；面板的动效、索引的生成与排序见[技术细节](/zh-CN/theme/search/details)。

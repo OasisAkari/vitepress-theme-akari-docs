@@ -37,7 +37,7 @@ order: 4
 
 保存后，文章立即出现在「组件」分类中，不需要重启开发服务器。导航中的名称取页面标题，也就是这里的「纸片」。
 
-新建分类时，新建一个分类目录，在共用配置的 `sidebar.categories` 中写上它的图标，在语言配置中写上它的名称，见[配置](/getting-started/configuration)。
+新建分类时，新建一个分类目录，在共用配置的 `sidebar.categories` 中写上它的图标，在语言配置中写上它的名称，见[配置](/zh-CN/getting-started/configuration)。
 
 ## 平行页面
 
@@ -64,14 +64,14 @@ parallel:
 
 ## 头图
 
-在头部信息中写 `hero`，页面顶部就会并排显示标题卡片与图片，见[头图](/theme/hero)。
+在头部信息中写 `hero`，页面顶部就会并排显示标题卡片与图片，见[头图](/zh-CN/theme/hero)。
 
 ## 图片与链接
 
 - 只有一个页面用到的图片，放在文章文件夹中，用 `![说明](./图片.png)` 引用。几个页面共用的放进 `docs/public`，用 `/hero/图片.svg` 这样的绝对路径引用。
-- 图片的宽高在渲染时自动写上，远程图片也是，所以图片加载时页面不会跳动，见[接口](/getting-started/writing/api#图片)。
-- 站内链接写页面的地址，以 `/` 开头：`[侧边导航](/theme/sidebar)`。不要写文件路径（`/zh-CN/theme/sidebar/index.md`），也不要写相对路径。
-- 英文页面之间的链接带上 `/` 前缀。
+- 图片的宽高在渲染时自动写上，远程图片也是，所以图片加载时页面不会跳动，见[接口](/zh-CN/getting-started/writing/api#图片)。
+- 站内链接写页面的地址，以 `/` 开头，不用写 `.html`，VitePress 会按 `cleanUrls` 补上：`[侧边导航](/zh-CN/theme/sidebar)`。不要写文件路径（`/zh-CN/theme/sidebar/index.md`），也不要写相对路径。
+- 本站的根语言是英文，英文页面之间的链接不带语言前缀，中文页面之间的链接带上 `/zh-CN/` 前缀。
 
 ## Markdown
 
@@ -81,8 +81,8 @@ VitePress 的 Markdown 扩展都可以用，例如代码组、提示块、代码
 - 可以直接在 Markdown 中写 m3e 组件，例如 `<m3e-button>`、`<m3e-card>`；本站的组件演示就是这样写的。
 - 有几个排版演示内容的辅助类：`demo-surface`、`demo-row`、`demo-grid`、`demo-stack`。
 
-完整的头部信息字段、可用组件与辅助类见[接口](/getting-started/writing/api)。
+完整的头部信息字段、可用组件与辅助类见[接口](/zh-CN/getting-started/writing/api)。
 
 ## 另一种语言的版本
 
-在另一个语言文件夹的相同位置放一个同名文件夹，例如 `docs/components/chip/index.md`，两个页面就互为对应页面，切换语言时会停留在这一页。没有对应页面时，切换语言会去该语言的首页。
+在另一个语言文件夹的相同位置放一个同名文件夹，例如 `docs/en-US/components/chip/index.md`，两个页面就互为对应页面，切换语言时会停留在这一页。没有对应页面时，切换语言会去该语言的首页。

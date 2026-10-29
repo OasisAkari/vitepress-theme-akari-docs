@@ -6,7 +6,7 @@ tab: Details
 
 ## Which language a page belongs to
 
-The path decides the language: a page whose path starts with `/<language folder>/` belongs to that language, and every other page belongs to the root language. In the source, the root language's pages sit in their own folder (`docs/zh-CN/`), and they are served without the folder name; see [Writing pages: Details](/getting-started/writing/details#path-rules).
+The path decides the language: a page whose path starts with `/<language folder>/` belongs to that language, and every other page belongs to the root language. In the source, the root language's pages sit in their own folder (`docs/en-US/`), and they are served without the folder name; see [Writing pages: Details](/getting-started/writing/details#path-rules).
 
 The config a page ends up with is the `config.ts` of its language folder layered over the shared config and the VitePress locale config; see [Configuration: Details](/getting-started/configuration/details#how-the-two-levels-layer).
 
@@ -29,7 +29,7 @@ When `settings.title`, `settings.labels`, `toc.overline`, `footer.message` and `
 
 ## Where switching language goes
 
-1. Move the current path into the target language: `/getting-started/installation` → `/getting-started/installation`, and remove the prefix in the other direction.
+1. Move the current path into the target language: `/getting-started/installation.html` → `/zh-CN/getting-started/installation.html`, and remove the prefix in the other direction.
 2. If the target language's navigation has this path, open it. The navigation includes every page of a parallel page group.
 3. Otherwise, open the target language's home page: `/` for the root language, `/<language folder>/` for the others.
 
@@ -46,4 +46,4 @@ Only the target language's navigation counts, so a page that is not in the navig
 
 ## Search scope
 
-There is one local index, holding the pages of every language. When you search, only entries of the same language as the current page are kept: results for the root language do not include pages under `/<language folder>/`. The search panel's text and error messages follow the language.
+Each language has its own local index, and a search loads only the current language's, so results only ever come from the current language. HTTP and registered backends receive the current language's `lang` and `locale` and decide the scope themselves. The search panel's text and error messages follow the language.

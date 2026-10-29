@@ -10,16 +10,16 @@ VitePress は、`akariContent` が生成する `rewrites` 関数で各ページ�
 
 | ソースファイル | 配信時のファイル | パス |
 | --- | --- | --- |
-| `zh-CN/index.md` | `index.md` | `/` |
-| `zh-CN/theme/layout/index.md` | `theme/layout.md` | `/theme/layout` |
-| `zh-CN/styles/icons/using.md` | `styles/icons/using.md` | `/styles/icons/using` |
-| `en-US/index.md` | `en-US/index.md` | `/` |
-| `en-US/theme/i18n/index.md` | `en-US/theme/i18n.md` | `/theme/i18n` |
+| `en-US/index.md` | `index.md` | `/` |
+| `en-US/theme/layout/index.md` | `theme/layout.md` | `/theme/layout.html` |
+| `en-US/styles/icons/using.md` | `styles/icons/using.md` | `/styles/icons/using.html` |
+| `zh-CN/index.md` | `zh-CN/index.md` | `/zh-CN/` |
+| `zh-CN/theme/i18n/index.md` | `zh-CN/theme/i18n.md` | `/zh-CN/theme/i18n.html` |
 | `404.md`（言語フォルダーの外） | 変更なし | 変更なし |
 
 - ルート言語のフォルダー名はパスから取り除かれます。ほかの言語はフォルダー名を接頭辞として残します。
 - ちょうど「言語/カテゴリ/記事/index.md」の位置にあるファイルは「カテゴリ/記事.md」に書き換えられます。そのため、記事のパスはフォルダー名になり、末尾にスラッシュは付きません。それ以外のファイルは、ルート言語のフォルダー名が取り除かれるだけです。
-- `cleanUrls` が有効なので、ビルド結果では `/theme/layout` が `theme/layout.html` に対応します。
+- このサイトのルート言語は英語で、`cleanUrls` は無効です。パスは `.html` で終わり、ビルド結果のファイルと 1 対 1 で対応します。`cleanUrls` を有効にするとパスに拡張子が付かず、`/theme/layout` は引き続きファイル `theme/layout.html` に対応します。
 
 ## 相対パス
 
@@ -48,7 +48,7 @@ VitePress は、`akariContent` が生成する `rewrites` 関数で各ページ�
 
 ## 対応するページ
 
-言語を切り替えると、テーマは現在のパスを切り替え先の言語に移します（`/theme/i18n` ↔ `/theme/i18n`）。切り替え先の言語のナビゲーションにそのパスがあればそれを開き、なければその言語のホームページを開きます。つまり、2 つのページがそれぞれの言語フォルダーで同じパスにあり、切り替え先のページがその言語のナビゲーションに含まれていれば、言語を切り替えても同じページにとどまります。
+言語を切り替えると、テーマは現在のパスを切り替え先の言語に移します（`/theme/i18n.html` ↔ `/zh-CN/theme/i18n.html`）。切り替え先の言語のナビゲーションにそのパスがあればそれを開き、なければその言語のホームページを開きます。つまり、2 つのページがそれぞれの言語フォルダーで同じパスにあり、切り替え先のページがその言語のナビゲーションに含まれていれば、言語を切り替えても同じページにとどまります。
 
 ## 検索インデックス
 

@@ -16,7 +16,7 @@ tab: 接口
 | `parallel` | `string[]` | 文章 | 平行页面：同一文件夹中其他 `.md` 的文件名（可以不写 `.md`），按标签栏顺序排在文章之后 |
 | `tab` | `string` | 文章与平行页面 | 在标签栏中的标题，缺省为页面标题 |
 | `category` | `string` | 语言首页 | 首页默认不在导航中；写上一个分类的文件夹名后，它加入该分类，没有 `order` 时排在最前面 |
-| `hero` | `string \| object` | 所有页面 | 页面顶部的头图，字段见[头图](/theme/hero/api) |
+| `hero` | `string \| object` | 所有页面 | 页面顶部的头图，字段见[头图](/zh-CN/theme/hero/api) |
 | `toc` | `boolean` | 所有页面 | `false` 时不显示右侧目录与窄屏的目录按钮 |
 
 文章指分类目录中某个文件夹的 `index.md`。VitePress 自身的头部信息字段（如 `head`、`titleTemplate`）照常可用。
@@ -69,7 +69,7 @@ hero:
 - 只写了 `width` 或 `height` 之一的本地图片，另一个按比例补上；两者都写了的不会被改动。
 - 远程图片下载失败时（离线、地址错误），终端给出提示，这张图片不带宽高，页面照常生成。下载是同步进行的，开发服务器在渲染带新远程图片的页面时会稍有停顿，之后由缓存直接给出。
 - 直接写成 HTML 的 `<img>` 不会被测量，需要自己写上宽高。
-- 远程图片的测量可以在 `.vitepress/config.mts` 中关闭或调整缓存，见[配置](/getting-started/configuration/api#akarimarkdown)。
+- 远程图片的测量可以在 `.vitepress/config.mts` 中关闭或调整缓存，见[配置](/zh-CN/getting-started/configuration/api#akarimarkdown)。
 
 ## 链接
 
@@ -130,4 +130,4 @@ Markdown 中可以直接写已注册的 m3e 组件。主题在 `docs/.vitepress/
 用到其他组件时，在 `m3e.ts` 中导入对应的子路径，例如 `import "@m3e/web/slider";`。
 
 - 组件中的标题用 `<m3e-heading>`；加上 `m3e-toc-ignore` 属性后，它不会进入目录。
-- 图标写 `<m3e-icon name="search"></m3e-icon>`，图标需要先在 `icons.ts` 中注册，见[使用图标](/styles/icons/using)。
+- 图标写 `<m3e-icon name="search"></m3e-icon>`，图标需要先在 `icons.ts` 中注册，见[使用图标](/zh-CN/styles/icons/using)。

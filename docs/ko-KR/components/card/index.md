@@ -111,7 +111,7 @@ parallel:
     </ul>
   </div>
   <div slot="actions">
-    <m3e-button variant="tonal" href="/ko-KR/theme/extending">
+    <m3e-button variant="tonal" href="/ko-KR/theme/extending.html">
       확장 방법 보기
       <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
     </m3e-button>
@@ -140,7 +140,7 @@ parallel:
     </ul>
   </div>
   <div slot="actions">
-    <m3e-button variant="tonal" href="/ko-KR/theme/extending">
+    <m3e-button variant="tonal" href="/ko-KR/theme/extending.html">
       확장 방법 보기
       <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
     </m3e-button>
@@ -155,17 +155,17 @@ parallel:
 카드에 `actionable`을 추가하면 표면 전체가 하나의 상호작용 영역이 됩니다. `href`가 있으면 그대로 링크로 동작합니다.
 
 <div class="demo-grid">
-  <m3e-card variant="outlined" actionable href="/ko-KR/getting-started/installation">
+  <m3e-card variant="outlined" actionable href="/ko-KR/getting-started/installation.html">
     <m3e-icon slot="header" name="package_2"></m3e-icon>
     <m3e-heading m3e-toc-ignore slot="header" variant="title" size="large">설치</m3e-heading>
     <div slot="content">Node와 의존성을 준비하고 첫 빌드를 만듭니다.</div>
   </m3e-card>
-  <m3e-card variant="outlined" actionable href="/ko-KR/getting-started/configuration">
+  <m3e-card variant="outlined" actionable href="/ko-KR/getting-started/configuration.html">
     <m3e-icon slot="header" name="tune"></m3e-icon>
     <m3e-heading m3e-toc-ignore slot="header" variant="title" size="large">구성</m3e-heading>
     <div slot="content">앱 바, 내비게이션, 설정 항목, 목차 깊이를 조정합니다.</div>
   </m3e-card>
-  <m3e-card variant="outlined" actionable href="/ko-KR/theme/extending">
+  <m3e-card variant="outlined" actionable href="/ko-KR/theme/extending.html">
     <m3e-icon slot="header" name="integration_instructions"></m3e-icon>
     <m3e-heading m3e-toc-ignore slot="header" variant="title" size="large">확장</m3e-heading>
     <div slot="content">컴포넌트 재정의와 CSS 토큰으로 인터페이스를 사용자 정의합니다.</div>
@@ -173,7 +173,7 @@ parallel:
 </div>
 
 ```html
-<m3e-card variant="outlined" actionable href="/ko-KR/getting-started/installation">
+<m3e-card variant="outlined" actionable href="/ko-KR/getting-started/installation.html">
   <m3e-icon slot="header" name="package_2"></m3e-icon>
   <m3e-heading slot="header" variant="title" size="large">설치</m3e-heading>
   <div slot="content">Node와 의존성을 준비하고 첫 빌드를 만듭니다.</div>

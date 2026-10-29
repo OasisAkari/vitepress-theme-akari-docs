@@ -23,17 +23,17 @@ parallel:
       <m3e-icon slot="icon" name="rocket_launch"></m3e-icon>
       <span slot="label">开始</span>
       <m3e-nav-menu-item selected>
-        <a slot="label" href="/">概览</a>
+        <a slot="label" href="/zh-CN/">概览</a>
       </m3e-nav-menu-item>
       <m3e-nav-menu-item>
-        <a slot="label" href="/getting-started/installation">安装</a>
+        <a slot="label" href="/zh-CN/getting-started/installation.html">安装</a>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>
     <m3e-nav-menu-item>
       <m3e-icon slot="icon" name="palette"></m3e-icon>
       <span slot="label">主题</span>
       <m3e-nav-menu-item>
-        <a slot="label" href="/theme/extending">扩展主题</a>
+        <a slot="label" href="/zh-CN/theme/extending.html">扩展主题</a>
         <span slot="badge">扩展</span>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>
@@ -42,7 +42,7 @@ parallel:
 
 ## 导航从哪里来
 
-导航由语言文件夹的目录生成：分类目录是 rail 中的分类，分类中的文章文件夹是页面，名称、图标与顺序写在文章的头部信息中。写法见[撰写页面](/getting-started/writing)。
+导航由语言文件夹的目录生成：分类目录是 rail 中的分类，分类中的文章文件夹是页面，名称、图标与顺序写在文章的头部信息中。写法见[撰写页面](/zh-CN/getting-started/writing)。
 
 分类的名称与图标写在配置的 `sidebar.categories` 中：
 
@@ -64,7 +64,7 @@ sidebar: {
 },
 ```
 
-也可以在配置中用 `sidebar.items` 手写整份导航，见[接口](/theme/sidebar/api#手写导航)。
+也可以在配置中用 `sidebar.items` 手写整份导航，见[接口](/zh-CN/theme/sidebar/api#手写导航)。
 
 ## 平行页面
 
@@ -75,6 +75,6 @@ sidebar: {
 - 在组内切换页面时，内容左右滑动；标签栏收在顶栏时保持不动，新页面直接从正文开始。
 - 上一页、下一页依次经过组内每一页。
 
-本站的[图标](/styles/icons)与每篇主题文档都是这样组织的。写法见[撰写页面](/getting-started/writing#平行页面)。
+本站的[图标](/zh-CN/styles/icons)与每篇主题文档都是这样组织的。写法见[撰写页面](/zh-CN/getting-started/writing#平行页面)。
 
-各项字段见[接口](/theme/sidebar/api)；抽屉的展开时机、标签栏的飞行动画等见[技术细节](/theme/sidebar/details)。
+各项字段见[接口](/zh-CN/theme/sidebar/api)；抽屉的展开时机、标签栏的飞行动画等见[技术细节](/zh-CN/theme/sidebar/details)。

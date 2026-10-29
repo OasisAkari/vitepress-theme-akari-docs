@@ -19,10 +19,10 @@ parallel:
 ```text
 docs/
 ├─ config.ts                 共通設定
-├─ zh-CN/                    簡体字中国語。サイトのルートで配信
+├─ en-US/                    英語。サイトのルートで配信
 │  ├─ config.ts              言語設定
 │  └─ …                      ページ。「ページの作成」を参照
-├─ en-US/                    英語。/ 以下で配信
+├─ zh-CN/                    簡体字中国語。/zh-CN/ 以下で配信
 │  ├─ config.ts
 │  └─ …
 └─ .vitepress/config.mts
@@ -38,7 +38,7 @@ import { defineAkariConfig } from "./.vitepress/theme/define.ts";
 
 export default defineAkariConfig({
   // サイトのルートで配信する言語フォルダー
-  rootLanguage: "zh-CN",
+  rootLanguage: "en-US",
   logo: "/logo.svg",
   head: [["link", { rel: "icon", type: "image/svg+xml", href: "/logo.svg" }]],
   appBar: {

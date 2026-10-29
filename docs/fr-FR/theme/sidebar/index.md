@@ -26,14 +26,14 @@ Sur ordinateur, un rail de 96px de large à gauche liste les catégories, et le 
         <a slot="label" href="/fr-FR/">Vue d'ensemble</a>
       </m3e-nav-menu-item>
       <m3e-nav-menu-item>
-        <a slot="label" href="/fr-FR/getting-started/installation">Installation</a>
+        <a slot="label" href="/fr-FR/getting-started/installation.html">Installation</a>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>
     <m3e-nav-menu-item>
       <m3e-icon slot="icon" name="palette"></m3e-icon>
       <span slot="label">Thème</span>
       <m3e-nav-menu-item>
-        <a slot="label" href="/fr-FR/theme/extending">Étendre le thème</a>
+        <a slot="label" href="/fr-FR/theme/extending.html">Étendre le thème</a>
         <span slot="badge">Extension</span>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>

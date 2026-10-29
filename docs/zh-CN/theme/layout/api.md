@@ -115,4 +115,4 @@ footer: {
 
 ## 替换组件
 
-顶栏、桌面导航、移动端抽屉、头图、目录、翻页卡片、页尾与正文容器都可以替换，见[扩展主题](/theme/extending/api#provideakaricomponents)。
+顶栏、桌面导航、移动端抽屉、头图、目录、翻页卡片、页尾与正文容器都可以替换，见[扩展主题](/zh-CN/theme/extending/api#provideakaricomponents)。

@@ -19,7 +19,7 @@ A page is a Markdown file in a language folder. Where you put it decides its pat
 3. Give it an icon and an order in the frontmatter.
 
 ```text
-docs/components/
+docs/en-US/components/
 └─ chip/
    └─ index.md          /components/chip
 ```
@@ -44,7 +44,7 @@ To add a category, create a category folder, give it an icon in `sidebar.categor
 A long article can be split into several pages, switched with the tab bar at the top of the page, while the sidebar still shows a single item. Create more `.md` files in the article folder and list them, in order, in the frontmatter of `index.md`:
 
 ```text
-docs/styles/icons/
+docs/en-US/styles/icons/
 ├─ index.md           /styles/icons
 ├─ choosing.md        /styles/icons/choosing
 └─ using.md           /styles/icons/using
@@ -70,8 +70,8 @@ Write `hero` in the frontmatter, and the top of the page shows a title card and 
 
 - An image used by only one page goes in the article folder and is referenced as `![Description](./image.png)`. Images shared by several pages go in `docs/public` and are referenced by an absolute path such as `/hero/image.svg`.
 - Image width and height are written automatically at render time, for remote images too, so the page does not jump while images load; see [API](/getting-started/writing/api#images).
-- Internal links use the page's path and start with `/`: `[Side navigation](/theme/sidebar)`. Do not write the file path (`/zh-CN/theme/sidebar/index.md`) or a relative path.
-- Links between English pages carry the `/` prefix.
+- Internal links use the page's path and start with `/`, without `.html`, which VitePress adds according to `cleanUrls`: `[Side navigation](/theme/sidebar)`. Do not write the file path (`/en-US/theme/sidebar/index.md`) or a relative path.
+- This site's root language is English: links between English pages have no language prefix, and links between Chinese pages carry the `/zh-CN/` prefix.
 
 ## Markdown
 

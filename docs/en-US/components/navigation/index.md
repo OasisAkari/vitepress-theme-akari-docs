@@ -22,16 +22,16 @@ The m3e components for navigation fall into three groups: `m3e-nav-menu` organiz
       <span slot="label">Components</span>
       <m3e-nav-menu-item>
         <m3e-icon slot="icon" name="radio_button_checked"></m3e-icon>
-        <a slot="label" href="/components/button">Buttons</a>
+        <a slot="label" href="/components/button.html">Buttons</a>
       </m3e-nav-menu-item>
       <m3e-nav-menu-item selected>
         <m3e-icon slot="icon" name="language"></m3e-icon>
-        <a slot="label" href="/components/navigation">Navigation</a>
+        <a slot="label" href="/components/navigation.html">Navigation</a>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>
     <m3e-nav-menu-item>
       <m3e-icon slot="icon" name="dashboard"></m3e-icon>
-      <a slot="label" href="/components/card">Cards</a>
+      <a slot="label" href="/components/card.html">Cards</a>
       <span slot="badge">New</span>
     </m3e-nav-menu-item>
   </m3e-nav-menu>
@@ -44,12 +44,12 @@ The m3e components for navigation fall into three groups: `m3e-nav-menu` organiz
     <span slot="label">Components</span>
     <m3e-nav-menu-item selected>
       <m3e-icon slot="icon" name="language"></m3e-icon>
-      <a slot="label" href="/components/navigation">Navigation</a>
+      <a slot="label" href="/components/navigation.html">Navigation</a>
     </m3e-nav-menu-item>
   </m3e-nav-menu-item>
   <m3e-nav-menu-item>
     <m3e-icon slot="icon" name="dashboard"></m3e-icon>
-    <a slot="label" href="/components/card">Cards</a>
+    <a slot="label" href="/components/card.html">Cards</a>
     <span slot="badge">New</span>
   </m3e-nav-menu-item>
 </m3e-nav-menu>

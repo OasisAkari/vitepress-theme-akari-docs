@@ -154,7 +154,7 @@ parallel:
     فتح Material 3
     <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
   </m3e-button>
-  <m3e-button variant="outlined" href="/ar-SA/components/card">
+  <m3e-button variant="outlined" href="/ar-SA/components/card.html">
     عرض البطاقات
     <m3e-icon slot="trailing-icon" name="chevron_right"></m3e-icon>
   </m3e-button>
@@ -172,7 +172,7 @@ parallel:
   فتح Material 3
   <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
 </m3e-button>
-<m3e-button variant="outlined" href="/ar-SA/components/card">
+<m3e-button variant="outlined" href="/ar-SA/components/card.html">
   عرض البطاقات
   <m3e-icon slot="trailing-icon" name="chevron_right"></m3e-icon>
 </m3e-button>

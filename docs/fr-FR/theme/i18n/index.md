@@ -34,7 +34,7 @@ Ce qui appartient à la langue elle-même (ses textes d'interface, ses polices, 
    });
    ```
 
-2. Ajoutez des pages avec la même structure que la langue racine : `docs/fr-FR/index.md` est la page d'accueil de cette langue, et `docs/fr-FR/getting-started/installation/index.md` correspond à la page chinoise `/getting-started/installation`.
+2. Ajoutez des pages avec la même structure que la langue racine, qui est l'anglais : `docs/fr-FR/index.md` est la page d'accueil de cette langue, et `docs/fr-FR/getting-started/installation/index.md` correspond à la page anglaise `/getting-started/installation.html` et est servie à `/fr-FR/getting-started/installation.html`.
 3. Si besoin, définissez `rootLanguage` dans la configuration partagée pour choisir la langue servie à la racine.
 
 Une configuration de langue s'applique par-dessus la configuration partagée : elle n'a besoin que des titres de la langue et des noms de catégories. La version, les liens sociaux, les icônes des catégories, etc. viennent de la configuration partagée. Le nom dans le menu des langues est par défaut le nom de la langue dans sa propre langue (English, 日本語), et le sens du texte, les textes de l'interface, le bouton de copie des blocs de code et les titres des conteneurs viennent du pack de langue. La configuration de langue peut remplacer chacun d'eux.
@@ -84,6 +84,6 @@ Dès lors, `de-DE`, `de-AT` et tout autre dossier de langue allemande utilisent 
 
 ## Langues de ce site
 
-Ce site propose six versions de chaque page : chinois (servi à la racine), anglais, japonais, coréen, français et arabe. Changer de langue vous garde sur la même page. La version arabe est mise en page de droite à gauche : vous pouvez vous en servir pour voir la mise en page RTL du thème.
+Ce site propose six versions de chaque page : anglais (servi à la racine), chinois, japonais, coréen, français et arabe. Changer de langue vous garde sur la même page. La version arabe est mise en page de droite à gauche : vous pouvez vous en servir pour voir la mise en page RTL du thème.
 
 Voir l'[API](/fr-FR/theme/i18n/api) pour tous les textes de l'interface et les fonctions de langue, et les [Détails](/fr-FR/theme/i18n/details) pour la façon dont les langues sont détectées et changées.

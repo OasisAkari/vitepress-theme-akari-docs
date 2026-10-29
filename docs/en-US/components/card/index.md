@@ -111,7 +111,7 @@ A card can mix headings, chips, badges and lists:
     </ul>
   </div>
   <div slot="actions">
-    <m3e-button variant="tonal" href="/theme/extending">
+    <m3e-button variant="tonal" href="/theme/extending.html">
       See how to extend
       <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
     </m3e-button>
@@ -140,7 +140,7 @@ A card can mix headings, chips, badges and lists:
     </ul>
   </div>
   <div slot="actions">
-    <m3e-button variant="tonal" href="/theme/extending">
+    <m3e-button variant="tonal" href="/theme/extending.html">
       See how to extend
       <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
     </m3e-button>
@@ -155,17 +155,17 @@ With more content, a card grows to fit it. Cards in the same grid do not get equ
 Add `actionable` to a card to make its whole surface one interactive area. With `href`, it works directly as a link:
 
 <div class="demo-grid">
-  <m3e-card variant="outlined" actionable href="/getting-started/installation">
+  <m3e-card variant="outlined" actionable href="/getting-started/installation.html">
     <m3e-icon slot="header" name="package_2"></m3e-icon>
     <m3e-heading m3e-toc-ignore slot="header" variant="title" size="large">Installation</m3e-heading>
     <div slot="content">Set up Node and the dependencies, then produce your first build.</div>
   </m3e-card>
-  <m3e-card variant="outlined" actionable href="/getting-started/configuration">
+  <m3e-card variant="outlined" actionable href="/getting-started/configuration.html">
     <m3e-icon slot="header" name="tune"></m3e-icon>
     <m3e-heading m3e-toc-ignore slot="header" variant="title" size="large">Configuration</m3e-heading>
     <div slot="content">Adjust the app bar, navigation, settings sections and TOC depth.</div>
   </m3e-card>
-  <m3e-card variant="outlined" actionable href="/theme/extending">
+  <m3e-card variant="outlined" actionable href="/theme/extending.html">
     <m3e-icon slot="header" name="integration_instructions"></m3e-icon>
     <m3e-heading m3e-toc-ignore slot="header" variant="title" size="large">Extending</m3e-heading>
     <div slot="content">Customize the interface with component overrides and CSS tokens.</div>
@@ -173,7 +173,7 @@ Add `actionable` to a card to make its whole surface one interactive area. With 
 </div>
 
 ```html
-<m3e-card variant="outlined" actionable href="/getting-started/installation">
+<m3e-card variant="outlined" actionable href="/getting-started/installation.html">
   <m3e-icon slot="header" name="package_2"></m3e-icon>
   <m3e-heading slot="header" variant="title" size="large">Installation</m3e-heading>
   <div slot="content">Set up Node and the dependencies, then produce your first build.</div>

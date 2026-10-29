@@ -82,7 +82,7 @@ export default defineConfig({
 | 옵션 | 용도 |
 | --- | --- |
 | `...content.site` | 폴더에서 생성한 `locales`, `rewrites`와 사이트 단위의 `lang`, `title`, `description`. 로컬 검색을 쓰면 VitePress의 로컬 검색 색인을 켜는 `themeConfig.search`도 포함됩니다 |
-| `cleanUrls: false` | `.html` 없는 경로. 호스팅 요구 사항은 [설치](/ko-KR/getting-started/installation#deployment)를 참고하세요 |
+| `cleanUrls: false` | 페이지 경로가 `.html`로 끝나며 출력 파일과 일대일로 대응합니다. `true`이면 확장자가 없습니다. 호스팅 요구 사항은 [설치](/ko-KR/getting-started/installation#deployment)를 참고하세요 |
 | `appearance: false` | VitePress에 내장된 라이트/다크 전환을 끕니다. 화면 모드는 테마가 관리합니다 |
 | `head: akariHead()` | 첫 프레임 전에 라이트 모드나 다크 모드를 적용하는 스크립트 |
 | `akariMarkdown` | 표의 M3 테두리와 원격 이미지의 크기 |
@@ -104,7 +104,7 @@ function akariContent(
 | --- | --- | --- |
 | `site` | `{ lang, title, description, locales, rewrites }` | `defineConfig`에 펼쳐 넣습니다 |
 | `plugin` | Vite `Plugin` | 개발 서버에서 내비게이션을 갱신합니다 |
-| `route` | `(page: string) => string` | 소스 파일 경로 → 페이지 경로. 예: `zh-CN/theme/layout/index.md` → `/theme/layout` |
+| `route` | `(page: string) => string` | 소스 파일 경로 → 페이지 경로. 예: `zh-CN/theme/layout/index.md` → `/zh-CN/theme/layout` |
 | `rewrite` | `(page: string) => string` | 소스 파일 경로 → VitePress 제공 경로. 예: → `theme/layout.md` |
 | `languages` | `{ folder, key, prefix }[]` | 언어 폴더 목록. 루트 언어가 먼저 옵니다. `key`는 VitePress 로캘 키(루트 언어는 `root`)이고, `prefix`는 경로 접두사입니다 |
 

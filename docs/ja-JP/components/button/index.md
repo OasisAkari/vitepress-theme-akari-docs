@@ -154,7 +154,7 @@ parallel:
     Material 3 を開く
     <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
   </m3e-button>
-  <m3e-button variant="outlined" href="/ja-JP/components/card">
+  <m3e-button variant="outlined" href="/ja-JP/components/card.html">
     カードを見る
     <m3e-icon slot="trailing-icon" name="chevron_right"></m3e-icon>
   </m3e-button>
@@ -172,7 +172,7 @@ parallel:
   Material 3 を開く
   <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
 </m3e-button>
-<m3e-button variant="outlined" href="/ja-JP/components/card">
+<m3e-button variant="outlined" href="/ja-JP/components/card.html">
   カードを見る
   <m3e-icon slot="trailing-icon" name="chevron_right"></m3e-icon>
 </m3e-button>

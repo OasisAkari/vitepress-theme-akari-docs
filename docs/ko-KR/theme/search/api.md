@@ -72,7 +72,7 @@ backend: {
       "title": "변형",
       "pageTitle": "버튼",
       "heading": "변형",
-      "href": "/ko-KR/components/button#변형",
+      "href": "/ko-KR/components/button.html#variants",
       "excerpt": "다섯 가지 스타일로 높은 강조부터 낮은 강조까지 표현합니다…"
     }
   ]

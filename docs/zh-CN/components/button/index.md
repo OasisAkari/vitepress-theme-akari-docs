@@ -154,7 +154,7 @@ parallel:
     打开 Material 3
     <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
   </m3e-button>
-  <m3e-button variant="outlined" href="/components/card">
+  <m3e-button variant="outlined" href="/zh-CN/components/card.html">
     查看卡片
     <m3e-icon slot="trailing-icon" name="chevron_right"></m3e-icon>
   </m3e-button>
@@ -172,13 +172,13 @@ parallel:
   打开 Material 3
   <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
 </m3e-button>
-<m3e-button variant="outlined" href="/components/card">
+<m3e-button variant="outlined" href="/zh-CN/components/card.html">
   查看卡片
   <m3e-icon slot="trailing-icon" name="chevron_right"></m3e-icon>
 </m3e-button>
 ```
 
-设置 `href` 后按钮渲染为链接语义，支持 `target`、`rel` 与 `download`。m3e 按钮的锚点位于 Shadow DOM 内，VitePress 的全局站内链接拦截不会接管它，因此站内 `m3e-button` 链接会整页跳转。需要 SPA 导航时，优先使用真实的 `<a>`（可配 m3e 样式），或在点击处理里调用 `useRouter().go()`，参考[导航](/components/navigation)。
+设置 `href` 后按钮渲染为链接语义，支持 `target`、`rel` 与 `download`。m3e 按钮的锚点位于 Shadow DOM 内，VitePress 的全局站内链接拦截不会接管它，因此站内 `m3e-button` 链接会整页跳转。需要 SPA 导航时，优先使用真实的 `<a>`（可配 m3e 样式），或在点击处理里调用 `useRouter().go()`，参考[导航](/zh-CN/components/navigation)。
 
 ## 选择状态
 
@@ -222,4 +222,4 @@ parallel:
 - 链接式按钮使用 `href`，不要给普通按钮绑定路由逻辑后丢失链接语义。
 - 主操作使用 `filled`，同一视觉区域避免出现多个高强调按钮。
 
-全部属性、插槽与事件见[接口](/components/button/api)。
+全部属性、插槽与事件见[接口](/zh-CN/components/button/api)。

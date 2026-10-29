@@ -72,7 +72,7 @@ backend: {
       "title": "التنويعات",
       "pageTitle": "الأزرار",
       "heading": "التنويعات",
-      "href": "/ar-SA/components/button#التنويعات",
+      "href": "/ar-SA/components/button.html#variants",
       "excerpt": "خمسة أنماط تعبّر عن درجة التأكيد من الأعلى إلى الأدنى…"
     }
   ]

@@ -10,11 +10,10 @@ icon: home
 Vitepress Theme Akari Docs 是一个用 VitePress 与 `@m3e/web` 搭建的文档主题。
 
 <div class="demo-row">
-  <m3e-button id="overview-demo-button" variant="filled">
+  <m3e-button id="overview-demo-button" variant="filled" href="/zh-CN/getting-started/installation.html">
     <m3e-icon slot="icon" name="rocket_launch"></m3e-icon>
-    开始使用
+    安装指南
   </m3e-button>
-  <m3e-button variant="outlined" href="/getting-started/installation">安装指南</m3e-button>
   <m3e-chip>
     <m3e-icon slot="icon" name="check"></m3e-icon>
     主题已就绪
@@ -65,9 +64,9 @@ npm run dev
 
 接着阅读：
 
-- [安装](/getting-started/installation)：从模板创建仓库、运行环境与部署。
-- [配置](/getting-started/configuration)：共用配置与语言配置。
-- [撰写页面](/getting-started/writing)：新建文章、头部信息与 Markdown 写法。
-- [布局与顶栏](/theme/layout)、[侧边导航](/theme/sidebar)：主题外壳的各个部分。
+- [安装](/zh-CN/getting-started/installation)：从模板创建仓库、运行环境与部署。
+- [配置](/zh-CN/getting-started/configuration)：共用配置与语言配置。
+- [撰写页面](/zh-CN/getting-started/writing)：新建文章、头部信息与 Markdown 写法。
+- [布局与顶栏](/zh-CN/theme/layout)、[侧边导航](/zh-CN/theme/sidebar)：主题外壳的各个部分。
 
 本站有中文、英文、日文、韩文、法文与阿拉伯文六个版本，用 rail 底部的语言按钮切换。

@@ -14,7 +14,7 @@ parallel:
 
 # 图标
 
-主题中的图标都是 [Material Symbols](https://fonts.google.com/icons)，由 `@m3e/icons` 以 SVG 路径的形式提供，用 `<m3e-icon>` 显示。[选择图标](/styles/icons/choosing)介绍样式、填充与尺寸，[使用图标](/styles/icons/using)介绍注册方法与无障碍要求。
+主题中的图标都是 [Material Symbols](https://fonts.google.com/icons)，由 `@m3e/icons` 以 SVG 路径的形式提供，用 `<m3e-icon>` 显示。[选择图标](/zh-CN/styles/icons/choosing)介绍样式、填充与尺寸，[使用图标](/zh-CN/styles/icons/using)介绍注册方法与无障碍要求。
 
 <div class="demo-row">
   <m3e-icon name="home"></m3e-icon>
@@ -46,4 +46,4 @@ parallel:
 
 ## 本组页面
 
-这三页是一组平行页面：在侧栏中合为一项「图标」，页面顶部的标签栏在三页之间切换。它们是 `styles/icons/` 文件夹中的 `index.md`、`choosing.md` 与 `using.md`，写法见[撰写页面](/getting-started/writing#平行页面)。
+这三页是一组平行页面：在侧栏中合为一项「图标」，页面顶部的标签栏在三页之间切换。它们是 `styles/icons/` 文件夹中的 `index.md`、`choosing.md` 与 `using.md`，写法见[撰写页面](/zh-CN/getting-started/writing#平行页面)。

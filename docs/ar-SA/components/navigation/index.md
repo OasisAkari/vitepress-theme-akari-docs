@@ -22,16 +22,16 @@ parallel:
       <span slot="label">المكونات</span>
       <m3e-nav-menu-item>
         <m3e-icon slot="icon" name="radio_button_checked"></m3e-icon>
-        <a slot="label" href="/ar-SA/components/button">الأزرار</a>
+        <a slot="label" href="/ar-SA/components/button.html">الأزرار</a>
       </m3e-nav-menu-item>
       <m3e-nav-menu-item selected>
         <m3e-icon slot="icon" name="language"></m3e-icon>
-        <a slot="label" href="/ar-SA/components/navigation">التنقل</a>
+        <a slot="label" href="/ar-SA/components/navigation.html">التنقل</a>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>
     <m3e-nav-menu-item>
       <m3e-icon slot="icon" name="dashboard"></m3e-icon>
-      <a slot="label" href="/ar-SA/components/card">البطاقات</a>
+      <a slot="label" href="/ar-SA/components/card.html">البطاقات</a>
       <span slot="badge">جديد</span>
     </m3e-nav-menu-item>
   </m3e-nav-menu>
@@ -44,12 +44,12 @@ parallel:
     <span slot="label">المكونات</span>
     <m3e-nav-menu-item selected>
       <m3e-icon slot="icon" name="language"></m3e-icon>
-      <a slot="label" href="/ar-SA/components/navigation">التنقل</a>
+      <a slot="label" href="/ar-SA/components/navigation.html">التنقل</a>
     </m3e-nav-menu-item>
   </m3e-nav-menu-item>
   <m3e-nav-menu-item>
     <m3e-icon slot="icon" name="dashboard"></m3e-icon>
-    <a slot="label" href="/ar-SA/components/card">البطاقات</a>
+    <a slot="label" href="/ar-SA/components/card.html">البطاقات</a>
     <span slot="badge">جديد</span>
   </m3e-nav-menu-item>
 </m3e-nav-menu>

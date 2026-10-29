@@ -26,14 +26,14 @@ parallel:
         <a slot="label" href="/ar-SA/">نظرة عامة</a>
       </m3e-nav-menu-item>
       <m3e-nav-menu-item>
-        <a slot="label" href="/ar-SA/getting-started/installation">التثبيت</a>
+        <a slot="label" href="/ar-SA/getting-started/installation.html">التثبيت</a>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>
     <m3e-nav-menu-item>
       <m3e-icon slot="icon" name="palette"></m3e-icon>
       <span slot="label">السمة</span>
       <m3e-nav-menu-item>
-        <a slot="label" href="/ar-SA/theme/extending">توسيع السمة</a>
+        <a slot="label" href="/ar-SA/theme/extending.html">توسيع السمة</a>
         <span slot="badge">توسيع</span>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>

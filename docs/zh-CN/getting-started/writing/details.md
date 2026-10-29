@@ -10,20 +10,20 @@ VitePress 用 `akariContent` 生成的 `rewrites` 函数决定每个页面在哪
 
 | 源文件 | 提供为 | 地址 |
 | --- | --- | --- |
-| `zh-CN/index.md` | `index.md` | `/` |
-| `zh-CN/theme/layout/index.md` | `theme/layout.md` | `/theme/layout` |
-| `zh-CN/styles/icons/using.md` | `styles/icons/using.md` | `/styles/icons/using` |
-| `en-US/index.md` | `en-US/index.md` | `/` |
-| `en-US/theme/i18n/index.md` | `en-US/theme/i18n.md` | `/theme/i18n` |
+| `en-US/index.md` | `index.md` | `/` |
+| `en-US/theme/layout/index.md` | `theme/layout.md` | `/theme/layout.html` |
+| `en-US/styles/icons/using.md` | `styles/icons/using.md` | `/styles/icons/using.html` |
+| `zh-CN/index.md` | `zh-CN/index.md` | `/zh-CN/` |
+| `zh-CN/theme/i18n/index.md` | `zh-CN/theme/i18n.md` | `/zh-CN/theme/i18n.html` |
 | `404.md`（语言文件夹之外） | 不变 | 不变 |
 
 - 根语言的文件夹名从路径中去掉，其他语言保留文件夹名作为前缀。
 - 恰好位于「语言/分类/文章/index.md」的文件改写为「分类/文章.md」，文章因此以文件夹名为地址，末尾没有斜杠。其他文件只去掉根语言的文件夹名。
-- 开启了 `cleanUrls`，构建产物中 `/theme/layout` 对应 `theme/layout.html`。
+- 本站的根语言是英文，关闭了 `cleanUrls`：地址带 `.html`，与构建产物中的文件一一对应。开启 `cleanUrls` 后地址不带扩展名，`/theme/layout` 仍对应文件 `theme/layout.html`。
 
 ## 相对路径
 
-- **链接**：VitePress 把 Markdown 链接原样输出，由浏览器按页面地址解析。文章的地址是 `/theme/layout` 而不是 `/theme/layout/`，所以其中的 `./sidebar` 指向 `/theme/sidebar`，而不是文章文件夹中的文件。站内链接因此要写完整的地址。
+- **链接**：VitePress 只给 Markdown 链接补上 `.html`（关闭 `cleanUrls` 时），由浏览器按页面地址解析。文章的地址是 `/zh-CN/theme/layout.html`，所以其中的 `./sidebar` 指向 `/zh-CN/theme/sidebar.html`，而不是文章文件夹中的文件。站内链接因此要写完整的地址。
 - **图片与资源**：图片由 Vite 当作模块导入，按源文件所在的位置解析，所以 `./图片.png` 指向文章文件夹中的文件。小图片会被内联为 data URL，其余在构建时加上哈希复制到产物中。
 
 ## 导航怎样生成
@@ -48,7 +48,7 @@ VitePress 用 `akariContent` 生成的 `rewrites` 函数决定每个页面在哪
 
 ## 对应页面
 
-切换语言时，主题把当前地址换到目标语言下（`/theme/i18n` ↔ `/theme/i18n`），如果目标语言的导航中有这个地址就打开它，否则打开目标语言的首页。所以切换语言能停留在同一页的条件是：两个页面在各自语言文件夹中的路径相同，并且目标页面在目标语言的导航中。
+切换语言时，主题把当前地址换到目标语言下（`/theme/i18n.html` ↔ `/zh-CN/theme/i18n.html`），如果目标语言的导航中有这个地址就打开它，否则打开目标语言的首页。所以切换语言能停留在同一页的条件是：两个页面在各自语言文件夹中的路径相同，并且目标页面在目标语言的导航中。
 
 ## 搜索索引
 

@@ -72,7 +72,7 @@ The response can be an array of results or `{ "results": [...] }`. The theme rea
       "title": "Variants",
       "pageTitle": "Buttons",
       "heading": "Variants",
-      "href": "/components/button#variants",
+      "href": "/components/button.html#variants",
       "excerpt": "Five styles express emphasis from high to low…"
     }
   ]

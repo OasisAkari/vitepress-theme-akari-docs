@@ -34,7 +34,7 @@ parallel:
    });
    ```
 
-2. 루트 언어와 같은 구조로 페이지를 추가합니다. `docs/ko-KR/index.md`는 이 언어의 홈 페이지이고, `docs/ko-KR/getting-started/installation/index.md`는 중국어 `/getting-started/installation`과 짝을 이룹니다.
+2. 루트 언어와 같은 구조로 페이지를 추가합니다. `docs/ko-KR/index.md`는 이 언어의 홈 페이지이고, `docs/ko-KR/getting-started/installation/index.md`는 영어 `/getting-started/installation.html`과 짝을 이루며 `/ko-KR/getting-started/installation.html`에서 제공됩니다.
 3. 필요하면 공통 구성에서 `rootLanguage`를 설정해 루트에서 제공할 언어를 고릅니다.
 
 언어 구성은 공통 구성 위에 겹쳐지므로, 그 언어의 제목과 카테고리 이름만 쓰면 됩니다. 버전, 소셜 링크, 카테고리 아이콘 등은 공통 구성에서 가져옵니다. 언어 메뉴에 표시되는 이름의 기본값은 그 언어로 표기한 언어 이름(English, 日本語)이고, 텍스트 방향, 인터페이스 문자열, 코드 블록 복사 버튼, 컨테이너 제목은 언어 팩에서 가져옵니다. 이 값들은 모두 언어 구성에서 재정의할 수 있습니다.
@@ -84,6 +84,6 @@ export default defineAkariConfig({
 
 ## 이 사이트의 언어
 
-이 사이트의 모든 페이지에는 중국어(루트에서 제공), 영어, 일본어, 한국어, 프랑스어, 아랍어의 여섯 가지 버전이 있습니다. 언어를 전환해도 같은 페이지에 머뭅니다. 아랍어 버전은 오른쪽에서 왼쪽으로 배치되므로, 테마의 RTL 레이아웃을 확인하는 데 쓸 수 있습니다.
+이 사이트의 모든 페이지에는 영어(루트에서 제공), 중국어, 일본어, 한국어, 프랑스어, 아랍어의 여섯 가지 버전이 있습니다. 언어를 전환해도 같은 페이지에 머뭅니다. 아랍어 버전은 오른쪽에서 왼쪽으로 배치되므로, 테마의 RTL 레이아웃을 확인하는 데 쓸 수 있습니다.
 
 모든 인터페이스 문자열과 언어 함수는 [API](/ko-KR/theme/i18n/api)를, 언어를 감지하고 전환하는 방식은 [세부 사항](/ko-KR/theme/i18n/details)을 참고하세요.

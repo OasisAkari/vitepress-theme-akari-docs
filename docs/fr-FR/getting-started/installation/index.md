@@ -77,13 +77,13 @@ VitePress est encore en alpha. Quand vous le mettez à jour, vérifiez ensemble 
 .
 ├── docs/
 │   ├── config.ts                  configuration partagée par toutes les langues
-│   ├── zh-CN/                     chinois simplifié, à la racine du site
+│   ├── en-US/                     anglais, à la racine du site
 │   │   ├── config.ts              remplace la configuration partagée
 │   │   ├── index.md               page d'accueil
 │   │   └── getting-started/       catégorie du rail
 │   │       └── installation/
-│   │           └── index.md       article /getting-started/installation
-│   ├── en-US/                     anglais, sous /
+│   │           └── index.md       article /getting-started/installation.html
+│   ├── zh-CN/                     chinois simplifié, sous /zh-CN/
 │   ├── public/                    ressources statiques
 │   └── .vitepress/
 │       ├── config.mts             branche le thème sur VitePress
@@ -99,7 +99,7 @@ Pour savoir où placer les pages et la configuration, voir [Configuration](/fr-F
 
 `npm run build` produit de simples fichiers statiques, que n'importe quel hébergeur statique peut servir.
 
-- **Chemins sans extension** : le site active `cleanUrls`, donc `/theme/layout` correspond au fichier `theme/layout.html`. Quand un fichier est introuvable, l'hébergeur doit réessayer en ajoutant `.html`. GitHub Pages, Netlify et Cloudflare Pages le font par défaut ; Vercel a besoin de `"cleanUrls": true` dans `vercel.json` ; pour Nginx, écrivez `try_files $uri $uri.html $uri/ =404;`.
+- **Chemins de page** : ce site désactive `cleanUrls`, donc les chemins de page se terminent par `.html` (`/theme/layout.html`) et correspondent un à un aux fichiers du résultat du build ; n'importe quel hébergeur statique les sert tels quels. Pour des chemins sans extension, définissez `cleanUrls: true` dans `.vitepress/config.mts`. L'hébergeur doit alors réessayer en ajoutant `.html` quand un fichier est introuvable. GitHub Pages, Netlify et Cloudflare Pages le font par défaut ; Vercel a besoin de `"cleanUrls": true` dans `vercel.json` ; pour Nginx, écrivez `try_files $uri $uri.html $uri/ =404;`.
 - **Sous un sous-chemin** : par exemple `https://example.com/docs/`, définissez `base: "/docs/"` dans `.vitepress/config.mts`. Il est ajouté automatiquement aux chemins internes de la navigation, du hero, du logo et de l'index de recherche.
 - **Index de recherche** : l'index de chaque langue est regroupé dans `assets/chunks/` de la sortie au moment du build. Aucune étape supplémentaire n'est nécessaire.
 

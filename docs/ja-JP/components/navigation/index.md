@@ -22,16 +22,16 @@ parallel:
       <span slot="label">コンポーネント</span>
       <m3e-nav-menu-item>
         <m3e-icon slot="icon" name="radio_button_checked"></m3e-icon>
-        <a slot="label" href="/ja-JP/components/button">ボタン</a>
+        <a slot="label" href="/ja-JP/components/button.html">ボタン</a>
       </m3e-nav-menu-item>
       <m3e-nav-menu-item selected>
         <m3e-icon slot="icon" name="language"></m3e-icon>
-        <a slot="label" href="/ja-JP/components/navigation">ナビゲーション</a>
+        <a slot="label" href="/ja-JP/components/navigation.html">ナビゲーション</a>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>
     <m3e-nav-menu-item>
       <m3e-icon slot="icon" name="dashboard"></m3e-icon>
-      <a slot="label" href="/ja-JP/components/card">カード</a>
+      <a slot="label" href="/ja-JP/components/card.html">カード</a>
       <span slot="badge">New</span>
     </m3e-nav-menu-item>
   </m3e-nav-menu>
@@ -44,12 +44,12 @@ parallel:
     <span slot="label">コンポーネント</span>
     <m3e-nav-menu-item selected>
       <m3e-icon slot="icon" name="language"></m3e-icon>
-      <a slot="label" href="/ja-JP/components/navigation">ナビゲーション</a>
+      <a slot="label" href="/ja-JP/components/navigation.html">ナビゲーション</a>
     </m3e-nav-menu-item>
   </m3e-nav-menu-item>
   <m3e-nav-menu-item>
     <m3e-icon slot="icon" name="dashboard"></m3e-icon>
-    <a slot="label" href="/ja-JP/components/card">カード</a>
+    <a slot="label" href="/ja-JP/components/card.html">カード</a>
     <span slot="badge">New</span>
   </m3e-nav-menu-item>
 </m3e-nav-menu>

@@ -77,13 +77,13 @@ VitePress はまだアルファ版です。アップグレードするときは�
 .
 ├── docs/
 │   ├── config.ts                  すべての言語で共通の設定
-│   ├── zh-CN/                     簡体字中国語。サイトのルートで配信
+│   ├── en-US/                     英語。サイトのルートで配信
 │   │   ├── config.ts              共通設定を上書き
 │   │   ├── index.md               ホームページ
 │   │   └── getting-started/       レールのカテゴリ
 │   │       └── installation/
-│   │           └── index.md       記事 /getting-started/installation
-│   ├── en-US/                     英語。/ 以下で配信
+│   │           └── index.md       記事 /getting-started/installation.html
+│   ├── zh-CN/                     簡体字中国語。/zh-CN/ 以下で配信
 │   ├── public/                    静的アセット
 │   └── .vitepress/
 │       ├── config.mts             テーマを VitePress に組み込む
@@ -99,7 +99,7 @@ VitePress はまだアルファ版です。アップグレードするときは�
 
 `npm run build` はプレーンな静的ファイルを出力するため、どの静的ホスティングでも配信できます。
 
-- **拡張子のないパス**：サイトでは `cleanUrls` を有効にしているため、`/theme/layout` はファイル `theme/layout.html` に対応します。ファイルが見つからないとき、ホスティング側で `.html` を付けて再試行する必要があります。GitHub Pages、Netlify、Cloudflare Pages はデフォルトでこの動作をします。Vercel では `vercel.json` に `"cleanUrls": true` が必要です。Nginx では `try_files $uri $uri.html $uri/ =404;` と書きます。
+- **ページのパス**：このサイトでは `cleanUrls` を無効にしているため、ページのパスは `.html` で終わり（`/theme/layout.html`）、ビルド結果のファイルと 1 対 1 で対応します。どの静的ホスティングでもそのまま配信できます。拡張子のないパスにしたい場合は、`.vitepress/config.mts` で `cleanUrls: true` を設定します。このとき、ファイルが見つからなければ、ホスティング側で `.html` を付けて再試行する必要があります。GitHub Pages、Netlify、Cloudflare Pages はデフォルトでこの動作をします。Vercel では `vercel.json` に `"cleanUrls": true` が必要です。Nginx では `try_files $uri $uri.html $uri/ =404;` と書きます。
 - **サブパスで配信する場合**：たとえば `https://example.com/docs/` では、`.vitepress/config.mts` に `base: "/docs/"` を設定します。ナビゲーション、ヒーロー、ロゴ、検索インデックスの内部パスには自動で付加されます。
 - **検索インデックス**：各言語のインデックスは、ビルド時に出力の `assets/chunks/` にまとめられます。追加の手順は不要です。
 

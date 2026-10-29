@@ -67,6 +67,6 @@ tab: 接口
 
 ## 在文档中使用
 
-- 按钮的锚点在 Shadow DOM 内，VitePress 的站内链接拦截看不到它，所以带 `href` 的站内 `m3e-button` 会整页跳转。需要 SPA 导航时，用普通的 `<a>`，或在点击时调用 `useRouter().go()`，见[导航](/components/navigation#spa-导航)。
+- 按钮的锚点在 Shadow DOM 内，VitePress 的站内链接拦截看不到它，所以带 `href` 的站内 `m3e-button` 会整页跳转。需要 SPA 导航时，用普通的 `<a>`，或在点击时调用 `useRouter().go()`，见[导航](/zh-CN/components/navigation#spa-导航)。
 - 无论视觉尺寸多大，按钮都保留至少 48×48dp 的触控区域。
 - 组件由主题的 `m3e.ts` 注册（`@m3e/web/button`、`@m3e/web/icon-button`、`@m3e/web/tooltip`）。

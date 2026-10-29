@@ -21,7 +21,7 @@ tab: 技术细节
 
 ## 切换提示
 
-每次按下明暗模式按钮，屏幕底部弹出一条 `m3e-snackbar`，约 2.5 秒后消失，连续按下时新的提示替换旧的。文字来自界面文字 `schemeChanged`（「当前主题已切换至：{mode}模式」）与 `schemeChangedFollowing`（再加「（{scheme}）」），见[国际化](/theme/i18n/api#messages)。
+每次按下明暗模式按钮，屏幕底部弹出一条 `m3e-snackbar`，约 2.5 秒后消失，连续按下时新的提示替换旧的。文字来自界面文字 `schemeChanged`（「当前主题已切换至：{mode}模式」）与 `schemeChangedFollowing`（再加「（{scheme}）」），见[国际化](/zh-CN/theme/i18n/api#messages)。
 
 ## 各选项作用在哪里
 
@@ -63,7 +63,7 @@ document.documentElement.style.fontSize = settings.textSize;
 
 ## 设置模态框
 
-设置模态框与搜索、语言选择使用同一种 M3 容器变换：按钮展开为居中的面板，面板标题前的齿轮图标就是按钮本身，关闭时原路收回，表现力动效下展开与收回都带一点回弹。`Escape`、点击遮罩或右上角的关闭按钮都会收起，焦点回到打开它的按钮。动效的细节见[搜索](/theme/search/details#容器变换)。
+设置模态框与搜索、语言选择使用同一种 M3 容器变换：按钮展开为居中的面板，面板标题前的齿轮图标就是按钮本身，关闭时原路收回，表现力动效下展开与收回都带一点回弹。`Escape`、点击遮罩或右上角的关闭按钮都会收起，焦点回到打开它的按钮。动效的细节见[搜索](/zh-CN/theme/search/details#容器变换)。
 
 - 颜色使用原生 `<input type="color">`，选择后立即生成新的色板。
 - 色调变体使用 `m3e-filter-chip-set`（多选的外观、单选的行为）；对比度、动效、方向与字号使用 `m3e-segmented-button`。

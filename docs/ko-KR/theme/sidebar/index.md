@@ -26,14 +26,14 @@ parallel:
         <a slot="label" href="/ko-KR/">개요</a>
       </m3e-nav-menu-item>
       <m3e-nav-menu-item>
-        <a slot="label" href="/ko-KR/getting-started/installation">설치</a>
+        <a slot="label" href="/ko-KR/getting-started/installation.html">설치</a>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>
     <m3e-nav-menu-item>
       <m3e-icon slot="icon" name="palette"></m3e-icon>
       <span slot="label">테마</span>
       <m3e-nav-menu-item>
-        <a slot="label" href="/ko-KR/theme/extending">테마 확장</a>
+        <a slot="label" href="/ko-KR/theme/extending.html">테마 확장</a>
         <span slot="badge">확장</span>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>

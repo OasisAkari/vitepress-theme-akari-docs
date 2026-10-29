@@ -19,10 +19,10 @@ Un champ d'une configuration de langue remplace le champ du même nom dans la co
 ```text
 docs/
 ├─ config.ts                 configuration partagée
-├─ zh-CN/                    chinois simplifié, à la racine du site
+├─ en-US/                    anglais, à la racine du site
 │  ├─ config.ts              configuration de langue
 │  └─ …                      pages, voir « Rédiger des pages »
-├─ en-US/                    anglais, sous /
+├─ zh-CN/                    chinois simplifié, sous /zh-CN/
 │  ├─ config.ts
 │  └─ …
 └─ .vitepress/config.mts
@@ -38,7 +38,7 @@ import { defineAkariConfig } from "./.vitepress/theme/define.ts";
 
 export default defineAkariConfig({
   // Le dossier de langue servi à la racine du site
-  rootLanguage: "zh-CN",
+  rootLanguage: "en-US",
   logo: "/logo.svg",
   head: [["link", { rel: "icon", type: "image/svg+xml", href: "/logo.svg" }]],
   appBar: {

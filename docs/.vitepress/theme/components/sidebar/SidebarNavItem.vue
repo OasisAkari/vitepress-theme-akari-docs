@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, watch } from "vue";
-import { useRoute, withBase } from "vitepress";
+import { useRoute } from "vitepress";
 
+import { usePageHref } from "../../composables/usePageHref";
 import { useSidebar } from "../../composables/useSidebar";
 import { nextLayoutFrame, whenAkariReady } from "../../ready";
 import { findFirstLink, isExternalLink } from "../../sidebar";
@@ -22,6 +23,7 @@ const props = defineProps<{
 }>();
 
 const { hasActive } = useSidebar();
+const pageHref = usePageHref();
 const route = useRoute();
 const groupElement = ref<NavMenuItemElement | null>(null);
 const leafElement = ref<NavMenuItemElement | null>(null);
@@ -58,7 +60,7 @@ watch(selected, (value) => {
 // clicks globally (capture phase) to keep SPA navigation.
 const internalHref = computed(() => {
   const link = findFirstLink(props.item);
-  return link && !isExternalLink(link) ? withBase(link) : undefined;
+  return link && !isExternalLink(link) ? pageHref(link) : undefined;
 });
 
 const externalLink = computed(() => {

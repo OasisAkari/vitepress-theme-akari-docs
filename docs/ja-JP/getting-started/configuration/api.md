@@ -82,7 +82,7 @@ export default defineConfig({
 | オプション | 用途 |
 | --- | --- |
 | `...content.site` | フォルダーから生成される `locales`、`rewrites`、およびサイトレベルの `lang`、`title`、`description`。ローカル検索では `themeConfig.search` も含まれ、VitePress のローカル検索インデックスが有効になります |
-| `cleanUrls: false` | `.html` のないパス。ホスティングの要件は [インストール](/ja-JP/getting-started/installation#deployment) を参照 |
+| `cleanUrls: false` | ページのパスは `.html` で終わり、出力のファイルと 1 対 1 で対応します。`true` にするとパスに拡張子が付きません。ホスティングの要件は [インストール](/ja-JP/getting-started/installation#deployment) を参照 |
 | `appearance: false` | VitePress に組み込まれたライト・ダークの切り替えをオフにします。テーマが管理します |
 | `head: akariHead()` | 最初のフレームの前にライトモードまたはダークモードを適用するスクリプト |
 | `akariMarkdown` | テーブルの M3 の枠線と、リモート画像のサイズ |
@@ -104,7 +104,7 @@ function akariContent(
 | --- | --- | --- |
 | `site` | `{ lang, title, description, locales, rewrites }` | `defineConfig` に展開します |
 | `plugin` | Vite の `Plugin` | 開発サーバーでナビゲーションを更新します |
-| `route` | `(page: string) => string` | ソースファイルのパス → ページのパス。たとえば `zh-CN/theme/layout/index.md` → `/theme/layout` |
+| `route` | `(page: string) => string` | ソースファイルのパス → ページのパス。たとえば `zh-CN/theme/layout/index.md` → `/zh-CN/theme/layout` |
 | `rewrite` | `(page: string) => string` | ソースファイルのパス → VitePress の配信パス。たとえば → `theme/layout.md` |
 | `languages` | `{ folder, key, prefix }[]` | 言語フォルダー。ルート言語が先頭です。`key` は VitePress のロケールキー（ルート言語は `root`）、`prefix` はパスの接頭辞です |
 

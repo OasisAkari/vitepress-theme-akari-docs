@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { withBase } from "vitepress";
 
 import { useAppBarRoom } from "../../composables/useAppBarRoom";
 import { useCoveredTitle } from "../../composables/useCoveredTitle";
 import { useAkariI18n } from "../../composables/useI18n";
 import { useAkariConfig } from "../../composables/useAkariConfig";
+import { usePageHref } from "../../composables/usePageHref";
 import { useAkariSettingsDialog } from "../../composables/useSettingsDialog";
 import { useTabIndicator } from "../../composables/useTabIndicator";
 import { useAkariTabs } from "../../composables/useTabs";
@@ -49,6 +49,7 @@ const measured = ref(false);
 
 // Parallel pages: their tab bar docks in the free space after the title.
 const tabs = useAkariTabs();
+const pageHref = usePageHref();
 
 // Once the article's title scrolls under the bar, the bar takes it over. A
 // switch between tabs with the bar docked opens the next page with its
@@ -147,7 +148,7 @@ function setDockedBar(element: unknown): void {
             v-for="tab in tabs.tabs.value"
             :key="tab.link"
             class="akari-page-tabs__tab"
-            :href="withBase(tab.link!)"
+            :href="pageHref(tab.link!)"
             :aria-current="tabs.isCurrent(tab) ? 'page' : undefined"
             :target="tabs.isCurrent(tab) ? '_self' : undefined"
             @click="tabs.onTabClick($event, tab)"

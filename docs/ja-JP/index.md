@@ -10,11 +10,10 @@ icon: home
 Vitepress Theme Akari Docs は、VitePress と `@m3e/web` で作られたドキュメントテーマです。
 
 <div class="demo-row">
-  <m3e-button id="overview-demo-button" variant="filled">
+  <m3e-button id="overview-demo-button" variant="filled" href="/ja-JP/getting-started/installation.html">
     <m3e-icon slot="icon" name="rocket_launch"></m3e-icon>
-    はじめる
+    インストールガイド
   </m3e-button>
-  <m3e-button variant="outlined" href="/ja-JP/getting-started/installation">インストールガイド</m3e-button>
   <m3e-chip>
     <m3e-icon slot="icon" name="check"></m3e-icon>
     テーマ準備完了

@@ -111,7 +111,7 @@ parallel:
     </ul>
   </div>
   <div slot="actions">
-    <m3e-button variant="tonal" href="/theme/extending">
+    <m3e-button variant="tonal" href="/zh-CN/theme/extending.html">
       查看扩展方式
       <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
     </m3e-button>
@@ -140,7 +140,7 @@ parallel:
     </ul>
   </div>
   <div slot="actions">
-    <m3e-button variant="tonal" href="/theme/extending">
+    <m3e-button variant="tonal" href="/zh-CN/theme/extending.html">
       查看扩展方式
       <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
     </m3e-button>
@@ -155,17 +155,17 @@ parallel:
 给卡片添加 `actionable` 后，整块表面成为单一交互区域；配合 `href` 可直接作为链接：
 
 <div class="demo-grid">
-  <m3e-card variant="outlined" actionable href="/getting-started/installation">
+  <m3e-card variant="outlined" actionable href="/zh-CN/getting-started/installation.html">
     <m3e-icon slot="header" name="package_2"></m3e-icon>
     <m3e-heading m3e-toc-ignore slot="header" variant="title" size="large">安装</m3e-heading>
     <div slot="content">准备 Node 环境与依赖，生成第一份构建。</div>
   </m3e-card>
-  <m3e-card variant="outlined" actionable href="/getting-started/configuration">
+  <m3e-card variant="outlined" actionable href="/zh-CN/getting-started/configuration.html">
     <m3e-icon slot="header" name="tune"></m3e-icon>
     <m3e-heading m3e-toc-ignore slot="header" variant="title" size="large">配置</m3e-heading>
     <div slot="content">调整顶栏、导航、设置区块与目录深度。</div>
   </m3e-card>
-  <m3e-card variant="outlined" actionable href="/theme/extending">
+  <m3e-card variant="outlined" actionable href="/zh-CN/theme/extending.html">
     <m3e-icon slot="header" name="integration_instructions"></m3e-icon>
     <m3e-heading m3e-toc-ignore slot="header" variant="title" size="large">扩展</m3e-heading>
     <div slot="content">通过组件覆盖与 CSS 令牌定制界面。</div>
@@ -173,7 +173,7 @@ parallel:
 </div>
 
 ```html
-<m3e-card variant="outlined" actionable href="/getting-started/installation">
+<m3e-card variant="outlined" actionable href="/zh-CN/getting-started/installation.html">
   <m3e-icon slot="header" name="package_2"></m3e-icon>
   <m3e-heading slot="header" variant="title" size="large">安装</m3e-heading>
   <div slot="content">准备 Node 环境与依赖，生成第一份构建。</div>
@@ -249,6 +249,6 @@ parallel:
 - 同一网格只使用一种变体，避免视觉噪声。
 - 整卡可点击时不要再嵌套按钮；需要多个操作时使用 `actions`。
 - 图片放在默认插槽或 `header` 插槽，并设置替代文本。
-- 卡片圆角、颜色与内边距通过 `--m3e-card-*` 变量调整，参考[扩展主题](/theme/extending)。
+- 卡片圆角、颜色与内边距通过 `--m3e-card-*` 变量调整，参考[扩展主题](/zh-CN/theme/extending)。
 
-全部属性、插槽与事件见[接口](/components/card/api)。
+全部属性、插槽与事件见[接口](/zh-CN/components/card/api)。

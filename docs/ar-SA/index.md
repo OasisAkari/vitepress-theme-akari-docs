@@ -10,11 +10,10 @@ icon: home
 Vitepress Theme Akari Docs سمة توثيق مبنية على VitePress و`@m3e/web`.
 
 <div class="demo-row">
-  <m3e-button id="overview-demo-button" variant="filled">
+  <m3e-button id="overview-demo-button" variant="filled" href="/ar-SA/getting-started/installation.html">
     <m3e-icon slot="icon" name="rocket_launch"></m3e-icon>
-    ابدأ الآن
+    دليل التثبيت
   </m3e-button>
-  <m3e-button variant="outlined" href="/ar-SA/getting-started/installation">دليل التثبيت</m3e-button>
   <m3e-chip>
     <m3e-icon slot="icon" name="check"></m3e-icon>
     السمة جاهزة

@@ -18,23 +18,25 @@ What belongs to the language itself (its interface strings, fonts, text directio
 1. Create a folder in `docs` named by the language code, and write a `config.ts` in it:
 
    ```ts
-   // docs/config.ts
+   // docs/zh-CN/config.ts
    import { defineAkariConfig } from "../.vitepress/theme/define.ts";
 
    export default defineAkariConfig({
+     // The language calls itself "中文"; this name is more precise.
+     label: "简体中文",
      title: "Vitepress Theme Akari Docs",
      appBar: { title: "Vitepress Theme Akari Docs" },
      sidebar: {
        categories: {
-         "getting-started": { text: "Getting started" },
-         theme: { text: "Theme" },
+         "getting-started": { text: "开始" },
+         theme: { text: "主题" },
        },
      },
-     footer: { message: "Built with VitePress and M3E Web Components" },
+     footer: { message: "基于 VitePress 与 M3E Web Components 构建" },
    });
    ```
 
-2. Add pages with the same structure as the root language: `docs/index.md` is this language's home page, and `docs/getting-started/installation/index.md` pairs with the Chinese `/getting-started/installation`.
+2. Add pages with the same structure as the root language: `docs/zh-CN/index.md` is this language's home page, and `docs/zh-CN/getting-started/installation/index.md` pairs with the English `/getting-started/installation.html` and is served at `/zh-CN/getting-started/installation.html`.
 3. If needed, set `rootLanguage` in the shared config to choose the language served at the root.
 
 A language config is layered over the shared config, so it only needs the language's titles and category names. The version, social links, category icons and so on come from the shared config. The name in the language menu defaults to the language's own name for itself (English, 日本語), and the text direction, interface strings, code block copy button and container titles come from the language pack. The language config can override any of them.
@@ -84,6 +86,6 @@ From then on, `de-DE`, `de-AT` and any other German language folder use this pac
 
 ## Languages on this site
 
-This site has six versions of every page: Chinese (served at the root), English, Japanese, Korean, French and Arabic. Switching language stays on the same page. The Arabic version is laid out right to left, so you can use it to see the theme's RTL layout.
+This site has six versions of every page: English (served at the root), Chinese, Japanese, Korean, French and Arabic. Switching language stays on the same page. The Arabic version is laid out right to left, so you can use it to see the theme's RTL layout.
 
 See [API](/theme/i18n/api) for all interface strings and the language functions, and [Details](/theme/i18n/details) for how languages are detected and switched.

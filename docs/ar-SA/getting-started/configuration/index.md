@@ -19,10 +19,10 @@ parallel:
 ```text
 docs/
 ├─ config.ts                 التهيئة المشتركة
-├─ zh-CN/                    الصينية المبسطة، في جذر الموقع
+├─ en-US/                    الإنجليزية، في جذر الموقع
 │  ├─ config.ts              تهيئة اللغة
 │  └─ …                      الصفحات، راجع «كتابة الصفحات»
-├─ en-US/                    الإنجليزية، تحت /
+├─ zh-CN/                    الصينية المبسطة، تحت /zh-CN/
 │  ├─ config.ts
 │  └─ …
 └─ .vitepress/config.mts
@@ -38,7 +38,7 @@ import { defineAkariConfig } from "./.vitepress/theme/define.ts";
 
 export default defineAkariConfig({
   // مجلد اللغة الذي يُقدَّم في جذر الموقع
-  rootLanguage: "zh-CN",
+  rootLanguage: "en-US",
   logo: "/logo.svg",
   head: [["link", { rel: "icon", type: "image/svg+xml", href: "/logo.svg" }]],
   appBar: {

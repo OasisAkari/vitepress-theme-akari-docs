@@ -6,7 +6,7 @@ tab: 接口
 
 ## 字体
 
-正文的字体按页面的语言选择，默认值来自[语言包](/theme/i18n/api#akarilanguage)的 `fonts`，内置语言包的如下，都可以用 [`fonts`](#fonts) 改写：
+正文的字体按页面的语言选择，默认值来自[语言包](/zh-CN/theme/i18n/api#akarilanguage)的 `fonts`，内置语言包的如下，都可以用 [`fonts`](#fonts) 改写：
 
 | 语言 | 从 Google Fonts 加载 | 字体序列 |
 | --- | --- | --- |

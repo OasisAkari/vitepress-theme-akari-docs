@@ -65,4 +65,4 @@ hero:
 
 透明背景的插画适合配 `fit: contain`：图片完整显示，并在卡片中留出边距。两张卡片上都有一层很淡的图案，指针停在卡片上时，周围会亮起一圈柔光；图案在透明的图片后面也能看到。用 `pattern` 指定图案，写 `none` 关闭。
 
-全部字段见[接口](/theme/hero/api)；取色、排版与图案的实现见[技术细节](/theme/hero/details)。
+全部字段见[接口](/zh-CN/theme/hero/api)；取色、排版与图案的实现见[技术细节](/zh-CN/theme/hero/details)。

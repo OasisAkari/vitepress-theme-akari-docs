@@ -26,14 +26,14 @@ On desktop, a 96px-wide rail on the left lists the categories, and the navigatio
         <a slot="label" href="/">Overview</a>
       </m3e-nav-menu-item>
       <m3e-nav-menu-item>
-        <a slot="label" href="/getting-started/installation">Installation</a>
+        <a slot="label" href="/getting-started/installation.html">Installation</a>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>
     <m3e-nav-menu-item>
       <m3e-icon slot="icon" name="palette"></m3e-icon>
       <span slot="label">Theme</span>
       <m3e-nav-menu-item>
-        <a slot="label" href="/theme/extending">Extending the theme</a>
+        <a slot="label" href="/theme/extending.html">Extending the theme</a>
         <span slot="badge">Extend</span>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>
@@ -55,7 +55,7 @@ sidebar: {
   },
 },
 
-// docs/config.ts
+// docs/en-US/config.ts
 sidebar: {
   categories: {
     "getting-started": { text: "Getting started" },

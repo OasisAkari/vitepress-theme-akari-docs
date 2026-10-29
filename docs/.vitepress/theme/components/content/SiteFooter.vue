@@ -5,6 +5,7 @@ import { withBase } from "vitepress";
 import { useAkariI18n } from "../../composables/useI18n";
 import { useAkariLocales } from "../../composables/useLocales";
 import { useAkariConfig } from "../../composables/useAkariConfig";
+import { usePageHref } from "../../composables/usePageHref";
 import { useSidebar } from "../../composables/useSidebar";
 import { flattenSidebar, isExternalLink } from "../../sidebar";
 import type { AkariFooterLinkGroup } from "../../types";
@@ -14,6 +15,7 @@ const MAX_GROUPS = 4;
 const MAX_LINKS = 6;
 
 const config = useAkariConfig();
+const pageHref = usePageHref();
 const { t } = useAkariI18n();
 const { items } = useSidebar();
 const { homeHref } = useAkariLocales();
@@ -40,7 +42,7 @@ const groups = computed<AkariFooterLinkGroup[]>(() => {
 });
 
 function hrefFor(link: string): string {
-  return isExternalLink(link) ? link : withBase(link);
+  return pageHref(link);
 }
 </script>
 

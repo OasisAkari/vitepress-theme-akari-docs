@@ -10,6 +10,7 @@ import {
   isExternalLink,
   isTabGroup,
   normalizePath,
+  pageLink,
   resolveSidebarItems,
 } from "../docs/.vitepress/theme/sidebar";
 import type {
@@ -287,5 +288,25 @@ describe("tab groups", () => {
       "/styles/icons/choosing",
       "/styles/icons/using",
     ]);
+  });
+});
+
+describe("pageLink", () => {
+  it("ends a page's link in .html when clean URLs are off", () => {
+    expect(pageLink("/theme/layout")).toBe("/theme/layout.html");
+    expect(pageLink("/theme/layout#css-variables")).toBe(
+      "/theme/layout.html#css-variables",
+    );
+    expect(pageLink("/search?q=x")).toBe("/search.html?q=x");
+  });
+
+  it("leaves folders, files, anchors and other sites alone", () => {
+    for (const link of ["/", "/zh-CN/", "/logo.svg", "/theme/layout.html", "#top", "https://example.com/a"]) {
+      expect(pageLink(link)).toBe(link);
+    }
+  });
+
+  it("changes nothing with clean URLs on", () => {
+    expect(pageLink("/theme/layout", true)).toBe("/theme/layout");
   });
 });

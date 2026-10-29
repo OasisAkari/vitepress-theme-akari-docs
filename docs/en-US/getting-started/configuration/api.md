@@ -82,7 +82,7 @@ export default defineConfig({
 | Option | Purpose |
 | --- | --- |
 | `...content.site` | `locales`, `rewrites` and the site-level `lang`, `title`, `description`, generated from the folders; with local search, also `themeConfig.search`, which turns on VitePress' local search index |
-| `cleanUrls: false` | Paths without `.html`; for hosting requirements see [Installation](/getting-started/installation#deployment) |
+| `cleanUrls: false` | Page paths end in `.html` and match the files in the output one to one; with `true` they have no extension, see [Installation](/getting-started/installation#deployment) for hosting requirements |
 | `appearance: false` | Turns off the light and dark toggle built into VitePress; the theme manages it |
 | `head: akariHead()` | A script that applies light or dark mode before the first frame |
 | `akariMarkdown` | M3 borders for tables and sizes for remote images |
@@ -104,7 +104,7 @@ Reads the config files and folders in `srcDir`. `logger` defaults to `console` a
 | --- | --- | --- |
 | `site` | `{ lang, title, description, locales, rewrites }` | Spread into `defineConfig` |
 | `plugin` | Vite `Plugin` | Updates the navigation in the dev server |
-| `route` | `(page: string) => string` | Source file path → page path, such as `zh-CN/theme/layout/index.md` → `/theme/layout` |
+| `route` | `(page: string) => string` | Source file path → page path, such as `zh-CN/theme/layout/index.md` → `/zh-CN/theme/layout` |
 | `rewrite` | `(page: string) => string` | Source file path → VitePress serving path, such as → `theme/layout.md` |
 | `languages` | `{ folder, key, prefix }[]` | Language folders, root language first. `key` is the VitePress locale key (`root` for the root language); `prefix` is the path prefix |
 

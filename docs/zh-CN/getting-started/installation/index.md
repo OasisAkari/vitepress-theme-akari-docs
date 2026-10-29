@@ -45,9 +45,9 @@ gh repo create my-docs --template OasisAkari/vitepress-theme-akari-docs --public
 
 ## 换成自己的站点
 
-- 站点名称、版本号、社交链接与页尾在 `docs/config.ts` 与各语言的 `config.ts` 中，见[配置](/getting-started/configuration)。
+- 站点名称、版本号、社交链接与页尾在 `docs/config.ts` 与各语言的 `config.ts` 中，见[配置](/zh-CN/getting-started/configuration)。
 - logo 是 `docs/public/logo.svg`。
-- 语言文件夹中是本站的文档。保留需要的语言，删去其余的文件夹，再在留下的文件夹中写自己的页面，见[撰写页面](/getting-started/writing)。
+- 语言文件夹中是本站的文档。保留需要的语言，删去其余的文件夹，再在留下的文件夹中写自己的页面，见[撰写页面](/zh-CN/getting-started/writing)。
 
 ## 同步模板的更新
 
@@ -77,13 +77,13 @@ VitePress 仍处于 alpha 阶段，升级时需要一并检查主题代码、配
 .
 ├── docs/
 │   ├── config.ts                  各语言共用的配置
-│   ├── zh-CN/                     简体中文，放在站点根路径
+│   ├── en-US/                     English，放在站点根路径
 │   │   ├── config.ts              覆写共用配置
 │   │   ├── index.md               首页
 │   │   └── getting-started/       rail 分类
 │   │       └── installation/
-│   │           └── index.md       文章 /getting-started/installation
-│   ├── en-US/                     English，放在 /
+│   │           └── index.md       文章 /getting-started/installation.html
+│   ├── zh-CN/                     简体中文，放在 /zh-CN/
 │   ├── public/                    静态资源
 │   └── .vitepress/
 │       ├── config.mts             把主题接入 VitePress
@@ -93,13 +93,13 @@ VitePress 仍处于 alpha 阶段，升级时需要一并检查主题代码、配
 └── package.json
 ```
 
-页面与配置怎样放置见[配置](/getting-started/configuration)与[撰写页面](/getting-started/writing)；主题源码的结构见[扩展主题](/theme/extending/api#源码结构)。
+页面与配置怎样放置见[配置](/zh-CN/getting-started/configuration)与[撰写页面](/zh-CN/getting-started/writing)；主题源码的结构见[扩展主题](/zh-CN/theme/extending/api#源码结构)。
 
 ## 部署
 
 `npm run build` 的产物是纯静态文件，可以放到任意静态托管。
 
-- **无扩展名地址**：站点开启了 `cleanUrls`，`/theme/layout` 对应文件 `theme/layout.html`。托管服务需要在找不到文件时补上 `.html` 再找：GitHub Pages、Netlify 与 Cloudflare Pages 默认如此；Vercel 需要在 `vercel.json` 中设置 `"cleanUrls": true`；Nginx 写 `try_files $uri $uri.html $uri/ =404;`。
+- **页面地址**：本站关闭了 `cleanUrls`，页面地址带 `.html`（`/theme/layout.html`），与构建产物中的文件一一对应，任何静态托管都能直接提供。想要不带扩展名的地址，在 `.vitepress/config.mts` 中设置 `cleanUrls: true`；这时托管服务要在找不到文件时补上 `.html` 再找：GitHub Pages、Netlify 与 Cloudflare Pages 默认如此；Vercel 需要在 `vercel.json` 中设置 `"cleanUrls": true`；Nginx 写 `try_files $uri $uri.html $uri/ =404;`。
 - **部署在子路径**：例如 `https://example.com/docs/`，在 `.vitepress/config.mts` 中设置 `base: "/docs/"`。导航、头图、logo 与搜索索引的站内地址都会自动加上它。
 - **搜索索引**：每种语言的索引在构建时打包进产物的 `assets/chunks/`，不需要额外步骤。
 

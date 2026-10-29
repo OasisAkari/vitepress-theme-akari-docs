@@ -72,7 +72,7 @@ backend: {
       "title": "变体",
       "pageTitle": "按钮",
       "heading": "变体",
-      "href": "/components/button#变体",
+      "href": "/zh-CN/components/button.html#变体",
       "excerpt": "五种外观从高到低表达强调程度……"
     }
   ]

@@ -111,7 +111,7 @@ parallel:
     </ul>
   </div>
   <div slot="actions">
-    <m3e-button variant="tonal" href="/ja-JP/theme/extending">
+    <m3e-button variant="tonal" href="/ja-JP/theme/extending.html">
       拡張方法を見る
       <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
     </m3e-button>
@@ -140,7 +140,7 @@ parallel:
     </ul>
   </div>
   <div slot="actions">
-    <m3e-button variant="tonal" href="/ja-JP/theme/extending">
+    <m3e-button variant="tonal" href="/ja-JP/theme/extending.html">
       拡張方法を見る
       <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
     </m3e-button>
@@ -155,17 +155,17 @@ parallel:
 カードに `actionable` を付けると、サーフェス全体が 1 つのインタラクティブな領域になります。`href` を付ければ、そのままリンクとして動作します。
 
 <div class="demo-grid">
-  <m3e-card variant="outlined" actionable href="/ja-JP/getting-started/installation">
+  <m3e-card variant="outlined" actionable href="/ja-JP/getting-started/installation.html">
     <m3e-icon slot="header" name="package_2"></m3e-icon>
     <m3e-heading m3e-toc-ignore slot="header" variant="title" size="large">インストール</m3e-heading>
     <div slot="content">Node と依存関係を準備して、最初のビルドを作ります。</div>
   </m3e-card>
-  <m3e-card variant="outlined" actionable href="/ja-JP/getting-started/configuration">
+  <m3e-card variant="outlined" actionable href="/ja-JP/getting-started/configuration.html">
     <m3e-icon slot="header" name="tune"></m3e-icon>
     <m3e-heading m3e-toc-ignore slot="header" variant="title" size="large">構成</m3e-heading>
     <div slot="content">アプリバー、ナビゲーション、設定のセクション、目次の深さを調整します。</div>
   </m3e-card>
-  <m3e-card variant="outlined" actionable href="/ja-JP/theme/extending">
+  <m3e-card variant="outlined" actionable href="/ja-JP/theme/extending.html">
     <m3e-icon slot="header" name="integration_instructions"></m3e-icon>
     <m3e-heading m3e-toc-ignore slot="header" variant="title" size="large">拡張</m3e-heading>
     <div slot="content">コンポーネントの置き換えと CSS トークンでインターフェースをカスタマイズします。</div>
@@ -173,7 +173,7 @@ parallel:
 </div>
 
 ```html
-<m3e-card variant="outlined" actionable href="/ja-JP/getting-started/installation">
+<m3e-card variant="outlined" actionable href="/ja-JP/getting-started/installation.html">
   <m3e-icon slot="header" name="package_2"></m3e-icon>
   <m3e-heading slot="header" variant="title" size="large">インストール</m3e-heading>
   <div slot="content">Node と依存関係を準備して、最初のビルドを作ります。</div>

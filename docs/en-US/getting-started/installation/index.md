@@ -77,13 +77,13 @@ VitePress is still in alpha. When you upgrade it, check the theme code, the conf
 .
 ├── docs/
 │   ├── config.ts                  config shared by every language
-│   ├── zh-CN/                     Simplified Chinese, at the site root
+│   ├── en-US/                     English, at the site root
 │   │   ├── config.ts              overrides the shared config
 │   │   ├── index.md               home page
 │   │   └── getting-started/       rail category
 │   │       └── installation/
-│   │           └── index.md       article /getting-started/installation
-│   ├── en-US/                     English, under /
+│   │           └── index.md       article /getting-started/installation.html
+│   ├── zh-CN/                     Simplified Chinese, under /zh-CN/
 │   ├── public/                    static assets
 │   └── .vitepress/
 │       ├── config.mts             wires the theme into VitePress
@@ -99,7 +99,7 @@ For where pages and config go, see [Configuration](/getting-started/configuratio
 
 `npm run build` produces plain static files that any static host can serve.
 
-- **Paths without extensions**: the site enables `cleanUrls`, so `/theme/layout` maps to the file `theme/layout.html`. When a file is not found, the host needs to try again with `.html` added. GitHub Pages, Netlify and Cloudflare Pages do this by default; Vercel needs `"cleanUrls": true` in `vercel.json`; for Nginx, write `try_files $uri $uri.html $uri/ =404;`.
+- **Page paths**: this site turns `cleanUrls` off, so page paths end in `.html` (`/theme/layout.html`) and match the files in the build output one to one; any static host serves them as they are. For paths without the extension, set `cleanUrls: true` in `.vitepress/config.mts`. The host then needs to try again with `.html` added when a file is not found: GitHub Pages, Netlify and Cloudflare Pages do this by default; Vercel needs `"cleanUrls": true` in `vercel.json`; for Nginx, write `try_files $uri $uri.html $uri/ =404;`.
 - **Under a subpath**: for example `https://example.com/docs/`, set `base: "/docs/"` in `.vitepress/config.mts`. Internal paths in the navigation, the hero, the logo and the search index get it added automatically.
 - **Search index**: each language's index is bundled into `assets/chunks/` of the output at build time. No extra step is needed.
 

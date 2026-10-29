@@ -19,10 +19,10 @@ parallel:
 ```text
 docs/
 ├─ config.ts                 공통 구성
-├─ zh-CN/                    중국어 간체, 사이트 루트에 배치
+├─ en-US/                    영어, 사이트 루트에 배치
 │  ├─ config.ts              언어 구성
 │  └─ …                      페이지, "페이지 작성" 참고
-├─ en-US/                    영어, / 아래에 배치
+├─ zh-CN/                    중국어 간체, /zh-CN/ 아래에 배치
 │  ├─ config.ts
 │  └─ …
 └─ .vitepress/config.mts
@@ -38,7 +38,7 @@ import { defineAkariConfig } from "./.vitepress/theme/define.ts";
 
 export default defineAkariConfig({
   // 사이트 루트에서 제공할 언어 폴더
-  rootLanguage: "zh-CN",
+  rootLanguage: "en-US",
   logo: "/logo.svg",
   head: [["link", { rel: "icon", type: "image/svg+xml", href: "/logo.svg" }]],
   appBar: {

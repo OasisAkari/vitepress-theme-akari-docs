@@ -72,7 +72,7 @@ La réponse peut être un tableau de résultats ou `{ "results": [...] }`. Le th
       "title": "Variantes",
       "pageTitle": "Boutons",
       "heading": "Variantes",
-      "href": "/fr-FR/components/button#variantes",
+      "href": "/fr-FR/components/button.html#variants",
       "excerpt": "Cinq styles expriment l'emphase, de la plus forte à la plus faible…"
     }
   ]

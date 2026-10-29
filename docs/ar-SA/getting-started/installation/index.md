@@ -77,13 +77,13 @@ git checkout template/main -- docs/.vitepress
 .
 ├── docs/
 │   ├── config.ts                  تهيئة مشتركة بين جميع اللغات
-│   ├── zh-CN/                     الصينية المبسطة، في جذر الموقع
+│   ├── en-US/                     الإنجليزية، في جذر الموقع
 │   │   ├── config.ts              يتجاوز التهيئة المشتركة
 │   │   ├── index.md               الصفحة الرئيسية
 │   │   └── getting-started/       فئة في شريط التنقل
 │   │       └── installation/
-│   │           └── index.md       المقالة /getting-started/installation
-│   ├── en-US/                     الإنجليزية، تحت /
+│   │           └── index.md       المقالة /getting-started/installation.html
+│   ├── zh-CN/                     الصينية المبسطة، تحت /zh-CN/
 │   ├── public/                    الملفات الثابتة
 │   └── .vitepress/
 │       ├── config.mts             يربط السمة بـ VitePress
@@ -99,7 +99,7 @@ git checkout template/main -- docs/.vitepress
 
 ينتج `npm run build` ملفات ثابتة عادية يمكن لأي استضافة ثابتة تقديمها.
 
-- **مسارات بلا امتدادات**: يفعّل الموقع `cleanUrls`، لذا يقابل المسار `/theme/layout` الملف `theme/layout.html`. وعندما لا يُعثر على ملف، يجب أن تعيد الاستضافة المحاولة بعد إضافة `.html`. تفعل GitHub Pages وNetlify وCloudflare Pages ذلك افتراضيًا؛ ويحتاج Vercel إلى `"cleanUrls": true` في `vercel.json`؛ وفي Nginx اكتب `try_files $uri $uri.html $uri/ =404;`.
+- **مسارات الصفحات**: يعطّل الموقع `cleanUrls`، لذا تنتهي مسارات الصفحات بـ `.html` (`/theme/layout.html`) وتطابق ملفات مخرجات البناء واحدًا لواحد؛ وتقدّمها أي استضافة ثابتة كما هي. وللحصول على مسارات بلا امتداد، اضبط `cleanUrls: true` في `.vitepress/config.mts`. عندها يجب أن تعيد الاستضافة المحاولة بعد إضافة `.html` عندما لا يُعثر على ملف. تفعل GitHub Pages وNetlify وCloudflare Pages ذلك افتراضيًا؛ ويحتاج Vercel إلى `"cleanUrls": true` في `vercel.json`؛ وفي Nginx اكتب `try_files $uri $uri.html $uri/ =404;`.
 - **تحت مسار فرعي**: مثل `https://example.com/docs/`، اضبط `base: "/docs/"` في `.vitepress/config.mts`. تُضاف هذه البادئة تلقائيًا إلى المسارات الداخلية في التنقل وقسم الواجهة والشعار وفهرس البحث.
 - **فهرس البحث**: يُجمَّع فهرس كل لغة وقت البناء داخل `assets/chunks/` في المخرجات. لا حاجة إلى أي خطوة إضافية.
 

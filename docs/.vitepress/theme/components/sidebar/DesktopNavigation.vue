@@ -8,9 +8,10 @@ import {
   watch,
   watchEffect,
 } from "vue";
-import { useRoute, useRouter, withBase } from "vitepress";
+import { useRoute, useRouter } from "vitepress";
 
 import { useAkariConfig } from "../../composables/useAkariConfig";
+import { usePageHref } from "../../composables/usePageHref";
 import { useSidebar } from "../../composables/useSidebar";
 import {
   AKARI_NAV_DRAWER_PINNED_QUERY,
@@ -33,6 +34,7 @@ const config = useAkariConfig();
 const { items, hasActive } = useSidebar();
 const route = useRoute();
 const router = useRouter();
+const pageHref = usePageHref();
 
 const host = ref<HTMLElement | null>(null);
 // Mirrors of the breakpoint media queries for interaction logic. Whether the
@@ -266,7 +268,7 @@ function onRailActivate(index: number, event: MouseEvent): void {
   event.preventDefault();
   if (pinnedOpen.value && hasChildren(item)) pendingIndex.value = index;
   closeDrawer();
-  void router.go(withBase(link));
+  void router.go(pageHref(link));
 }
 
 function onEscape(event: KeyboardEvent): void {

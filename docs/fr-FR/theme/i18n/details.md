@@ -6,7 +6,7 @@ tab: Détails
 
 ## À quelle langue appartient une page
 
-Le chemin détermine la langue : une page dont le chemin commence par `/<dossier de langue>/` appartient à cette langue, et toutes les autres pages appartiennent à la langue racine. Dans les sources, les pages de la langue racine se trouvent dans leur propre dossier (`docs/zh-CN/`), mais elles sont servies sans le nom du dossier ; voir [Rédiger des pages : détails](/fr-FR/getting-started/writing/details#path-rules).
+Le chemin détermine la langue : une page dont le chemin commence par `/<dossier de langue>/` appartient à cette langue, et toutes les autres pages appartiennent à la langue racine. Dans les sources, les pages de la langue racine se trouvent dans leur propre dossier (`docs/en-US/`), mais elles sont servies sans le nom du dossier ; voir [Rédiger des pages : détails](/fr-FR/getting-started/writing/details#path-rules).
 
 La configuration qu'obtient une page est le `config.ts` de son dossier de langue, appliqué par-dessus la configuration partagée et la configuration de locale de VitePress ; voir [Configuration : détails](/fr-FR/getting-started/configuration/details#how-the-two-levels-layer).
 
@@ -29,7 +29,7 @@ Lorsque `settings.title`, `settings.labels`, `toc.overline`, `footer.message` et
 
 ## Où mène le changement de langue
 
-1. Transposer le chemin courant dans la langue cible : `/getting-started/installation` → `/fr-FR/getting-started/installation`, et retirer le préfixe dans l'autre sens.
+1. Transposer le chemin courant dans la langue cible : `/getting-started/installation.html` → `/zh-CN/getting-started/installation.html`, et retirer le préfixe dans l'autre sens.
 2. Si la navigation de la langue cible contient ce chemin, l'ouvrir. La navigation comprend chaque page d'un groupe de pages parallèles.
 3. Sinon, ouvrir la page d'accueil de la langue cible : `/` pour la langue racine, `/<dossier de langue>/` pour les autres.
 
@@ -46,4 +46,4 @@ Seule la navigation de la langue cible compte : une page absente de la navigati
 
 ## Portée de la recherche
 
-Il n'existe qu'un seul index local, qui contient les pages de toutes les langues. Lors d'une recherche, seules les entrées de la même langue que la page courante sont conservées : les résultats de la langue racine n'incluent pas les pages sous `/<dossier de langue>/`. Les textes et les messages d'erreur du panneau de recherche suivent la langue.
+Chaque langue a son propre index local, et une recherche ne charge que celui de la langue courante : les résultats viennent donc toujours de la langue courante. Les backends HTTP et les backends enregistrés reçoivent le `lang` et le `locale` de la langue courante et décident eux-mêmes de la portée. Les textes et les messages d'erreur du panneau de recherche suivent la langue.

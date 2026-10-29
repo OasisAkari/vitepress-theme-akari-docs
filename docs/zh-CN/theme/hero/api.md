@@ -48,4 +48,4 @@ hero:
 
 ## 替换头图组件
 
-头图可以替换为自己的组件，见[扩展主题](/theme/extending/api#provideakaricomponents)。布局只在页面配置了带图片的 `hero` 时渲染这个组件，并隐藏正文的第一个 `h1`，所以自定义组件要自己渲染页面标题；给标题加上 `data-akari-page-title` 属性，顶栏的标题替换就会跟随它。组件中用 VitePress 的 `useData()` 读取头部信息。
+头图可以替换为自己的组件，见[扩展主题](/zh-CN/theme/extending/api#provideakaricomponents)。布局只在页面配置了带图片的 `hero` 时渲染这个组件，并隐藏正文的第一个 `h1`，所以自定义组件要自己渲染页面标题；给标题加上 `data-akari-page-title` 属性，顶栏的标题替换就会跟随它。组件中用 VitePress 的 `useData()` 读取头部信息。

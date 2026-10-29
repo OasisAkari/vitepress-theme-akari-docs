@@ -111,7 +111,7 @@ parallel:
     </ul>
   </div>
   <div slot="actions">
-    <m3e-button variant="tonal" href="/ar-SA/theme/extending">
+    <m3e-button variant="tonal" href="/ar-SA/theme/extending.html">
       تعرّف على طرق التوسيع
       <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
     </m3e-button>
@@ -140,7 +140,7 @@ parallel:
     </ul>
   </div>
   <div slot="actions">
-    <m3e-button variant="tonal" href="/ar-SA/theme/extending">
+    <m3e-button variant="tonal" href="/ar-SA/theme/extending.html">
       تعرّف على طرق التوسيع
       <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
     </m3e-button>
@@ -155,17 +155,17 @@ parallel:
 أضف `actionable` إلى بطاقة لتجعل سطحها كله منطقة تفاعل واحدة. ومع `href` تعمل رابطًا مباشرة:
 
 <div class="demo-grid">
-  <m3e-card variant="outlined" actionable href="/ar-SA/getting-started/installation">
+  <m3e-card variant="outlined" actionable href="/ar-SA/getting-started/installation.html">
     <m3e-icon slot="header" name="package_2"></m3e-icon>
     <m3e-heading m3e-toc-ignore slot="header" variant="title" size="large">التثبيت</m3e-heading>
     <div slot="content">جهّز Node والاعتماديات، ثم أنتج أول بناء لك.</div>
   </m3e-card>
-  <m3e-card variant="outlined" actionable href="/ar-SA/getting-started/configuration">
+  <m3e-card variant="outlined" actionable href="/ar-SA/getting-started/configuration.html">
     <m3e-icon slot="header" name="tune"></m3e-icon>
     <m3e-heading m3e-toc-ignore slot="header" variant="title" size="large">التهيئة</m3e-heading>
     <div slot="content">اضبط شريط التطبيق والتنقل وأقسام الإعدادات وعمق جدول المحتويات.</div>
   </m3e-card>
-  <m3e-card variant="outlined" actionable href="/ar-SA/theme/extending">
+  <m3e-card variant="outlined" actionable href="/ar-SA/theme/extending.html">
     <m3e-icon slot="header" name="integration_instructions"></m3e-icon>
     <m3e-heading m3e-toc-ignore slot="header" variant="title" size="large">التوسيع</m3e-heading>
     <div slot="content">خصّص الواجهة باستبدال المكونات ورموز CSS.</div>
@@ -173,7 +173,7 @@ parallel:
 </div>
 
 ```html
-<m3e-card variant="outlined" actionable href="/ar-SA/getting-started/installation">
+<m3e-card variant="outlined" actionable href="/ar-SA/getting-started/installation.html">
   <m3e-icon slot="header" name="package_2"></m3e-icon>
   <m3e-heading slot="header" variant="title" size="large">التثبيت</m3e-heading>
   <div slot="content">جهّز Node والاعتماديات، ثم أنتج أول بناء لك.</div>

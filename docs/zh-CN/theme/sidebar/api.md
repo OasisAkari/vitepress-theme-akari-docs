@@ -16,7 +16,7 @@ tab: 接口
 | `tab` | `string` | 在标签栏中的标题，缺省为页面标题 |
 | `category` | `string` | 只用于语言首页：加入哪个分类 |
 
-完整的头部信息字段见[撰写页面](/getting-started/writing/api#头部信息)。
+完整的头部信息字段见[撰写页面](/zh-CN/getting-started/writing/api#头部信息)。
 
 ## sidebar
 
@@ -125,4 +125,4 @@ const { items, prevNext, tabGroup, isActive, hasActive } = useSidebar();
 
 ## 图标
 
-导航中用到的图标需要先在 `docs/.vitepress/theme/icons.ts` 中注册，见[使用图标](/styles/icons/using)。未注册的图标显示为空白。
+导航中用到的图标需要先在 `docs/.vitepress/theme/icons.ts` 中注册，见[使用图标](/zh-CN/styles/icons/using)。未注册的图标显示为空白。

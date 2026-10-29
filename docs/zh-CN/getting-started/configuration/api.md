@@ -19,7 +19,7 @@ function defineAkariConfig(config: AkariSiteConfig): AkariDirectoryConfig;
 | 字段 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `rootLanguage` | `string` | 按字母顺序的第一个语言文件夹 | 只在共用配置中有效：放在站点根路径的语言文件夹，其他语言的地址以文件夹名开头 |
-| `lang` | `string` | 语言文件夹名 | 语言代码；用于 `<html lang>`，并选择[语言包](/theme/i18n/api#akarilanguage) |
+| `lang` | `string` | 语言文件夹名 | 语言代码；用于 `<html lang>`，并选择[语言包](/zh-CN/theme/i18n/api#akarilanguage) |
 | `label` | `string` | 语言的自称 | 语言菜单中的名称 |
 | `dir` | `"ltr" \| "rtl" \| "auto"` | 语言包的方向 | 文字方向 |
 | `title` | `string` | 无 | 站点标题，也是顶栏标题的默认值 |
@@ -35,18 +35,18 @@ function defineAkariConfig(config: AkariSiteConfig): AkariDirectoryConfig;
 
 | 字段 | 内容 | 详见 |
 | --- | --- | --- |
-| `appBar` | 顶栏标题、版本、logo、按钮与社交链接 | [布局与顶栏](/theme/layout/api#appbar) |
-| `toc` | 右侧目录 | [布局与顶栏](/theme/layout/api#toc) |
-| `loadingBar` | 页面加载时窗口顶部的进度条 | [布局与顶栏](/theme/layout/api#loadingbar) |
-| `footer` | 翻页卡片与页尾 | [布局与顶栏](/theme/layout/api#footer) |
-| `sidebar` | 分类、手写导航与抽屉宽度 | [侧边导航](/theme/sidebar/api#sidebar) |
-| `settings` | 设置模态框与明暗模式按钮 | [设置与明暗模式](/theme/settings/api#settings) |
-| `search` | 搜索入口与后端 | [搜索](/theme/search/api#search) |
-| `messages` | 界面文字 | [国际化](/theme/i18n/api#messages) |
-| `fonts` | 是否从 Google Fonts 加载字体，以及字体序列 | [排版](/styles/typography/api#fonts) |
-| `languages` | 内置之外的语言包，或对内置语言包的改写 | [国际化](/theme/i18n/api#akarilanguage) |
+| `appBar` | 顶栏标题、版本、logo、按钮与社交链接 | [布局与顶栏](/zh-CN/theme/layout/api#appbar) |
+| `toc` | 右侧目录 | [布局与顶栏](/zh-CN/theme/layout/api#toc) |
+| `loadingBar` | 页面加载时窗口顶部的进度条 | [布局与顶栏](/zh-CN/theme/layout/api#loadingbar) |
+| `footer` | 翻页卡片与页尾 | [布局与顶栏](/zh-CN/theme/layout/api#footer) |
+| `sidebar` | 分类、手写导航与抽屉宽度 | [侧边导航](/zh-CN/theme/sidebar/api#sidebar) |
+| `settings` | 设置模态框与明暗模式按钮 | [设置与明暗模式](/zh-CN/theme/settings/api#settings) |
+| `search` | 搜索入口与后端 | [搜索](/zh-CN/theme/search/api#search) |
+| `messages` | 界面文字 | [国际化](/zh-CN/theme/i18n/api#messages) |
+| `fonts` | 是否从 Google Fonts 加载字体，以及字体序列 | [排版](/zh-CN/styles/typography/api#fonts) |
+| `languages` | 内置之外的语言包，或对内置语言包的改写 | [国际化](/zh-CN/theme/i18n/api#akarilanguage) |
 
-替换界面组件不写在配置文件中，见[扩展主题](/theme/extending/api#provideakaricomponents)。
+替换界面组件不写在配置文件中，见[扩展主题](/zh-CN/theme/extending/api#provideakaricomponents)。
 
 ## .vitepress/config.mts
 
@@ -82,7 +82,7 @@ export default defineConfig({
 | 选项 | 作用 |
 | --- | --- |
 | `...content.site` | 由目录生成的 `locales`、`rewrites` 与站点级 `lang`、`title`、`description`；使用本地搜索时还有开启 VitePress 本地搜索索引的 `themeConfig.search` |
-| `cleanUrls: false` | 地址不带 `.html`；部署要求见[安装](/getting-started/installation#部署) |
+| `cleanUrls: false` | 页面地址带 `.html`，与产物中的文件一一对应；改为 `true` 时地址不带扩展名，部署要求见[安装](/zh-CN/getting-started/installation#部署) |
 | `appearance: false` | 关闭 VitePress 自带的明暗切换，由主题管理 |
 | `head: akariHead()` | 首帧前应用明暗模式的脚本 |
 | `akariMarkdown` | 表格的 M3 边框与远程图片的尺寸 |
@@ -104,7 +104,7 @@ function akariContent(
 | --- | --- | --- |
 | `site` | `{ lang, title, description, locales, rewrites }` | 展开到 `defineConfig` 中 |
 | `plugin` | Vite `Plugin` | 开发服务器中更新导航 |
-| `route` | `(page: string) => string` | 源文件路径 → 页面地址，如 `zh-CN/theme/layout/index.md` → `/theme/layout` |
+| `route` | `(page: string) => string` | 源文件路径 → 页面地址，如 `zh-CN/theme/layout/index.md` → `/zh-CN/theme/layout` |
 | `rewrite` | `(page: string) => string` | 源文件路径 → VitePress 的服务路径，如 → `theme/layout.md` |
 | `languages` | `{ folder, key, prefix }[]` | 语言文件夹，根语言在前；`key` 是 VitePress 的语言键（根语言为 `root`），`prefix` 是地址前缀 |
 
@@ -117,7 +117,7 @@ function akariHead(options?: {
 }): HeadConfig[];
 ```
 
-返回一段在首帧绘制前应用明暗模式的内联脚本。字体的 `<head>` 标签随语言不同，由 `akariContent` 写入各语言的 locale，见[排版](/styles/typography/api#fonts)。修改了 `settings.storageKey` 或 `settings.defaults.scheme` 时，把同样的值传进来，脚本才会读到同一份设置。
+返回一段在首帧绘制前应用明暗模式的内联脚本。字体的 `<head>` 标签随语言不同，由 `akariContent` 写入各语言的 locale，见[排版](/zh-CN/styles/typography/api#fonts)。修改了 `settings.storageKey` 或 `settings.defaults.scheme` 时，把同样的值传进来，脚本才会读到同一份设置。
 
 ## akariMarkdown
 
@@ -131,7 +131,7 @@ function akariMarkdown(
 在 `markdown.config` 中调用，做两件事：
 
 - 把每个 Markdown 表格包进 `<div class="akari-table">`，表格因此有 M3 的描边边框与横向滚动。
-- 用 [markdown-it-image-size](https://github.com/boyum/markdown-it-image-size) 给远程图片写上宽高；本地图片的宽高由 VitePress 自己写入。详见[撰写页面](/getting-started/writing/api#图片)。
+- 用 [markdown-it-image-size](https://github.com/boyum/markdown-it-image-size) 给远程图片写上宽高；本地图片的宽高由 VitePress 自己写入。详见[撰写页面](/zh-CN/getting-started/writing/api#图片)。
 
 | 选项 | 默认值 | 说明 |
 | --- | --- | --- |

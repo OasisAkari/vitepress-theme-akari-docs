@@ -77,13 +77,13 @@ VitePress는 아직 알파 단계입니다. 업그레이드할 때는 테마 코
 .
 ├── docs/
 │   ├── config.ts                  모든 언어의 공통 구성
-│   ├── zh-CN/                     중국어 간체, 사이트 루트에 배치
+│   ├── en-US/                     영어, 사이트 루트에 배치
 │   │   ├── config.ts              공통 구성을 재정의
 │   │   ├── index.md               홈 페이지
 │   │   └── getting-started/       레일 카테고리
 │   │       └── installation/
-│   │           └── index.md       글 /getting-started/installation
-│   ├── en-US/                     영어, / 아래에 배치
+│   │           └── index.md       글 /getting-started/installation.html
+│   ├── zh-CN/                     중국어 간체, /zh-CN/ 아래에 배치
 │   ├── public/                    정적 자산
 │   └── .vitepress/
 │       ├── config.mts             테마를 VitePress에 연결
@@ -99,7 +99,7 @@ VitePress는 아직 알파 단계입니다. 업그레이드할 때는 테마 코
 
 `npm run build`는 어떤 정적 호스팅에서도 제공할 수 있는 일반 정적 파일을 만듭니다.
 
-- **확장자 없는 경로**: 사이트는 `cleanUrls`를 켜 두므로 `/theme/layout`은 `theme/layout.html` 파일에 대응합니다. 파일을 찾지 못하면 호스트가 `.html`을 붙여 다시 시도해야 합니다. GitHub Pages, Netlify, Cloudflare Pages는 기본으로 이렇게 동작합니다. Vercel은 `vercel.json`에 `"cleanUrls": true`가 필요하고, Nginx에서는 `try_files $uri $uri.html $uri/ =404;`를 작성합니다.
+- **페이지 경로**: 이 사이트는 `cleanUrls`를 꺼 두므로 페이지 경로가 `.html`로 끝나고(`/theme/layout.html`) 빌드 출력의 파일과 일대일로 대응합니다. 어떤 정적 호스팅에서도 그대로 제공할 수 있습니다. 확장자 없는 경로를 쓰려면 `.vitepress/config.mts`에서 `cleanUrls: true`로 설정하세요. 이 경우 파일을 찾지 못하면 호스트가 `.html`을 붙여 다시 시도해야 합니다. GitHub Pages, Netlify, Cloudflare Pages는 기본으로 이렇게 동작합니다. Vercel은 `vercel.json`에 `"cleanUrls": true`가 필요하고, Nginx에서는 `try_files $uri $uri.html $uri/ =404;`를 작성합니다.
 - **하위 경로에 배포**: 예를 들어 `https://example.com/docs/`라면 `.vitepress/config.mts`에 `base: "/docs/"`를 설정합니다. 내비게이션, 히어로, 로고, 검색 색인의 내부 경로에는 자동으로 붙습니다.
 - **검색 색인**: 각 언어의 색인은 빌드할 때 출력의 `assets/chunks/`에 묶입니다. 추가 작업은 필요 없습니다.
 

@@ -26,14 +26,14 @@ parallel:
         <a slot="label" href="/ja-JP/">概要</a>
       </m3e-nav-menu-item>
       <m3e-nav-menu-item>
-        <a slot="label" href="/ja-JP/getting-started/installation">インストール</a>
+        <a slot="label" href="/ja-JP/getting-started/installation.html">インストール</a>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>
     <m3e-nav-menu-item>
       <m3e-icon slot="icon" name="palette"></m3e-icon>
       <span slot="label">テーマ</span>
       <m3e-nav-menu-item>
-        <a slot="label" href="/ja-JP/theme/extending">テーマの拡張</a>
+        <a slot="label" href="/ja-JP/theme/extending.html">テーマの拡張</a>
         <span slot="badge">拡張</span>
       </m3e-nav-menu-item>
     </m3e-nav-menu-item>

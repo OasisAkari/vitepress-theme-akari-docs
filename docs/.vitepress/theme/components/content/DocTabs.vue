@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { withBase } from "vitepress";
 
 import { useAkariI18n } from "../../composables/useI18n";
+import { usePageHref } from "../../composables/usePageHref";
 import { useAkariSettings } from "../../composables/useSettings";
 import { useTabIndicator } from "../../composables/useTabIndicator";
 import { useTabScroll } from "../../composables/useTabScroll";
@@ -10,6 +10,7 @@ import { useAkariTabs } from "../../composables/useTabs";
 import { useTabsDock } from "../../composables/useTabsDock";
 
 const tabs = useAkariTabs();
+const pageHref = usePageHref();
 const { t } = useAkariI18n();
 const { settings } = useAkariSettings();
 const bar = ref<HTMLElement | null>(null);
@@ -53,7 +54,7 @@ useTabScroll(bar, () => tabs.current.value);
         v-for="tab in tabs.tabs.value"
         :key="tab.link"
         class="akari-page-tabs__tab"
-        :href="withBase(tab.link!)"
+        :href="pageHref(tab.link!)"
         :aria-current="tabs.isCurrent(tab) ? 'page' : undefined"
         :target="tabs.isCurrent(tab) ? '_self' : undefined"
         @click="tabs.onTabClick($event, tab)"

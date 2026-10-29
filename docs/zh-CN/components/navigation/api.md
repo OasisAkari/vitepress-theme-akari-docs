@@ -47,7 +47,7 @@ tab: 接口
 | `selected` | 布尔 | `false` | 当前标签；只能有一个 |
 | `disabled` | 布尔 | `false` | 禁用 |
 
-`m3e-tab` 与 `m3e-tab-panel` 直接写在 `m3e-tabs` 中，见[概览](/components/navigation#标签页)中的示例；`prev-icon`、`next-icon` 插槽替换翻页图标。切换标签时触发 `beforeinput`（可以取消）、`input` 与 `change`。`m3e-tab` 另有 `icon` 插槽。
+`m3e-tab` 与 `m3e-tab-panel` 直接写在 `m3e-tabs` 中，见[概览](/zh-CN/components/navigation#标签页)中的示例；`prev-icon`、`next-icon` 插槽替换翻页图标。切换标签时触发 `beforeinput`（可以取消）、`input` 与 `change`。`m3e-tab` 另有 `icon` 插槽。
 
 ## m3e-chip 与 m3e-filter-chip
 

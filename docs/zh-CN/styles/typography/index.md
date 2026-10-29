@@ -35,7 +35,7 @@ parallel:
 
 - 段落保持三到五行，长段落拆成列表或小标题。
 - 行内代码用于命令、字段名与标签名，例如 `npm run build`、`appBar.title` 与 `m3e-card`。
-- 链接文字要说明去向，例如[安装与运行环境](/getting-started/installation)，不要写「点击这里」。
+- 链接文字要说明去向，例如[安装与运行环境](/zh-CN/getting-started/installation)，不要写「点击这里」。
 - 强调只用少量加粗，不要整段加粗。
 
 > 引用块用于来自规格或官方的结论，正文中的引用与提示块都带有和代码块一样的淡淡图案。
@@ -65,4 +65,4 @@ parallel:
 | 150% | `24px` | 视力较弱或远距离阅读 |
 | 200% | `32px` | 演示与无障碍检查 |
 
-字体、正文元素的样式与排版令牌见[接口](/styles/typography/api)。
+字体、正文元素的样式与排版令牌见[接口](/zh-CN/styles/typography/api)。

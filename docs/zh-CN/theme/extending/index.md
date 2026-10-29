@@ -13,7 +13,7 @@ parallel:
 
 | 方式 | 适合 | 写在 |
 | --- | --- | --- |
-| 配置 | 标题、导航、设置选项、目录、页尾、界面文字 | `docs/config.ts` 与语言的 `config.ts`，见[配置](/getting-started/configuration) |
+| 配置 | 标题、导航、设置选项、目录、页尾、界面文字 | `docs/config.ts` 与语言的 `config.ts`，见[配置](/zh-CN/getting-started/configuration) |
 | 替换组件 | 品牌顶栏、特殊的页尾、自定义正文容器 | 主题入口的 `enhanceApp` |
 | CSS 变量 | 圆角、间距、表面颜色、目录宽度 | 站点样式 |
 
@@ -35,7 +35,7 @@ export default {
 } satisfies Theme;
 ```
 
-自定义组件中用主题的组合式函数读取配置与状态，例如 `useAkariConfig()`、`useSidebar()`。可以替换的部分与可用的函数见[接口](/theme/extending/api)。
+自定义组件中用主题的组合式函数读取配置与状态，例如 `useAkariConfig()`、`useSidebar()`。可以替换的部分与可用的函数见[接口](/zh-CN/theme/extending/api)。
 
 ## CSS 变量
 

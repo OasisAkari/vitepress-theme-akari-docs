@@ -46,6 +46,21 @@ export function isExternalLink(link: string): boolean {
   return link.startsWith("//") || /^[a-z][a-z0-9+.-]*:/i.test(link);
 }
 
+/**
+ * A page's link as the site serves it: with `.html` when clean URLs are
+ * off (`cleanUrls: false`), so the address bar shows the file the server
+ * has. Links are written either way; a folder's (`/zh-CN/`), a file's
+ * (`/logo.svg`), an anchor and an external link stay as they are.
+ */
+export function pageLink(link: string, cleanUrls = false): string {
+  if (cleanUrls || !link || isExternalLink(link) || link.startsWith("#")) {
+    return link;
+  }
+  const [, path = "", rest = ""] = /^([^?#]*)(.*)$/.exec(link) ?? [];
+  if (!path || path.endsWith("/") || /\.[a-z0-9]+$/i.test(path)) return link;
+  return `${path}.html${rest}`;
+}
+
 function joinLink(base: string, link: string): string {
   if (
     !link ||

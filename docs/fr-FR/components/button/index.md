@@ -154,7 +154,7 @@ Par défaut, un bouton désactivé ne peut pas recevoir le focus clavier. `disab
     Ouvrir Material 3
     <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
   </m3e-button>
-  <m3e-button variant="outlined" href="/fr-FR/components/card">
+  <m3e-button variant="outlined" href="/fr-FR/components/card.html">
     Voir les cartes
     <m3e-icon slot="trailing-icon" name="chevron_right"></m3e-icon>
   </m3e-button>
@@ -172,7 +172,7 @@ Par défaut, un bouton désactivé ne peut pas recevoir le focus clavier. `disab
   Ouvrir Material 3
   <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
 </m3e-button>
-<m3e-button variant="outlined" href="/fr-FR/components/card">
+<m3e-button variant="outlined" href="/fr-FR/components/card.html">
   Voir les cartes
   <m3e-icon slot="trailing-icon" name="chevron_right"></m3e-icon>
 </m3e-button>

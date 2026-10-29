@@ -16,7 +16,7 @@ tab: 接口
 | `messages` | `Partial<AkariMessages>` | 无 | 改写或补全界面文字 |
 | `languages` | `AkariLanguage[]` | 无 | 内置之外的语言包，或对内置语言包的改写；一般写在共用配置中 |
 
-其余字段（`title`、`description`、`appBar`、`footer`、`search` 等）同样可以写在语言配置中，见[配置](/getting-started/configuration/api)。
+其余字段（`title`、`description`、`appBar`、`footer`、`search` 等）同样可以写在语言配置中，见[配置](/zh-CN/getting-started/configuration/api)。
 
 ## AkariLanguage
 
@@ -26,7 +26,7 @@ tab: 接口
 | --- | --- | --- |
 | `code` | `string` | 必填，语言代码。页面先找完整代码相同的语言包（`pt-BR`），再找主语言相同的（`pt`） |
 | `dir` | `"ltr" \| "rtl"` | 文字方向，缺省为 `"ltr"` |
-| `fonts` | `{ google: string[]; family: string[] }` | 字体，两项的写法同 [`fonts`](/styles/typography/api#fonts)；缺省为主题的字体（Roboto 与思源黑体） |
+| `fonts` | `{ google: string[]; family: string[] }` | 字体，两项的写法同 [`fonts`](/zh-CN/styles/typography/api#fonts)；缺省为主题的字体（Roboto 与思源黑体） |
 | `messages` | `Partial<AkariMessages>` | 界面文字，缺少的条目用英文 |
 | `markdown` | `MarkdownLocaleOptions` | Markdown 中的文字：`codeCopyButton` 是代码块复制按钮的提示，`container` 是提示块的默认标题（`tipLabel`、`warningLabel`、`dangerLabel`、`infoLabel`、`detailsLabel` 等） |
 
@@ -174,4 +174,4 @@ const { locales, homeHref } = useAkariLocales();
 
 ## 搜索中的语言
 
-注册的搜索后端在第二个参数中收到 `lang`（如 `zh-CN`）与 `locale`（VitePress 语言键，根语言为 `root`），见[搜索](/theme/search/api#注册的后端)。
+注册的搜索后端在第二个参数中收到 `lang`（如 `zh-CN`）与 `locale`（VitePress 语言键，根语言为 `root`），见[搜索](/zh-CN/theme/search/api#注册的后端)。

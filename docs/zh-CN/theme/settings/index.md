@@ -75,4 +75,4 @@ settings: {
 },
 ```
 
-也可以只显示部分选项，或者隐藏明暗模式按钮，见[接口](/theme/settings/api)。明暗模式怎样在首帧之前生效、各选项作用在哪里，见[技术细节](/theme/settings/details)。
+也可以只显示部分选项，或者隐藏明暗模式按钮，见[接口](/zh-CN/theme/settings/api)。明暗模式怎样在首帧之前生效、各选项作用在哪里，见[技术细节](/zh-CN/theme/settings/details)。

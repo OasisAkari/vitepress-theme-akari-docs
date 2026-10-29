@@ -64,7 +64,7 @@ tab: 接口
 
 ## 局部色板
 
-在页面中包一层 `m3e-theme`，就能为其中的内容生成另一套色板，[色彩](/styles/color)概览页的演示就是这样做的：
+在页面中包一层 `m3e-theme`，就能为其中的内容生成另一套色板，[色彩](/zh-CN/styles/color)概览页的演示就是这样做的：
 
 ```html
 <m3e-theme color="#006A6A" scheme="dark" variant="vibrant" contrast="high">
@@ -76,8 +76,8 @@ tab: 接口
 | --- | --- |
 | `color` | 六位十六进制的种子色 |
 | `scheme` | `light`、`dark`、`auto` |
-| `variant` | 见[色调变体](/styles/color#色调变体) |
+| `variant` | 见[色调变体](/zh-CN/styles/color#色调变体) |
 | `contrast` | `standard`、`medium`、`high` |
 | `motion` | `standard`、`expressive` |
 
-站点整体的种子色、变体与对比度由设置决定，见[设置与明暗模式](/theme/settings/api#akarithemesettings)。
+站点整体的种子色、变体与对比度由设置决定，见[设置与明暗模式](/zh-CN/theme/settings/api#akarithemesettings)。

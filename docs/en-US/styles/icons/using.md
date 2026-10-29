@@ -59,7 +59,7 @@ sidebar: {
 ```
 
 ```yaml
-# docs/styles/color/index.md
+# docs/en-US/styles/color/index.md
 ---
 icon: colorize
 ---

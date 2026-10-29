@@ -72,7 +72,7 @@ backend: {
       "title": "バリアント",
       "pageTitle": "ボタン",
       "heading": "バリアント",
-      "href": "/ja-JP/components/button#バリアント",
+      "href": "/ja-JP/components/button.html#variants",
       "excerpt": "5 つのスタイルで、強調の度合いを高から低まで表します…"
     }
   ]

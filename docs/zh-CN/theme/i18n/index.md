@@ -18,23 +18,25 @@ parallel:
 1. 在 `docs` 下新建以语言代码命名的文件夹，在其中写 `config.ts`：
 
    ```ts
-   // docs/en-US/config.ts
+   // docs/zh-CN/config.ts
    import { defineAkariConfig } from "../.vitepress/theme/define.ts";
 
    export default defineAkariConfig({
+     // 语言的自称是「中文」，这里改为更明确的名称。
+     label: "简体中文",
      title: "Vitepress Theme Akari Docs",
      appBar: { title: "Vitepress Theme Akari Docs" },
      sidebar: {
        categories: {
-         "getting-started": { text: "Getting started" },
-         theme: { text: "Theme" },
+         "getting-started": { text: "开始" },
+         theme: { text: "主题" },
        },
      },
-     footer: { message: "Built with VitePress and M3E Web Components" },
+     footer: { message: "基于 VitePress 与 M3E Web Components 构建" },
    });
    ```
 
-2. 按与根语言相同的结构放入页面：`docs/en-US/index.md` 是这种语言的首页，`docs/en-US/getting-started/installation/index.md` 对应中文的 `/getting-started/installation`。
+2. 按与根语言相同的结构放入页面：`docs/zh-CN/index.md` 是这种语言的首页，`docs/zh-CN/getting-started/installation/index.md` 对应英文的 `/getting-started/installation.html`，提供在 `/zh-CN/getting-started/installation.html`。
 3. 需要时在共用配置中用 `rootLanguage` 指定放在根路径的语言。
 
 语言配置叠加在共用配置之上，所以只需要写这种语言的标题与分类名称；版本号、社交链接、分类图标等沿用共用配置。语言菜单中的名称默认是语言的自称（English、日本語），文字方向、界面文字、代码块复制按钮与提示块标题来自语言包，都可以在语言配置中改写。
@@ -84,6 +86,6 @@ export default defineAkariConfig({
 
 ## 本站的语言
 
-本站有中文（放在站点根路径）、英文、日文、韩文、法文与阿拉伯文六个版本，每一页都有六种语言，切换语言时停留在同一页。阿拉伯文版从右到左排版，可以用来查看主题的 RTL 布局。
+本站有英文（放在站点根路径）、中文、日文、韩文、法文与阿拉伯文六个版本，每一页都有六种语言，切换语言时停留在同一页。阿拉伯文版从右到左排版，可以用来查看主题的 RTL 布局。
 
-全部界面文字与语言相关的函数见[接口](/theme/i18n/api)；语言的识别与切换规则见[技术细节](/theme/i18n/details)。
+全部界面文字与语言相关的函数见[接口](/zh-CN/theme/i18n/api)；语言的识别与切换规则见[技术细节](/zh-CN/theme/i18n/details)。

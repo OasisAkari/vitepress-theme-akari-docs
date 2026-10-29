@@ -10,11 +10,10 @@ icon: home
 Vitepress Theme Akari Docs는 VitePress와 `@m3e/web`으로 만든 문서 테마입니다.
 
 <div class="demo-row">
-  <m3e-button id="overview-demo-button" variant="filled">
+  <m3e-button id="overview-demo-button" variant="filled" href="/ko-KR/getting-started/installation.html">
     <m3e-icon slot="icon" name="rocket_launch"></m3e-icon>
-    시작하기
+    설치 가이드
   </m3e-button>
-  <m3e-button variant="outlined" href="/ko-KR/getting-started/installation">설치 가이드</m3e-button>
   <m3e-chip>
     <m3e-icon slot="icon" name="check"></m3e-icon>
     테마 준비 완료

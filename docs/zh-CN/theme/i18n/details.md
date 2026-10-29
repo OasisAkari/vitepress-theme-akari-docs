@@ -6,9 +6,9 @@ tab: 技术细节
 
 ## 页面属于哪种语言
 
-语言由地址决定：地址以 `/<语言文件夹>/` 开头的页面属于那种语言，其余都属于根语言。根语言的页面在源码中位于它自己的文件夹（`docs/zh-CN/`），提供时去掉了文件夹名，见[撰写页面 · 技术细节](/getting-started/writing/details#地址规则)。
+语言由地址决定：地址以 `/<语言文件夹>/` 开头的页面属于那种语言，其余都属于根语言。根语言的页面在源码中位于它自己的文件夹（`docs/en-US/`），提供时去掉了文件夹名，见[撰写页面 · 技术细节](/zh-CN/getting-started/writing/details#地址规则)。
 
-一个页面最终使用的配置，是它所在语言文件夹的 `config.ts` 叠在共用配置与 VitePress 的 locale 配置之上的结果，见[配置 · 技术细节](/getting-started/configuration/details#两层配置怎样叠加)。
+一个页面最终使用的配置，是它所在语言文件夹的 `config.ts` 叠在共用配置与 VitePress 的 locale 配置之上的结果，见[配置 · 技术细节](/zh-CN/getting-started/configuration/details#两层配置怎样叠加)。
 
 ## 语言包的选择
 
@@ -29,7 +29,7 @@ tab: 技术细节
 
 ## 切换语言的目标
 
-1. 把当前地址换到目标语言下：`/getting-started/installation` → `/en-US/getting-started/installation`，反向时去掉前缀。
+1. 把当前地址换到目标语言下：`/getting-started/installation.html` → `/zh-CN/getting-started/installation.html`，反向时去掉前缀。
 2. 目标语言的导航中有这个地址时打开它；导航包括平行页面组中的每一页。
 3. 否则打开目标语言的首页：根语言为 `/`，其他语言为 `/<语言文件夹>/`。
 
@@ -46,4 +46,4 @@ tab: 技术细节
 
 ## 搜索范围
 
-本地索引只有一份，包含所有语言的页面。搜索时，结果只保留与当前页面属于同一种语言的条目：根语言的结果不包括 `/<语言文件夹>/` 下的页面。搜索面板的文字与错误提示随语言切换。
+每种语言有自己的本地索引，搜索时只加载当前语言的那一份，结果因此只来自当前语言。HTTP 与注册的后端收到当前语言的 `lang` 与 `locale`，由它们决定范围。搜索面板的文字与错误提示随语言切换。

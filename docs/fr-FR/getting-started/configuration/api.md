@@ -82,7 +82,7 @@ export default defineConfig({
 | Option | Rôle |
 | --- | --- |
 | `...content.site` | `locales`, `rewrites` et les `lang`, `title`, `description` du site, générés à partir des dossiers ; avec la recherche locale, aussi `themeConfig.search`, qui active l'index de recherche local de VitePress |
-| `cleanUrls: false` | Chemins sans `.html` ; pour les exigences d'hébergement, voir [Installation](/fr-FR/getting-started/installation#deployment) |
+| `cleanUrls: false` | Les chemins de page se terminent par `.html` et correspondent un à un aux fichiers du résultat du build ; avec `true`, ils n'ont pas d'extension, voir [Installation](/fr-FR/getting-started/installation#deployment) pour les exigences d'hébergement |
 | `appearance: false` | Désactive le sélecteur clair/sombre intégré à VitePress ; c'est le thème qui s'en charge |
 | `head: akariHead()` | Un script qui applique le mode clair ou sombre avant la première image affichée |
 | `akariMarkdown` | Bordures M3 pour les tableaux et dimensions des images distantes |
@@ -104,7 +104,7 @@ Lit les fichiers de configuration et les dossiers de `srcDir`. `logger` vaut `co
 | --- | --- | --- |
 | `site` | `{ lang, title, description, locales, rewrites }` | À étaler dans `defineConfig` |
 | `plugin` | `Plugin` Vite | Met à jour la navigation dans le serveur de développement |
-| `route` | `(page: string) => string` | Chemin du fichier source → chemin de la page, par exemple `zh-CN/theme/layout/index.md` → `/theme/layout` |
+| `route` | `(page: string) => string` | Chemin du fichier source → chemin de la page, par exemple `zh-CN/theme/layout/index.md` → `/zh-CN/theme/layout` |
 | `rewrite` | `(page: string) => string` | Chemin du fichier source → chemin servi par VitePress, par exemple → `theme/layout.md` |
 | `languages` | `{ folder, key, prefix }[]` | Dossiers de langue, langue racine en premier. `key` est la clé de locale VitePress (`root` pour la langue racine) ; `prefix` est le préfixe des chemins |
 

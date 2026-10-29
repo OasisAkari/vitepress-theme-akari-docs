@@ -105,4 +105,4 @@ const { mode, resolved, cycle } = useAkariColorScheme();
 
 ## 替换设置面板
 
-设置模态框中的面板可以换成自己的组件（槽位 `Settings`），标题、关闭按钮与动效仍由模态框提供，见[扩展主题](/theme/extending/api#provideakaricomponents)。
+设置模态框中的面板可以换成自己的组件（槽位 `Settings`），标题、关闭按钮与动效仍由模态框提供，见[扩展主题](/zh-CN/theme/extending/api#provideakaricomponents)。

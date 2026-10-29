@@ -14,6 +14,7 @@ import {
   resolveLocaleLink,
   translateLocalePath,
 } from "../locales";
+import { usePageHref } from "./usePageHref";
 
 const siteDataKey: InjectionKey<Readonly<Ref<SiteData>>> =
   Symbol("akari-site-data");
@@ -41,6 +42,7 @@ export interface AkariLocaleOption {
 
 export function useAkariLocales() {
   const { site, localeIndex } = useData();
+  const pageHref = usePageHref();
   const route = useRoute();
   const rawSite = inject(siteDataKey, undefined);
 
@@ -83,7 +85,7 @@ export function useAkariLocales() {
         key,
         label: locale.label || locale.lang || key,
         lang: locale.lang,
-        href: withBase(link),
+        href: pageHref(link),
         current: key === from,
       };
     });

@@ -111,7 +111,7 @@ Une carte peut mélanger titres, chips, badges et listes :
     </ul>
   </div>
   <div slot="actions">
-    <m3e-button variant="tonal" href="/fr-FR/theme/extending">
+    <m3e-button variant="tonal" href="/fr-FR/theme/extending.html">
       Voir comment étendre le thème
       <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
     </m3e-button>
@@ -140,7 +140,7 @@ Une carte peut mélanger titres, chips, badges et listes :
     </ul>
   </div>
   <div slot="actions">
-    <m3e-button variant="tonal" href="/fr-FR/theme/extending">
+    <m3e-button variant="tonal" href="/fr-FR/theme/extending.html">
       Voir comment étendre le thème
       <m3e-icon slot="trailing-icon" name="arrow_forward"></m3e-icon>
     </m3e-button>
@@ -155,17 +155,17 @@ Avec plus de contenu, une carte s'agrandit pour l'accueillir. Les cartes d'une m
 Ajoutez `actionable` à une carte pour faire de toute sa surface une seule zone interactive. Avec `href`, elle fonctionne directement comme un lien :
 
 <div class="demo-grid">
-  <m3e-card variant="outlined" actionable href="/fr-FR/getting-started/installation">
+  <m3e-card variant="outlined" actionable href="/fr-FR/getting-started/installation.html">
     <m3e-icon slot="header" name="package_2"></m3e-icon>
     <m3e-heading m3e-toc-ignore slot="header" variant="title" size="large">Installation</m3e-heading>
     <div slot="content">Installez Node et les dépendances, puis produisez votre premier build.</div>
   </m3e-card>
-  <m3e-card variant="outlined" actionable href="/fr-FR/getting-started/configuration">
+  <m3e-card variant="outlined" actionable href="/fr-FR/getting-started/configuration.html">
     <m3e-icon slot="header" name="tune"></m3e-icon>
     <m3e-heading m3e-toc-ignore slot="header" variant="title" size="large">Configuration</m3e-heading>
     <div slot="content">Réglez la barre d'application, la navigation, les sections des paramètres et la profondeur de la table des matières.</div>
   </m3e-card>
-  <m3e-card variant="outlined" actionable href="/fr-FR/theme/extending">
+  <m3e-card variant="outlined" actionable href="/fr-FR/theme/extending.html">
     <m3e-icon slot="header" name="integration_instructions"></m3e-icon>
     <m3e-heading m3e-toc-ignore slot="header" variant="title" size="large">Extension</m3e-heading>
     <div slot="content">Personnalisez l'interface en remplaçant des composants et avec les tokens CSS.</div>
@@ -173,7 +173,7 @@ Ajoutez `actionable` à une carte pour faire de toute sa surface une seule zone 
 </div>
 
 ```html
-<m3e-card variant="outlined" actionable href="/fr-FR/getting-started/installation">
+<m3e-card variant="outlined" actionable href="/fr-FR/getting-started/installation.html">
   <m3e-icon slot="header" name="package_2"></m3e-icon>
   <m3e-heading slot="header" variant="title" size="large">Installation</m3e-heading>
   <div slot="content">Installez Node et les dépendances, puis produisez votre premier build.</div>

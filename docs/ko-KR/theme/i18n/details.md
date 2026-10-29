@@ -6,7 +6,7 @@ tab: 세부 사항
 
 ## 페이지가 속하는 언어
 
-경로가 언어를 결정합니다. 경로가 `/<language folder>/`로 시작하는 페이지는 그 언어에 속하고, 그 밖의 페이지는 모두 루트 언어에 속합니다. 소스에서는 루트 언어의 페이지도 자체 폴더(`docs/zh-CN/`)에 있지만, 폴더 이름 없이 제공됩니다. [페이지 작성: 세부 사항](/ko-KR/getting-started/writing/details#path-rules)을 참고하세요.
+경로가 언어를 결정합니다. 경로가 `/<language folder>/`로 시작하는 페이지는 그 언어에 속하고, 그 밖의 페이지는 모두 루트 언어에 속합니다. 소스에서는 루트 언어의 페이지도 자체 폴더(`docs/en-US/`)에 있지만, 폴더 이름 없이 제공됩니다. [페이지 작성: 세부 사항](/ko-KR/getting-started/writing/details#path-rules)을 참고하세요.
 
 페이지가 최종적으로 갖는 구성은 공통 구성과 VitePress 로케일 구성 위에 해당 언어 폴더의 `config.ts`를 겹친 것입니다. [구성: 세부 사항](/ko-KR/getting-started/configuration/details#how-the-two-levels-layer)을 참고하세요.
 
@@ -29,7 +29,7 @@ tab: 세부 사항
 
 ## 언어 전환 시 이동하는 곳
 
-1. 현재 경로를 대상 언어로 옮깁니다. `/getting-started/installation` → `/ko-KR/getting-started/installation`이며, 반대 방향으로는 접두사를 제거합니다.
+1. 현재 경로를 대상 언어로 옮깁니다. `/getting-started/installation.html` → `/ko-KR/getting-started/installation.html`이며, 반대 방향으로는 접두사를 제거합니다.
 2. 대상 언어의 내비게이션에 이 경로가 있으면 그 페이지를 엽니다. 내비게이션에는 병렬 페이지 그룹의 모든 페이지가 포함됩니다.
 3. 없으면 대상 언어의 홈 페이지를 엽니다. 루트 언어는 `/`, 그 밖의 언어는 `/<language folder>/`입니다.
 
@@ -46,4 +46,4 @@ tab: 세부 사항
 
 ## 검색 범위
 
-로컬 색인은 하나이며 모든 언어의 페이지를 담고 있습니다. 검색할 때는 현재 페이지와 같은 언어의 항목만 남깁니다. 루트 언어의 결과에는 `/<language folder>/` 아래의 페이지가 포함되지 않습니다. 검색 패널의 텍스트와 오류 메시지도 언어를 따릅니다.
+언어마다 자체 로컬 색인이 있고, 검색할 때는 현재 언어의 색인만 불러오므로 결과는 항상 현재 언어에서만 나옵니다. HTTP 백엔드와 등록된 백엔드는 현재 언어의 `lang`과 `locale`을 받으며, 검색 범위는 백엔드가 직접 정합니다. 검색 패널의 텍스트와 오류 메시지도 언어를 따릅니다.

@@ -5,6 +5,7 @@ import { withBase } from "vitepress";
 import { useAkariI18n } from "../../composables/useI18n";
 import { useAkariLocales } from "../../composables/useLocales";
 import { useAkariConfig } from "../../composables/useAkariConfig";
+import { usePageHref } from "../../composables/usePageHref";
 import { findFirstLink, isExternalLink } from "../../sidebar";
 import type { AkariSidebarItem } from "../../types";
 import LocaleSwitcher from "../shell/LocaleSwitcher.vue";
@@ -24,6 +25,7 @@ const emit = defineEmits<{
 }>();
 
 const config = useAkariConfig();
+const pageHref = usePageHref();
 const { t } = useAkariI18n();
 const { homeHref } = useAkariLocales();
 const logo = computed(() => {
@@ -57,7 +59,7 @@ function isExternal(item: AkariSidebarItem): boolean {
 function hrefFor(item: AkariSidebarItem): string | undefined {
   const link = findFirstLink(item);
   if (!link) return undefined;
-  return isExternalLink(link) ? link : withBase(link);
+  return pageHref(link);
 }
 
 function onPointerEnter(index: number, event: PointerEvent): void {

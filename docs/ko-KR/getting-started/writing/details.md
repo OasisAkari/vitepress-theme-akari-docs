@@ -10,20 +10,20 @@ VitePress는 `akariContent`가 생성한 `rewrites` 함수로 각 페이지를 �
 
 | 소스 파일 | 제공 위치 | 경로 |
 | --- | --- | --- |
-| `zh-CN/index.md` | `index.md` | `/` |
-| `zh-CN/theme/layout/index.md` | `theme/layout.md` | `/theme/layout` |
-| `zh-CN/styles/icons/using.md` | `styles/icons/using.md` | `/styles/icons/using` |
-| `en-US/index.md` | `en-US/index.md` | `/` |
-| `en-US/theme/i18n/index.md` | `en-US/theme/i18n.md` | `/theme/i18n` |
+| `en-US/index.md` | `index.md` | `/` |
+| `en-US/theme/layout/index.md` | `theme/layout.md` | `/theme/layout.html` |
+| `en-US/styles/icons/using.md` | `styles/icons/using.md` | `/styles/icons/using.html` |
+| `zh-CN/index.md` | `zh-CN/index.md` | `/zh-CN/` |
+| `zh-CN/theme/i18n/index.md` | `zh-CN/theme/i18n.md` | `/zh-CN/theme/i18n.html` |
 | `404.md`(언어 폴더 밖) | 변경 없음 | 변경 없음 |
 
 - 루트 언어의 폴더 이름은 경로에서 빠집니다. 다른 언어는 폴더 이름을 접두사로 유지합니다.
 - 정확히 “언어/카테고리/글/index.md” 위치에 있는 파일은 “카테고리/글.md”로 재작성되므로, 글의 경로는 폴더 이름이 되고 끝에 슬래시가 붙지 않습니다. 다른 파일은 루트 언어의 폴더 이름만 빠집니다.
-- `cleanUrls`가 켜져 있으므로 빌드 결과에서 `/theme/layout`은 `theme/layout.html`에 대응합니다.
+- 이 사이트의 루트 언어는 영어이고 `cleanUrls`는 꺼져 있습니다. 경로가 `.html`로 끝나며 빌드 출력의 파일과 일대일로 대응합니다. `cleanUrls`를 켜면 경로에 확장자가 없으며, `/theme/layout`은 여전히 `theme/layout.html` 파일에 대응합니다.
 
 ## 상대 경로
 
-- **링크**: VitePress는 Markdown 링크를 작성한 그대로 출력하고, 브라우저는 페이지 경로를 기준으로 링크를 해석합니다. 글의 경로는 `/theme/layout/`이 아니라 `/theme/layout`이므로, 그 안의 `./sidebar`는 글 폴더 안의 파일이 아니라 `/theme/sidebar`를 가리킵니다. 그러니 내부 링크는 전체 경로로 작성하세요.
+- **링크**: VitePress는 Markdown 링크에 `.html`만 붙여 출력하고(`cleanUrls`가 꺼져 있을 때), 브라우저는 페이지 경로를 기준으로 링크를 해석합니다. 글의 경로는 `/theme/layout.html`이므로, 그 안의 `./sidebar`는 글 폴더 안의 파일이 아니라 `/theme/sidebar.html`을 가리킵니다. 그러니 내부 링크는 전체 경로로 작성하세요.
 - **이미지와 자산**: Vite는 이미지를 모듈로 가져오고 소스 파일의 위치를 기준으로 해석하므로, `./image.png`는 글 폴더 안의 파일을 가리킵니다. 작은 이미지는 data URL로 인라인되고, 나머지는 빌드할 때 해시가 붙어 출력으로 복사됩니다.
 
 ## 내비게이션 생성 방식
@@ -48,7 +48,7 @@ VitePress는 `akariContent`가 생성한 `rewrites` 함수로 각 페이지를 �
 
 ## 대응 페이지
 
-언어를 바꾸면 테마는 현재 경로를 대상 언어의 경로로 옮깁니다(`/theme/i18n` ↔ `/theme/i18n`). 대상 언어의 내비게이션에 그 경로가 있으면 그 페이지를 열고, 없으면 대상 언어의 홈 페이지를 엽니다. 따라서 두 페이지가 각 언어 폴더에서 같은 경로에 있고, 대상 페이지가 대상 언어의 내비게이션에 포함되어 있을 때 언어를 바꿔도 같은 페이지에 머뭅니다.
+언어를 바꾸면 테마는 현재 경로를 대상 언어의 경로로 옮깁니다(`/theme/i18n.html` ↔ `/zh-CN/theme/i18n.html`). 대상 언어의 내비게이션에 그 경로가 있으면 그 페이지를 열고, 없으면 대상 언어의 홈 페이지를 엽니다. 따라서 두 페이지가 각 언어 폴더에서 같은 경로에 있고, 대상 페이지가 대상 언어의 내비게이션에 포함되어 있을 때 언어를 바꿔도 같은 페이지에 머뭅니다.
 
 ## 검색 색인
 

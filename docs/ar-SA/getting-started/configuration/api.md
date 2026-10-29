@@ -82,7 +82,7 @@ export default defineConfig({
 | الخيار | الغرض |
 | --- | --- |
 | `...content.site` | `locales` و`rewrites` و`lang` و`title` و`description` على مستوى الموقع، مولَّدة من المجلدات؛ ومع البحث المحلي أيضًا `themeConfig.search`، الذي يشغّل فهرس البحث المحلي في VitePress |
-| `cleanUrls: false` | مسارات بلا `.html`؛ لمتطلبات الاستضافة راجع [التثبيت](/ar-SA/getting-started/installation#deployment) |
+| `cleanUrls: false` | مسارات الصفحات تنتهي بـ `.html` وتطابق ملفات المخرجات واحدًا لواحد؛ ومع `true` تكون بلا امتداد، ولمتطلبات الاستضافة راجع [التثبيت](/ar-SA/getting-started/installation#deployment) |
 | `appearance: false` | يوقف مفتاح التبديل بين الوضع الفاتح والداكن المدمج في VitePress؛ فالسمة تتولى ذلك |
 | `head: akariHead()` | برنامج نصي يطبّق الوضع الفاتح أو الداكن قبل الإطار الأول |
 | `akariMarkdown` | حدود M3 للجداول وأبعاد للصور البعيدة |
@@ -104,7 +104,7 @@ function akariContent(
 | --- | --- | --- |
 | `site` | `{ lang, title, description, locales, rewrites }` | يُفرد داخل `defineConfig` |
 | `plugin` | `Plugin` من Vite | يحدّث التنقل في خادم التطوير |
-| `route` | `(page: string) => string` | مسار الملف المصدري ← مسار الصفحة، فمثلًا يصبح `zh-CN/theme/layout/index.md` المسار `/theme/layout` |
+| `route` | `(page: string) => string` | مسار الملف المصدري ← مسار الصفحة، فمثلًا يصبح `zh-CN/theme/layout/index.md` المسار `/zh-CN/theme/layout` |
 | `rewrite` | `(page: string) => string` | مسار الملف المصدري ← مسار التقديم في VitePress، فيصبح الملف نفسه `theme/layout.md` |
 | `languages` | `{ folder, key, prefix }[]` | مجلدات اللغات، واللغة الجذرية أولًا. `key` هو مفتاح locale في VitePress (`root` للغة الجذرية)؛ و`prefix` هو بادئة المسار |
 

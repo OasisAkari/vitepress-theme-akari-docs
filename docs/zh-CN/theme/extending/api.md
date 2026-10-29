@@ -57,12 +57,12 @@ const config = useAkariConfig();
 | 函数 | 返回 | 详见 |
 | --- | --- | --- |
 | `useAkariConfig()` | `ComputedRef<ResolvedAkariThemeConfig>`：合并默认值后的主题配置 | 下文 |
-| `useSidebar()` | `{ items, prevNext, tabGroup, isActive, hasActive }` | [侧边导航](/theme/sidebar/api#usesidebar) |
-| `useAkariSettings()` | `{ settings, setSetting, reset, isDefault, defaults, sections, labels }` | [设置](/theme/settings/api#useakarisettings) |
-| `useAkariColorScheme()` | `{ mode, resolved, cycle }` | [设置](/theme/settings/api#useakaricolorscheme) |
-| `useAkariI18n()` | `{ lang, messages, t }` | [国际化](/theme/i18n/api#useakarii18n) |
-| `useAkariLocales()` | `{ locales, homeHref }` | [国际化](/theme/i18n/api#useakarilocales) |
-| `useAkariSearch()` | 搜索面板的状态与操作 | [搜索](/theme/search/api#useakarisearch) |
+| `useSidebar()` | `{ items, prevNext, tabGroup, isActive, hasActive }` | [侧边导航](/zh-CN/theme/sidebar/api#usesidebar) |
+| `useAkariSettings()` | `{ settings, setSetting, reset, isDefault, defaults, sections, labels }` | [设置](/zh-CN/theme/settings/api#useakarisettings) |
+| `useAkariColorScheme()` | `{ mode, resolved, cycle }` | [设置](/zh-CN/theme/settings/api#useakaricolorscheme) |
+| `useAkariI18n()` | `{ lang, messages, t }` | [国际化](/zh-CN/theme/i18n/api#useakarii18n) |
+| `useAkariLocales()` | `{ locales, homeHref }` | [国际化](/zh-CN/theme/i18n/api#useakarilocales) |
+| `useAkariSearch()` | 搜索面板的状态与操作 | [搜索](/zh-CN/theme/search/api#useakarisearch) |
 
 `useAkariConfig()` 的结果包含 `lang`、`messages`、`appBar`、`sidebar`、`settings`、`toc`、`footer`、`search`、`fonts` 与 `components`，每一组都已填好默认值并做过校验（例如 `toc.maxDepth` 限制在 1 到 6）。
 
@@ -70,10 +70,10 @@ const config = useAkariConfig();
 
 | 导出 | 类型 | 用途 |
 | --- | --- | --- |
-| `defineAkariConfig` | `(config: AkariSiteConfig) => AkariDirectoryConfig` | 写配置文件，见[配置](/getting-started/configuration/api#defineakariconfig) |
+| `defineAkariConfig` | `(config: AkariSiteConfig) => AkariDirectoryConfig` | 写配置文件，见[配置](/zh-CN/getting-started/configuration/api#defineakariconfig) |
 | `defineAkariThemeConfig` | `(config: AkariThemeConfig) => AkariThemeConfig` | 只写主题字段时的类型辅助 |
-| `registerSearchBackend` | `(id, handler) => void` | 注册搜索后端，见[搜索](/theme/search/api#注册的后端) |
-| `defineAkariLanguage` | `(language: AkariLanguage) => AkariLanguage` | 写语言包，见[国际化](/theme/i18n/api#akarilanguage) |
+| `registerSearchBackend` | `(id, handler) => void` | 注册搜索后端，见[搜索](/zh-CN/theme/search/api#注册的后端) |
+| `defineAkariLanguage` | `(language: AkariLanguage) => AkariLanguage` | 写语言包，见[国际化](/zh-CN/theme/i18n/api#akarilanguage) |
 | `AKARI_LANGUAGES` | `AkariLanguage[]` | 内置的语言包 |
 | `resolveLanguage` | `(lang, languages?) => ResolvedAkariLanguage` | 一种语言最终使用的语言包 |
 | `AKARI_CONTENT_ID` | `"akari-doc-content"` | 正文容器的 id |
@@ -86,11 +86,11 @@ const config = useAkariConfig();
 
 | 范围 | 变量 | 详见 |
 | --- | --- | --- |
-| 文档表面、目录、页尾 | `--akari-doc-*`、`--akari-toc-width`、`--akari-wavy-divider-color` | [布局与顶栏](/theme/layout/api#css-变量) |
-| 平行页面的标签栏 | `--akari-app-bar-tabs-gap`、`--akari-page-tabs-docked-max-width` | [侧边导航](/theme/sidebar/api#标签栏的-css-变量) |
-| 头图与图案 | `--akari-doc-hero-*`、`--akari-pattern-*` | [头图](/theme/hero/api#css-变量) |
-| 颜色 | `--md-sys-color-*` | [色彩](/styles/color/api) |
-| 排版 | `--md-sys-typescale-*` | [排版](/styles/typography/api) |
+| 文档表面、目录、页尾 | `--akari-doc-*`、`--akari-toc-width`、`--akari-wavy-divider-color` | [布局与顶栏](/zh-CN/theme/layout/api#css-变量) |
+| 平行页面的标签栏 | `--akari-app-bar-tabs-gap`、`--akari-page-tabs-docked-max-width` | [侧边导航](/zh-CN/theme/sidebar/api#标签栏的-css-变量) |
+| 头图与图案 | `--akari-doc-hero-*`、`--akari-pattern-*` | [头图](/zh-CN/theme/hero/api#css-变量) |
+| 颜色 | `--md-sys-color-*` | [色彩](/zh-CN/styles/color/api) |
+| 排版 | `--md-sys-typescale-*` | [排版](/zh-CN/styles/typography/api) |
 | m3e 组件 | 如 `--m3e-card-shape`、`--m3e-button-*` | m3e 组件文档 |
 
 ## 源码结构

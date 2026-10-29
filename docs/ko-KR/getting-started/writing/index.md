@@ -70,8 +70,8 @@ parallel:
 
 - 한 페이지에서만 쓰는 이미지는 글 폴더에 두고 `![설명](./image.png)`으로 참조합니다. 여러 페이지에서 함께 쓰는 이미지는 `docs/public`에 두고 `/hero/image.svg` 같은 절대 경로로 참조합니다.
 - 이미지의 너비와 높이는 원격 이미지까지 포함해 렌더링할 때 자동으로 기록되므로, 이미지가 로드되는 동안 페이지가 흔들리지 않습니다. [API](/ko-KR/getting-started/writing/api#images)를 참고하세요.
-- 내부 링크는 페이지 경로를 쓰고 `/`로 시작합니다: `[사이드 내비게이션](/theme/sidebar)`. 파일 경로(`/zh-CN/theme/sidebar/index.md`)나 상대 경로는 쓰지 마세요.
-- 한국어 페이지 사이의 링크에는 `/ko-KR/` 접두사가 붙습니다.
+- 내부 링크는 페이지 경로를 쓰고 `/`로 시작하며 `.html`은 쓰지 않습니다. VitePress가 `cleanUrls`에 따라 붙여 줍니다: `[사이드 내비게이션](/ko-KR/theme/sidebar)`. 파일 경로(`/ko-KR/theme/sidebar/index.md`)나 상대 경로는 쓰지 마세요.
+- 이 사이트의 루트 언어는 영어입니다. 한국어 페이지 사이의 링크에는 `/ko-KR/` 접두사가 붙습니다.
 
 ## Markdown
 
