@@ -57,7 +57,7 @@ async function render(
     path: path.join(docs, "theme/layout.md"),
     realPath: path.join(docs, "zh-CN/theme/layout/index.md"),
     relativePath: "theme/layout.md",
-    cleanUrls: true,
+    cleanUrls: false,
   });
 }
 

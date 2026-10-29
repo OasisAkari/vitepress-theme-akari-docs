@@ -64,7 +64,7 @@ const content = await akariContent(docsDir);
 
 export default defineConfig({
   ...content.site,
-  cleanUrls: true,
+  cleanUrls: false,
   appearance: false,
   head: akariHead(),
   markdown: { config: (md) => akariMarkdown(md) },
@@ -82,7 +82,7 @@ export default defineConfig({
 | オプション | 用途 |
 | --- | --- |
 | `...content.site` | フォルダーから生成される `locales`、`rewrites`、およびサイトレベルの `lang`、`title`、`description`。ローカル検索では `themeConfig.search` も含まれ、VitePress のローカル検索インデックスが有効になります |
-| `cleanUrls: true` | `.html` のないパス。ホスティングの要件は [インストール](/ja-JP/getting-started/installation#deployment) を参照 |
+| `cleanUrls: false` | `.html` のないパス。ホスティングの要件は [インストール](/ja-JP/getting-started/installation#deployment) を参照 |
 | `appearance: false` | VitePress に組み込まれたライト・ダークの切り替えをオフにします。テーマが管理します |
 | `head: akariHead()` | 最初のフレームの前にライトモードまたはダークモードを適用するスクリプト |
 | `akariMarkdown` | テーブルの M3 の枠線と、リモート画像のサイズ |

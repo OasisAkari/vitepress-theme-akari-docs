@@ -64,7 +64,7 @@ const content = await akariContent(docsDir);
 
 export default defineConfig({
   ...content.site,
-  cleanUrls: true,
+  cleanUrls: false,
   appearance: false,
   head: akariHead(),
   markdown: { config: (md) => akariMarkdown(md) },
@@ -82,7 +82,7 @@ export default defineConfig({
 | Option | Purpose |
 | --- | --- |
 | `...content.site` | `locales`, `rewrites` and the site-level `lang`, `title`, `description`, generated from the folders; with local search, also `themeConfig.search`, which turns on VitePress' local search index |
-| `cleanUrls: true` | Paths without `.html`; for hosting requirements see [Installation](/getting-started/installation#deployment) |
+| `cleanUrls: false` | Paths without `.html`; for hosting requirements see [Installation](/getting-started/installation#deployment) |
 | `appearance: false` | Turns off the light and dark toggle built into VitePress; the theme manages it |
 | `head: akariHead()` | A script that applies light or dark mode before the first frame |
 | `akariMarkdown` | M3 borders for tables and sizes for remote images |

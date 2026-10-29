@@ -64,7 +64,7 @@ const content = await akariContent(docsDir);
 
 export default defineConfig({
   ...content.site,
-  cleanUrls: true,
+  cleanUrls: false,
   appearance: false,
   head: akariHead(),
   markdown: { config: (md) => akariMarkdown(md) },
@@ -82,7 +82,7 @@ export default defineConfig({
 | 选项 | 作用 |
 | --- | --- |
 | `...content.site` | 由目录生成的 `locales`、`rewrites` 与站点级 `lang`、`title`、`description`；使用本地搜索时还有开启 VitePress 本地搜索索引的 `themeConfig.search` |
-| `cleanUrls: true` | 地址不带 `.html`；部署要求见[安装](/getting-started/installation#部署) |
+| `cleanUrls: false` | 地址不带 `.html`；部署要求见[安装](/getting-started/installation#部署) |
 | `appearance: false` | 关闭 VitePress 自带的明暗切换，由主题管理 |
 | `head: akariHead()` | 首帧前应用明暗模式的脚本 |
 | `akariMarkdown` | 表格的 M3 边框与远程图片的尺寸 |

@@ -64,7 +64,7 @@ const content = await akariContent(docsDir);
 
 export default defineConfig({
   ...content.site,
-  cleanUrls: true,
+  cleanUrls: false,
   appearance: false,
   head: akariHead(),
   markdown: { config: (md) => akariMarkdown(md) },
@@ -82,7 +82,7 @@ export default defineConfig({
 | Option | Rôle |
 | --- | --- |
 | `...content.site` | `locales`, `rewrites` et les `lang`, `title`, `description` du site, générés à partir des dossiers ; avec la recherche locale, aussi `themeConfig.search`, qui active l'index de recherche local de VitePress |
-| `cleanUrls: true` | Chemins sans `.html` ; pour les exigences d'hébergement, voir [Installation](/fr-FR/getting-started/installation#deployment) |
+| `cleanUrls: false` | Chemins sans `.html` ; pour les exigences d'hébergement, voir [Installation](/fr-FR/getting-started/installation#deployment) |
 | `appearance: false` | Désactive le sélecteur clair/sombre intégré à VitePress ; c'est le thème qui s'en charge |
 | `head: akariHead()` | Un script qui applique le mode clair ou sombre avant la première image affichée |
 | `akariMarkdown` | Bordures M3 pour les tableaux et dimensions des images distantes |

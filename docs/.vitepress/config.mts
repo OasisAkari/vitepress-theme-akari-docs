@@ -14,7 +14,7 @@ const content = await akariContent(docsDir);
 
 export default defineConfig({
   ...content.site,
-  cleanUrls: true,
+  cleanUrls: false,
   // Light and dark belong to the theme's appearance button.
   appearance: false,
   head: akariHead(),

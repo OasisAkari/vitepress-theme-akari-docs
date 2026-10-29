@@ -64,7 +64,7 @@ const content = await akariContent(docsDir);
 
 export default defineConfig({
   ...content.site,
-  cleanUrls: true,
+  cleanUrls: false,
   appearance: false,
   head: akariHead(),
   markdown: { config: (md) => akariMarkdown(md) },
@@ -82,7 +82,7 @@ export default defineConfig({
 | 옵션 | 용도 |
 | --- | --- |
 | `...content.site` | 폴더에서 생성한 `locales`, `rewrites`와 사이트 단위의 `lang`, `title`, `description`. 로컬 검색을 쓰면 VitePress의 로컬 검색 색인을 켜는 `themeConfig.search`도 포함됩니다 |
-| `cleanUrls: true` | `.html` 없는 경로. 호스팅 요구 사항은 [설치](/ko-KR/getting-started/installation#deployment)를 참고하세요 |
+| `cleanUrls: false` | `.html` 없는 경로. 호스팅 요구 사항은 [설치](/ko-KR/getting-started/installation#deployment)를 참고하세요 |
 | `appearance: false` | VitePress에 내장된 라이트/다크 전환을 끕니다. 화면 모드는 테마가 관리합니다 |
 | `head: akariHead()` | 첫 프레임 전에 라이트 모드나 다크 모드를 적용하는 스크립트 |
 | `akariMarkdown` | 표의 M3 테두리와 원격 이미지의 크기 |

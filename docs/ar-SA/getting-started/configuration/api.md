@@ -64,7 +64,7 @@ const content = await akariContent(docsDir);
 
 export default defineConfig({
   ...content.site,
-  cleanUrls: true,
+  cleanUrls: false,
   appearance: false,
   head: akariHead(),
   markdown: { config: (md) => akariMarkdown(md) },
@@ -82,7 +82,7 @@ export default defineConfig({
 | الخيار | الغرض |
 | --- | --- |
 | `...content.site` | `locales` و`rewrites` و`lang` و`title` و`description` على مستوى الموقع، مولَّدة من المجلدات؛ ومع البحث المحلي أيضًا `themeConfig.search`، الذي يشغّل فهرس البحث المحلي في VitePress |
-| `cleanUrls: true` | مسارات بلا `.html`؛ لمتطلبات الاستضافة راجع [التثبيت](/ar-SA/getting-started/installation#deployment) |
+| `cleanUrls: false` | مسارات بلا `.html`؛ لمتطلبات الاستضافة راجع [التثبيت](/ar-SA/getting-started/installation#deployment) |
 | `appearance: false` | يوقف مفتاح التبديل بين الوضع الفاتح والداكن المدمج في VitePress؛ فالسمة تتولى ذلك |
 | `head: akariHead()` | برنامج نصي يطبّق الوضع الفاتح أو الداكن قبل الإطار الأول |
 | `akariMarkdown` | حدود M3 للجداول وأبعاد للصور البعيدة |
