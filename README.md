@@ -4,6 +4,12 @@ English | [简体中文](README.zh-CN.md)
 
 A Material You / Expressive stylized documentation theme for vitepress, built with VitePress and [`@m3e/web`](https://github.com/matraic/m3e) Material 3 Expressive Web Components. Compared with [Vitepress Theme Akari Blog](https://github.com/OasisAkari/vitepress-theme-akari-blog), its layout is optimized for technical documentation.
 
+## Showcase
+
+![](./imgs/overview.png)
+
+![](./imgs/overview-dark.png)
+
 ## Requirements
 
 - Node.js >= 22.12
