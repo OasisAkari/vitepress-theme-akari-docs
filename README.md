@@ -41,7 +41,7 @@ For more configuration documentation for this theme, see [here](https://vitepres
 
 ## Q&A
 
-## Wow, a new theme!
+### Wow, a new theme!
 
 Yay!
 
