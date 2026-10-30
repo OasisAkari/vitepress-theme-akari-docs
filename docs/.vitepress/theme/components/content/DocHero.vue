@@ -267,10 +267,11 @@ const pattern = usePagePattern();
   opacity: var(--akari-pattern-spot);
 }
 
-@media (hover: hover) {
-  :is(.akari-doc-hero__text, .akari-doc-hero__media):hover .akari-doc-hero__light {
-    opacity: 1;
-  }
+/* Lit only under a mouse or pen (data-akari-hover, see useContentLight). */
+:root[data-akari-hover]
+  :is(.akari-doc-hero__text, .akari-doc-hero__media):hover
+  .akari-doc-hero__light {
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {

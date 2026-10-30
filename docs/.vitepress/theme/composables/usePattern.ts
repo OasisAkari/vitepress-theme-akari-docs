@@ -53,6 +53,12 @@ export function usePagePattern(): ComputedRef<AkariHeroPattern | null> {
   );
 }
 
+/**
+ * Set on html while the reader points with a mouse or pen; the light only
+ * comes up then (styles/pattern.css, DocHero).
+ */
+const HOVER_ATTRIBUTE = "data-akari-hover";
+
 /** Surfaces whose pattern lights up around the pointer. */
 const LIT = [
   ".akari-doc-hero__text",
@@ -66,6 +72,13 @@ const LIT = [
  * surface's own coordinates, into its --_x and --_y once a frame, for the
  * surface under the pointer and any lit surface around it. Mouse and pen
  * only: touch has nothing to hover.
+ *
+ * Whether the reader is on a mouse or pen is read from the pointer events
+ * themselves (HOVER_ATTRIBUTE), not the hover media query: that reports the
+ * device's primary input as the browser guesses it, and where the guess is
+ * touch (a convertible laptop, a browser that cannot see the mouse) the
+ * light would never come up under a real mouse. A touch turns it off
+ * again, so a tap leaves nothing lit.
  */
 export function useContentLight(surface: Ref<HTMLElement | null>): void {
   let frame = 0;
@@ -86,6 +99,13 @@ export function useContentLight(surface: Ref<HTMLElement | null>): void {
     }
   }
 
+  function onPointer(event: PointerEvent): void {
+    document.documentElement.toggleAttribute(
+      HOVER_ATTRIBUTE,
+      event.pointerType === "mouse" || event.pointerType === "pen",
+    );
+  }
+
   function onMove(event: PointerEvent): void {
     if (event.pointerType !== "mouse" && event.pointerType !== "pen") return;
     if (!(event.target instanceof Element)) return;
@@ -102,8 +122,16 @@ export function useContentLight(surface: Ref<HTMLElement | null>): void {
     { immediate: true },
   );
 
+  onMounted(() => {
+    window.addEventListener("pointermove", onPointer, { passive: true });
+    window.addEventListener("pointerdown", onPointer, { passive: true });
+  });
+
   onUnmounted(() => {
     if (frame) cancelAnimationFrame(frame);
     surface.value?.removeEventListener("pointermove", onMove);
+    window.removeEventListener("pointermove", onPointer);
+    window.removeEventListener("pointerdown", onPointer);
+    document.documentElement.removeAttribute(HOVER_ATTRIBUTE);
   });
 }
