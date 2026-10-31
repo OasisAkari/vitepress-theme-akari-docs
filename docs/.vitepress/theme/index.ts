@@ -1,8 +1,9 @@
-import type { Theme } from "vitepress";
+import { inBrowser, type Theme } from "vitepress";
 import DefaultTheme from "vitepress/theme-without-fonts";
 
 import { provideAkariSiteData } from "./composables/useLocales";
 import Layout from "./layouts/AkariLayout.vue";
+import { routeComponentLinks } from "./links";
 import "./styles/index.css";
 
 if (!import.meta.env.SSR) {
@@ -15,8 +16,9 @@ if (!import.meta.env.SSR) {
 export default {
   extends: DefaultTheme,
   Layout,
-  enhanceApp({ app, siteData }) {
+  enhanceApp({ app, router, siteData }) {
     provideAkariSiteData(app, siteData);
+    if (inBrowser) routeComponentLinks(router);
   },
 } satisfies Theme;
 

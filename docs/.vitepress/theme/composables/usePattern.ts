@@ -69,9 +69,9 @@ const LIT = [
 /**
  * Moves the light on patterned surfaces with the pointer: one listener on
  * the document surface writes the pointer's position, in each lit
- * surface's own coordinates, into its --_x and --_y once a frame, for the
- * surface under the pointer and any lit surface around it. Mouse and pen
- * only: touch has nothing to hover.
+ * surface's own coordinates, into its --akari-light-x and --akari-light-y
+ * once a frame, for the surface under the pointer and any lit surface
+ * around it. Mouse and pen only: touch has nothing to hover.
  *
  * Whether the reader is on a mouse or pen is read from the pointer events
  * themselves (HOVER_ATTRIBUTE), not the hover media query: that reports the
@@ -88,14 +88,19 @@ export function useContentLight(surface: Ref<HTMLElement | null>): void {
     frame = 0;
     if (!pointer) return;
     const { target, x, y } = pointer;
+    // Every box is read before any position is written, so a surface nested
+    // in another does not make the next read recompute styles.
+    const lit: [HTMLElement, DOMRect][] = [];
     for (
-      let lit = target.closest<HTMLElement>(LIT);
-      lit;
-      lit = lit.parentElement?.closest<HTMLElement>(LIT) ?? null
+      let element = target.closest<HTMLElement>(LIT);
+      element;
+      element = element.parentElement?.closest<HTMLElement>(LIT) ?? null
     ) {
-      const box = lit.getBoundingClientRect();
-      lit.style.setProperty("--_x", `${x - box.left}px`);
-      lit.style.setProperty("--_y", `${y - box.top}px`);
+      lit.push([element, element.getBoundingClientRect()]);
+    }
+    for (const [element, box] of lit) {
+      element.style.setProperty("--akari-light-x", `${x - box.left}px`);
+      element.style.setProperty("--akari-light-y", `${y - box.top}px`);
     }
   }
 

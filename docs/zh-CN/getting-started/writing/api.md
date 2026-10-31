@@ -131,3 +131,4 @@ Markdown 中可以直接写已注册的 m3e 组件。主题在 `docs/.vitepress/
 
 - 组件中的标题用 `<m3e-heading>`；加上 `m3e-toc-ignore` 属性后，它不会进入目录。
 - 图标写 `<m3e-icon name="search"></m3e-icon>`，图标需要先在 `icons.ts` 中注册，见[使用图标](/zh-CN/styles/icons/using)。
+- 带 `href` 的组件（按钮、卡片、纸片、列表项等）指向站内页面时，和普通链接一样在页面内切换，不重新加载整个网页；写上 `target="_self"` 时按 VitePress 的约定整页加载，`target="_blank"` 在新标签页打开。
