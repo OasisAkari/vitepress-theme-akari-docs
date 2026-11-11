@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@m3e/icons": "1.0.21",
-    "@m3e/web": "2.10.3",
+    "@m3e/web": "2.12.1",
     "@material/material-color-utilities": "^0.4.0"
   },
   "devDependencies": {
