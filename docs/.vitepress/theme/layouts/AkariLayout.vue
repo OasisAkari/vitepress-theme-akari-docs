@@ -32,7 +32,9 @@ import { provideAkariSettings } from "../composables/useSettings";
 import { provideAkariSettingsDialog } from "../composables/useSettingsDialog";
 import { provideAkariTabs } from "../composables/useTabs";
 import SearchDialog from "../search/components/SearchDialog.vue";
+import SearchDockLayer from "../search/components/SearchDockLayer.vue";
 import { provideAkariSearch } from "../search/useSearch";
+import { provideAkariSearchDock } from "../search/useSearchDock";
 import {
   AKARI_CONTENT_ID,
   AKARI_NAV_RAIL_QUERY,
@@ -43,7 +45,8 @@ const config = provideAkariConfig();
 const settingsApi = provideAkariSettings(config);
 const { settings } = settingsApi;
 const { resolved: resolvedScheme } = provideAkariColorScheme(settingsApi);
-provideAkariSearch(config);
+const search = provideAkariSearch(config);
+provideAkariSearchDock(search);
 provideAkariLocaleDialog();
 provideAkariSettingsDialog();
 const tabs = provideAkariTabs(config);
@@ -274,6 +277,7 @@ onUnmounted(() => {
         <component :is="components.Sidebar" />
       </div>
     </m3e-drawer-container>
+    <SearchDockLayer v-if="config.search.enabled" />
     <SearchDialog v-if="config.search.enabled" />
     <LocaleDialog v-if="locales.length > 1" />
     <SettingsDialog v-if="config.settings.enabled" />

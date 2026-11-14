@@ -229,6 +229,31 @@ export type AkariSearchBackendConfig =
     }
   | { type: "registered"; id: string };
 
+/** The look the flying search trigger takes when a page docks it. */
+export type AkariSearchDockVariant = "bar" | "pill" | "icon" | "hero";
+
+/** Where a docked trigger's contents sit along its inline axis. */
+export type AkariSearchDockAlign = "start" | "center" | "end";
+
+/**
+ * What a `<SearchDock>` tag tells the trigger. The tag itself supplies the
+ * landing box; these options change how the copy looks once it arrives.
+ */
+export interface AkariSearchDockAnchorOptions {
+  placeholder?: string;
+  variant?: AkariSearchDockVariant;
+  align?: AkariSearchDockAlign;
+  /** Higher wins when one page contains more than one dock tag. */
+  priority?: number;
+}
+
+export interface ResolvedAkariSearchDockAnchorOptions {
+  placeholder?: string;
+  variant: AkariSearchDockVariant;
+  align: AkariSearchDockAlign;
+  priority: number;
+}
+
 export interface AkariSearchConfig {
   enabled?: boolean;
   placeholder?: string;
@@ -343,6 +368,24 @@ export interface AkariMessages {
   searchBackendMissing: string;
   /** The loading bar's name for assistive technology. */
   loadingLabel: string;
+  /** SearchDock demo controls and labels. */
+  dockDemoVariant: string;
+  dockDemoAlign: string;
+  dockDemoPlaceholder: string;
+  dockDemoBar: string;
+  dockDemoPill: string;
+  dockDemoIcon: string;
+  dockDemoHero: string;
+  dockDemoStart: string;
+  dockDemoCenter: string;
+  dockDemoEnd: string;
+  dockDemoFill: string;
+  dockDemoNatural: string;
+  dockDemoHideTag: string;
+  dockDemoShowTag: string;
+  dockDemoReload: string;
+  dockDemoCaption: string;
+  dockDemoHint: string;
 }
 
 /**

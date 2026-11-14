@@ -499,7 +499,8 @@ html:not([data-akari-ready]) .akari-sidebar-slot {
 .akari-drawers {
   position: fixed;
   inset: var(--akari-doc-app-bar-height) 0 0;
-  z-index: 3;
+  /* Above the flying search copy; its inset starts below the app bar. */
+  z-index: 8;
   pointer-events: none;
   --m3e-drawer-container-color: var(--md-sys-color-surface-container-low);
   --m3e-modal-drawer-container-color: var(--md-sys-color-surface-container);
