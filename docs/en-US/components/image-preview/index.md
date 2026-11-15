@@ -8,23 +8,23 @@ parallel:
 
 # Image preview
 
-`AkariImagePreview` wraps a picture in a thumbnail that opens into a full view of the content area, where it can be zoomed, rotated and panned, with the keyboard doing the same work.
+`AkariImagePreview` wraps a picture in a thumbnail that opens to fill the content area, where it can be zoomed, rotated and panned, with the keyboard doing the same work.
 
 ## Usage
 
-<AkariImagePreview src="/hero/theme-hero.svg" alt="The theme">
+<AkariImagePreview src="/hero/theme-hero.svg" alt="The theme" label="View the theme">
   <img src="/hero/theme-hero.svg" alt="The theme" width="360" />
 </AkariImagePreview>
 
 ```html
-<AkariImagePreview src="/hero/theme-hero.svg" alt="The theme">
+<AkariImagePreview src="/hero/theme-hero.svg" alt="The theme" label="View the theme">
   <img src="/hero/theme-hero.svg" alt="The theme" width="360" />
 </AkariImagePreview>
 ```
 
-The default slot is the thumbnail. Leave it out and the component renders an `<img>` of its own; give it and the component only wraps your markup in a button.
+The default slot is the thumbnail. Leave it out and the component renders an `<img>` of its own. Provide it and the component uses your markup as-is, only wrapping it in a button.
 
-Props, slots, CSS classes and the exported geometry functions live on the **API** tab.
+Props, slots, CSS classes and exported geometry functions are documented on the **API** tab.
 
 ## Keyboard
 
@@ -37,7 +37,7 @@ Props, slots, CSS classes and the exported geometry functions live on the **API*
 | `r` | Rotate 90° clockwise |
 | `Shift` + `r` | Rotate 90° counter-clockwise |
 
-Zoom runs from 50% to 400%, by wheel, double click or the buttons in the bar. Drag to pan, double click the picture or press the reset button to return to the opening view.
+Zoom runs from 50% to 400%, by wheel, double-click or the buttons in the bar. Drag to pan; double-click the picture or press the reset button to return to the opening view.
 
 ## Motion and fallbacks
 

@@ -6,7 +6,7 @@ tab: API
 
 `AkariImagePreview` belongs to the theme rather than to `@m3e/web`, so it has no `m3e-` element behind it. It reads the `--md-sys-color-*` and `--md-sys-motion-*` tokens, which is why it follows the color and motion settings.
 
-## Component
+## AkariImagePreview
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -41,6 +41,7 @@ import {
   wheelImageScale,
   rotateImage,
   uprightRotation,
+  unwindRotation,
   isImageTransformed,
   previewChrome,
   rotationFitScale,
@@ -50,21 +51,25 @@ import {
 
 | Name | Description |
 | --- | --- |
+| `IMAGE_PREVIEW_FIT` | The scale a preview opens at, `1` |
 | `IMAGE_PREVIEW_MIN_SCALE`, `IMAGE_PREVIEW_MAX_SCALE` | Zoom limits, `0.5` and `4` |
 | `IMAGE_PREVIEW_ZOOM_STEP` | How far one click zooms, `0.25` |
 | `IMAGE_PREVIEW_WHEEL_FACTOR` | How much one wheel notch scales, `1.1` |
+| `IMAGE_PREVIEW_ROTATION_STEP` | Degrees each rotate button turns, `90` |
 | `clampImageScale(scale)` | Limits the scale and rounds it to whole percents |
 | `zoomImageScale(scale, delta)` | Adds a step and clamps |
 | `wheelImageScale(scale, direction)` | Applies a wheel notch and clamps |
 | `rotateImage(rotation, delta)` | Turns by the given angle |
 | `uprightRotation(rotation)` | The nearest whole turn, used when resetting |
+| `unwindRotation(rotation)` | The nearest whole turn to return to on close, reversing on a half turn |
 | `isImageTransformed(view)` | Whether the view was zoomed, turned or panned |
 | `previewChrome(viewportWidth)` | Height the overlay leaves for its bar |
 | `rotationFitScale(rotation, image, viewport, chrome)` | The factor that keeps a quarter-turned picture inside the viewport |
 | `scaleLabel(scale)` | Reads `1.05` as `105%` |
+| `ImagePreviewView`, `ImagePreviewSize` | Types for a view and a size |
 
 ## Accessibility
 
-- The trigger has a name and the thumbnail has its `alt`; an empty `alt` switches the dialog to the label without a description.
+- The trigger has a name and the thumbnail has its `alt`; an empty `alt` uses the label without a description.
 - The overlay is `role="dialog"` with `aria-modal="true"`, takes focus when it opens, closes on `Esc`, and returns focus to the trigger.
 - Page scrolling is locked while open; reduced motion turns the flying transition off.

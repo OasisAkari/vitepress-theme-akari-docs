@@ -8,7 +8,7 @@ parallel:
 
 # Aperçu d'image
 
-`AkariImagePreview` enveloppe une image dans une vignette que l'on ouvre d'une pression. L'image remplit alors la zone de contenu, où elle peut être agrandie, tournée et déplacée, le clavier faisant le même travail.
+`AkariImagePreview` enveloppe une image dans une vignette que l'on ouvre d'un clic. L'image remplit alors la zone de contenu, où elle peut être agrandie, tournée et déplacée, et le clavier permet les mêmes opérations.
 
 ## Utilisation
 
@@ -17,7 +17,7 @@ parallel:
 </AkariImagePreview>
 
 ```html
-<AkariImagePreview src="/hero/theme-hero.svg" alt="L'apparence du thème">
+<AkariImagePreview src="/hero/theme-hero.svg" alt="L'apparence du thème" label="Voir l'apparence du thème">
   <img src="/hero/theme-hero.svg" alt="L'apparence du thème" width="360" />
 </AkariImagePreview>
 ```

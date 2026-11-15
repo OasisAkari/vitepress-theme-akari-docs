@@ -6,7 +6,7 @@ tab: API
 
 `AkariImagePreview` 는 `@m3e/web` 이 아니라 테마 자체의 컴포넌트이며 대응하는 `m3e-` 요소가 없습니다. `--md-sys-color-*` 와 `--md-sys-motion-*` 토큰을 읽으므로 설정의 색과 동작을 따릅니다.
 
-## 컴포넌트
+## AkariImagePreview
 
 | 속성 | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
@@ -41,6 +41,7 @@ import {
   wheelImageScale,
   rotateImage,
   uprightRotation,
+  unwindRotation,
   isImageTransformed,
   previewChrome,
   rotationFitScale,
@@ -50,21 +51,25 @@ import {
 
 | 이름 | 설명 |
 | --- | --- |
+| `IMAGE_PREVIEW_FIT` | 미리보기를 열 때의 초기 배율, `1` |
 | `IMAGE_PREVIEW_MIN_SCALE`, `IMAGE_PREVIEW_MAX_SCALE` | 확대 한계, `0.5` 와 `4` |
 | `IMAGE_PREVIEW_ZOOM_STEP` | 버튼 한 번의 확대 거리, `0.25` |
 | `IMAGE_PREVIEW_WHEEL_FACTOR` | 휠 한 칸의 배율, `1.1` |
+| `IMAGE_PREVIEW_ROTATION_STEP` | 회전 버튼 한 번의 각도, `90` |
 | `clampImageScale(scale)` | 범위로 자르고 정수 퍼센트로 반올림한다 |
 | `zoomImageScale(scale, delta)` | 한 단계 더하고 자른다 |
 | `wheelImageScale(scale, direction)` | 휠 방향으로 배율을 곱하고 자른다 |
 | `rotateImage(rotation, delta)` | 주어진 각도만큼 돌린다 |
 | `uprightRotation(rotation)` | 가장 가까운 한 바퀴 각도, 보기 초기화에 쓴다 |
+| `unwindRotation(rotation)` | 닫을 때 돌아갈 가장 가까운 한 바퀴 각도, 반 바퀴일 때는 반대 방향 |
 | `isImageTransformed(view)` | 확대·회전·이동이 있었는지 |
 | `previewChrome(viewportWidth)` | 미리보기 층이 도구 모음을 위해 비우는 높이 |
 | `rotationFitScale(rotation, image, viewport, chrome)` | 가로세로가 바뀐 뒤 화면에 맞추는 비율 |
 | `scaleLabel(scale)` | `1.05` 를 `105%` 로 읽는다 |
+| `ImagePreviewView`, `ImagePreviewSize` | 보기와 크기의 타입 정의 |
 
 ## 접근성
 
 - 트리거에는 이름이 있고 썸네일에는 `alt` 가 있다. `alt` 가 비면 설명 없는 라벨을 쓴다.
 - 미리보기 층은 `role="dialog"` 와 `aria-modal="true"` 를 가지며, 열면 초점을 받고 `Esc` 로 닫히며 닫은 뒤 초점은 트리거로 돌아간다.
-- 여는 동안 페이지 스크롤을 잠근다. 「동작 줄이기」가 켜져 있으면 이동 애니메이션을 재생하지 않는다.
+- 여는 동안 페이지 스크롤을 잠근다. “동작 줄이기”가 켜져 있으면 이동 애니메이션을 재생하지 않는다.

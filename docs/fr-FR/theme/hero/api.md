@@ -12,7 +12,7 @@ tab: API
 | --- | --- | --- | --- |
 | `image` | `string \| { src, alt? } \| { light, dark, alt? }` | Obligatoire | URL de l'image ; `base` est ajouté automatiquement aux chemins du site, et les URL externes sont utilisées telles quelles. Sous la forme `{ light, dark }`, les deux images servent en mode clair et en mode sombre |
 | `alt` | `string` | `""` | Texte alternatif de l'image ; laissez-le vide pour une image purement décorative |
-| `date` | `string \| Date` | Aucune | Affichée au-dessus du titre. Une date comme `2026-05-19` est mise en forme selon la langue de la page et produite dans un `<time datetime>` ; tout autre texte s'affiche tel quel |
+| `date` | `string \| Date` | Aucune | Affichée au-dessus du titre. Une date comme `2026-05-19` est mise en forme selon la langue de la page et produite dans un `<time datetime="2026-05-19">` ; tout autre texte s'affiche tel quel |
 | `tagline` | `string` | La `description` de la page | Résumé d'une ligne sous le titre |
 | `background` | `string` | `--md-sys-color-primary-container` | Couleur de fond de la carte d'image ; toute couleur CSS ou tout jeton |
 | `fit` | `"cover" \| "contain"` | `"cover"` | `cover` remplit la carte et rogne ce qui dépasse ; `contain` montre toute l'image avec une marge, ce qui convient aux illustrations sur fond transparent |

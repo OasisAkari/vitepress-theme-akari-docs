@@ -12,7 +12,7 @@ tab: API
 | --- | --- | --- | --- |
 | `image` | `string \| { src, alt? } \| { light, dark, alt? }` | Required | Image URL; site paths get `base` added automatically, and external URLs are used as they are. Written as `{ light, dark }`, the two images are used in light and dark mode |
 | `alt` | `string` | `""` | Alt text of the image; leave it empty for a purely decorative image |
-| `date` | `string \| Date` | None | Shown above the title. A date such as `2026-05-19` is formatted for the page language and output as `<time datetime>`; any other text shows as written |
+| `date` | `string \| Date` | None | Shown above the title. A date such as `2026-05-19` is formatted for the page language and output as a tag such as `<time datetime="2026-05-19">`; any other text shows as written |
 | `tagline` | `string` | The page's `description` | One-line summary below the title |
 | `background` | `string` | `--md-sys-color-primary-container` | Background color of the image card; any CSS color or token |
 | `fit` | `"cover" \| "contain"` | `"cover"` | `cover` fills the card and crops what does not fit; `contain` shows the whole image with a margin, suited to illustrations with a transparent background |

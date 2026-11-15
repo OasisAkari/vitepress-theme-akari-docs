@@ -12,7 +12,7 @@ This page is the live example for [`<SearchDock>`](/theme/search/api#searchdock)
 
 <SearchDockDemo />
 
-Try it in three ways:
+Try it in four ways:
 
 - Reload this page: the field is already in the box, with no fly-in transition.
 - Leave this page (for example via **Overview**) and come back: it flies from the app bar to the box.

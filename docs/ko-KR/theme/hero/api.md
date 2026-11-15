@@ -12,7 +12,7 @@ tab: API
 | --- | --- | --- | --- |
 | `image` | `string \| { src, alt? } \| { light, dark, alt? }` | 필수 | 이미지 URL. 사이트 경로에는 `base`가 자동으로 붙고, 외부 URL은 그대로 씁니다. `{ light, dark }`로 쓰면 두 이미지를 각각 라이트 모드와 다크 모드에서 씁니다 |
 | `alt` | `string` | `""` | 이미지의 대체 텍스트. 순수한 장식용 이미지라면 비워 둡니다 |
-| `date` | `string \| Date` | 없음 | 제목 위에 표시됩니다. `2026-05-19` 같은 날짜는 페이지 언어에 맞게 형식화되어 `<time datetime>`으로 출력되고, 그 밖의 텍스트는 쓴 그대로 표시됩니다 |
+| `date` | `string \| Date` | 없음 | 제목 위에 표시됩니다. `2026-05-19` 같은 날짜는 페이지 언어에 맞게 형식화되어 `<time datetime="2026-05-19">` 태그로 출력되고, 그 밖의 텍스트는 쓴 그대로 표시됩니다 |
 | `tagline` | `string` | 페이지의 `description` | 제목 아래의 한 줄 요약 |
 | `background` | `string` | `--md-sys-color-primary-container` | 이미지 카드의 배경색. CSS 색상이나 토큰이면 무엇이든 됩니다 |
 | `fit` | `"cover" \| "contain"` | `"cover"` | `cover`는 카드를 채우고 넘치는 부분을 잘라 냅니다. `contain`은 여백을 두고 이미지 전체를 보여 주며, 배경이 투명한 일러스트에 어울립니다 |
