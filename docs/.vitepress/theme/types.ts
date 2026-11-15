@@ -292,6 +292,20 @@ export interface AkariMessages {
   moreActions: string;
   /** The floating button that scrolls back to the top, and its label. */
   backToTop: string;
+  /** Label of the dialog that shows a picture enlarged. Placeholders: `{alt}`. */
+  imagePreview: string;
+  /** The same dialog for a picture that carries no description. */
+  imagePreviewNoAlt: string;
+  /** Name of the button that opens the enlarged picture. */
+  imagePreviewOpen: string;
+  imagePreviewZoomIn: string;
+  imagePreviewZoomOut: string;
+  /** Placeholders: `{percentage}`. */
+  imagePreviewZoomStatus: string;
+  imagePreviewRotateLeft: string;
+  imagePreviewRotateRight: string;
+  imagePreviewResetView: string;
+  imagePreviewClose: string;
   /** The floating button that opens the table of contents on compact windows. */
   tocButton: string;
   languageLabel: string;

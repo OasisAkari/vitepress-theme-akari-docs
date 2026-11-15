@@ -3,6 +3,7 @@ import DefaultTheme from "vitepress/theme-without-fonts";
 
 import { provideAkariSiteData } from "./composables/useLocales";
 import SearchDock from "./search/components/SearchDock.vue";
+import ImagePreview from "./components/content/ImagePreview.vue";
 import Layout from "./layouts/AkariLayout.vue";
 import { routeComponentLinks } from "./links";
 import "./styles/index.css";
@@ -20,6 +21,7 @@ export default {
   enhanceApp({ app, router, siteData }) {
     provideAkariSiteData(app, siteData);
     app.component("SearchDock", SearchDock);
+    app.component("AkariImagePreview", ImagePreview);
     app.component("AkariSearchDock", SearchDock);
     if (inBrowser) routeComponentLinks(router);
   },
@@ -42,6 +44,8 @@ export { useAkariColorScheme } from "./composables/useColorScheme";
 export { useAkariI18n } from "./composables/useI18n";
 export { useAkariLocales } from "./composables/useLocales";
 export type { AkariLocaleOption } from "./composables/useLocales";
+export { default as AkariImagePreview } from "./components/content/ImagePreview.vue";
+export * from "./image-preview";
 export { useAkariSettings } from "./composables/useSettings";
 export { useSidebar } from "./composables/useSidebar";
 export { registerSearchBackend } from "./search/registry";
