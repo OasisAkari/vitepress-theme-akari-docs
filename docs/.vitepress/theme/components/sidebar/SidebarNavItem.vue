@@ -41,26 +41,22 @@ const groupKey = computed(
   () => `${props.parentKey ?? ""}\n${props.item.text}\n${findFirstLink(props.item) ?? ""}`,
 );
 const groupState = useNavGroupState();
-// As the reader left it; else open when it holds the current page or is
-// set to start open. Resolve to `undefined` instead of `false`: Vue's
-// hydration path can write `open="false"` / `selected="false"` before the
-// custom element upgrades, and Lit's Boolean converter treats any present
-// attribute as true.
+// Open when it holds the current page, then as the reader left it, then
+// open when it is set to start open. Resolve to `undefined` instead of
+// `false`: Vue's hydration path can write `open="false"` / `selected="false"`
+// before the custom element upgrades, and Lit's Boolean converter treats any
+// present attribute as true.
+//
+// Holding the current page is read from the route rather than written down:
+// it opens the group on arrival and, once the reader moves on, lets the
+// group fall back to its default instead of staying expanded for the rest
+// of the session.
 const open = computed(() => {
+  if (hasActive(props.item)) return true;
   const left = groupState.get(groupKey.value);
   if (left !== undefined) return left ? true : undefined;
-  return hasActive(props.item) || props.item.collapsed === false
-    ? true
-    : undefined;
+  return props.item.collapsed === false ? true : undefined;
 });
-// Going to a page in a group opens it, however it was left.
-watch(
-  () => hasChildren.value && hasActive(props.item),
-  (active) => {
-    if (active) groupState.set(groupKey.value, true);
-  },
-  { immediate: true },
-);
 
 // The theme opening or closing a group itself is not the reader's choice.
 let applying = false;
