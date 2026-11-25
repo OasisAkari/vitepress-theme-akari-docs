@@ -1,13 +1,17 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { useData, withBase } from "vitepress";
+import imageColors from "virtual:akari-image-colors";
 
+import { useAkariColorScheme } from "../../composables/useColorScheme";
 import { useHero } from "../../composables/useHero";
 import { usePagePattern } from "../../composables/usePattern";
 import { heroImageHref } from "../../hero";
+import { lookupImageMeta } from "../../heroColorCache";
 
-const { page } = useData();
+const { page, site } = useData();
 const hero = useHero();
+const { resolved: scheme } = useAkariColorScheme();
 
 const src = computed(() =>
   hero.value ? heroImageHref(hero.value.src, withBase) : "",
@@ -15,6 +19,66 @@ const src = computed(() =>
 const darkSrc = computed(() =>
   hero.value?.darkSrc ? heroImageHref(hero.value.darkSrc, withBase) : "",
 );
+
+// The image the current scheme shows is the one the loading indicator waits
+// for; the other one is hidden and, being lazy, is not fetched at all.
+const mounted = ref(false);
+const lightImage = ref<HTMLImageElement | null>(null);
+const darkImage = ref<HTMLImageElement | null>(null);
+const lightLoaded = ref(false);
+const darkLoaded = ref(false);
+const hasDark = computed(() => !!darkSrc.value);
+const loaded = computed(() =>
+  scheme.value === "dark" && hasDark.value
+    ? darkLoaded.value
+    : lightLoaded.value,
+);
+
+// The scrim takes the color of the image the current scheme shows, so the
+// wait looks like the picture that is arriving rather than a generic card.
+const overlayStyle = computed(() => {
+  const shown =
+    scheme.value === "dark" && hero.value?.darkSrc
+      ? hero.value.darkSrc
+      : hero.value?.src;
+  if (!shown) return undefined;
+  const meta = lookupImageMeta(
+    imageColors,
+    shown,
+    page.value.filePath,
+    site.value.base,
+  );
+  return meta?.color ? { "--akari-media-color": meta.color } : undefined;
+});
+
+function markLightLoaded(): void {
+  lightLoaded.value = true;
+}
+
+function markDarkLoaded(): void {
+  darkLoaded.value = true;
+}
+
+// A cached image can finish before Vue has attached the load listener, so
+// look at `complete` once the element is in the page.
+function checkComplete(): void {
+  if (lightImage.value?.complete) lightLoaded.value = true;
+  if (darkImage.value?.complete) darkLoaded.value = true;
+}
+
+// The indicator is a client-side enhancement: without JavaScript the image
+// simply shows, instead of sitting under a spinner that never goes away.
+onMounted(() => {
+  mounted.value = true;
+  checkComplete();
+});
+
+watch([src, darkSrc], async () => {
+  lightLoaded.value = false;
+  darkLoaded.value = false;
+  await nextTick();
+  checkComplete();
+});
 
 // The page's pattern, shared with the article; the layout moves the light.
 const pattern = usePagePattern();
@@ -56,6 +120,7 @@ const pattern = usePagePattern();
     <div
       class="akari-doc-hero__media"
       :data-fit="hero.fit"
+      :data-state="loaded ? 'loaded' : 'loading'"
       :style="hero.background ? { '--_background': hero.background } : undefined"
     >
       <!-- The same decoration, below the image: it shows where the image is transparent. -->
@@ -73,30 +138,53 @@ const pattern = usePagePattern();
       -->
       <template v-if="darkSrc">
         <img
+          ref="lightImage"
           class="akari-doc-hero__image akari-doc-hero__image--light"
           :src="src"
           :alt="hero.alt"
           loading="lazy"
           decoding="async"
           fetchpriority="high"
+          @load="markLightLoaded"
+          @error="markLightLoaded"
         />
         <img
+          ref="darkImage"
           class="akari-doc-hero__image akari-doc-hero__image--dark"
           :src="darkSrc"
           :alt="hero.alt"
           loading="lazy"
           decoding="async"
           fetchpriority="high"
+          @load="markDarkLoaded"
+          @error="markDarkLoaded"
         />
       </template>
       <img
         v-else
+        ref="lightImage"
         class="akari-doc-hero__image"
         :src="src"
         :alt="hero.alt"
+        loading="lazy"
         decoding="async"
         fetchpriority="high"
+        @load="markLightLoaded"
+        @error="markLightLoaded"
       />
+      <!-- Covers the image's own box with a centered Material indicator
+           until the image this scheme shows has arrived; then it fades out
+           instead of disappearing. -->
+      <Transition name="akari-media-fade">
+        <span
+          v-if="mounted && !loaded"
+          class="akari-doc-hero__loading"
+          :style="overlayStyle"
+          aria-hidden="true"
+        >
+          <m3e-loading-indicator></m3e-loading-indicator>
+        </span>
+      </Transition>
     </div>
   </header>
 </template>

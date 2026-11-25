@@ -5,10 +5,6 @@ import {
   Score,
 } from "@material/material-color-utilities";
 
-// Longest side the image is scaled to before its pixels are read, as
-// Material's own image extraction does: enough to find the dominant colors,
-// small enough to stay instant.
-const SAMPLE_SIZE = 128;
 const MAX_COLORS = 128;
 
 /**
@@ -16,6 +12,10 @@ const MAX_COLORS = 128;
  * wallpaper's source color: quantize, then score the colors for how well
  * they suit a UI theme. Transparent pixels are skipped. Null when nothing in
  * the image is colorful enough to build a theme on.
+ *
+ * The site samples hero colors at build time instead (see media-colors.ts);
+ * this reference implementation stays for tests and for anyone reading the
+ * algorithm without sharp and Node's module loader in the way.
  */
 export function sourceColorFromPixels(
   data: ArrayLike<number>,
@@ -39,44 +39,8 @@ export function sourceColorFromPixels(
   return best ? hexFromArgb(best) : null;
 }
 
-const pending = new Map<string, Promise<string | null>>();
-
-/**
- * Loads an image and samples its theme seed. Images from other origins can
- * only be read when they are served with CORS headers; otherwise this
- * resolves to null.
- *
- * This module is only loaded in the browser, on demand: the color library is
- * kept out of the server render and of pages without a hero.
- */
-export function sampleImageColor(url: string): Promise<string | null> {
-  const known = pending.get(url);
-  if (known) return known;
-
-  const task = (async () => {
-    const image = new Image();
-    image.crossOrigin = "anonymous";
-    image.decoding = "async";
-    image.src = url;
-    await image.decode();
-
-    // SVGs without an intrinsic size report zero; draw them square.
-    const width = image.naturalWidth || SAMPLE_SIZE;
-    const height = image.naturalHeight || SAMPLE_SIZE;
-    const scale = Math.min(1, SAMPLE_SIZE / Math.max(width, height));
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.max(1, Math.round(width * scale));
-    canvas.height = Math.max(1, Math.round(height * scale));
-
-    const context = canvas.getContext("2d", { willReadFrequently: true });
-    if (!context) return null;
-
-    context.drawImage(image, 0, 0, canvas.width, canvas.height);
-    return sourceColorFromPixels(
-      context.getImageData(0, 0, canvas.width, canvas.height).data,
-    );
-  })().catch(() => null);
-
-  pending.set(url, task);
-  return task;
-}
+export {
+  HERO_COLOR_SAMPLE_SIZE,
+  heroColorKey,
+  resolveHeroColor,
+} from "./heroColorCache";

@@ -21,6 +21,7 @@ import { provideAkariLocaleDialog } from "../composables/useLocaleDialog";
 import { useAkariLocales } from "../composables/useLocales";
 import { useHero } from "../composables/useHero";
 import { useHeroColor } from "../composables/useHeroColor";
+import { useLazyMedia } from "../composables/useLazyMedia";
 import {
   providePagePattern,
   useContentLight,
@@ -84,6 +85,7 @@ const components = computed(() => ({
 
 usePageTransition(pageElement, tabs.direction);
 useContentLight(pageElement);
+useLazyMedia(pageElement);
 useScrolledUnder(scrollSentinel);
 
 const desktopNavMedia =
