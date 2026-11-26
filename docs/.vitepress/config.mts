@@ -2,6 +2,8 @@ import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitepress";
 import { akariContent } from "./content";
 import { akariMediaColors } from "./media-colors";
+import { akariMediaWebp } from "./media-webp";
+import { injectAkariBoot } from "./theme/boot";
 import { akariHead } from "./theme/head";
 import { akariMarkdown } from "./theme/markdown";
 
@@ -19,6 +21,9 @@ export default defineConfig({
   // Light and dark belong to the theme's appearance button.
   appearance: false,
   head: akariHead(),
+  // The boot screen lives outside `#app` so it can paint before the app's
+  // components exist (see theme/boot.ts).
+  transformHtml: (html) => injectAkariBoot(html),
   markdown: {
     theme: { light: "github-light", dark: "github-dark" },
     headers: { level: [2, 3] },
@@ -43,4 +48,7 @@ export default defineConfig({
       }),
     ],
   },
+  // `images.webp` in docs/config.ts turns this on: every raster image the
+  // built pages point at is then replaced by a WebP copy of itself.
+  buildEnd: akariMediaWebp({ images: content.config?.images }),
 });
