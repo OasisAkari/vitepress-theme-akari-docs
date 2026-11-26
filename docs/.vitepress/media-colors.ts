@@ -76,6 +76,14 @@ interface Payload {
   heroes: Record<string, string | null>;
 }
 
+export interface AkariMediaColorsPlugin extends Plugin {
+  /**
+   * The hero seeds the build sampled, keyed by `heroColorKey`. Available to
+   * the site config, which writes a hero page's boot palette from it.
+   */
+  heroColors(): Promise<Record<string, string | null>>;
+}
+
 /**
  * Samples the color and intrinsic size of every image the site can show,
  * once, while the site is built, and hands the theme two modules: one for
@@ -83,7 +91,9 @@ interface Payload {
  * image's modification time and size, so a rebuild only reads the images
  * that changed.
  */
-export function akariMediaColors(options: AkariMediaColorsOptions): Plugin {
+export function akariMediaColors(
+  options: AkariMediaColorsOptions,
+): AkariMediaColorsPlugin {
   let config: ResolvedConfig | undefined;
   let logger: Logger = console;
   let payload: Promise<Payload> | undefined;
@@ -129,6 +139,9 @@ export function akariMediaColors(options: AkariMediaColorsOptions): Plugin {
 
   return {
     name: "akari-media-colors",
+    heroColors() {
+      return load().then((colored) => colored.heroes);
+    },
     configResolved(resolved) {
       config = resolved;
       logger = resolved.logger;

@@ -159,7 +159,13 @@ html:not([data-akari-ready]) .akari-sidebar-slot {
  * time), so it paints with this stylesheet alone: no JavaScript, no m3e
  * component, nothing to hydrate. It copies the shell's proportions — 64px
  * bar, 96px rail, document column — and leaves in the frame the app arrives.
+ *
+ * Its colors cannot come from the runtime palette: `--md-sys-color-*` only
+ * exists once m3e-theme has upgraded. bootColors.ts derives them from the
+ * site's theme seed while the site is built and appends them to this file as
+ * plain literals, so the first paint is already painted in the theme's color.
  */
+
 #akari-boot {
   position: fixed;
   inset: 0;
@@ -167,13 +173,28 @@ html:not([data-akari-ready]) .akari-sidebar-slot {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  color: var(--akari-doc-page-foreground, CanvasText);
-  background: var(--akari-doc-page-background, Canvas);
+  color: var(--akari-boot-foreground, var(--akari-doc-page-foreground, CanvasText));
+  background: var(--akari-boot-background, var(--akari-doc-page-background, Canvas));
   pointer-events: none;
 }
 
+/*
+ * Ready: the app is already painted underneath, so fading this layer out is
+ * the hand-off. Visibility flips only after the fade, keeping the skeleton
+ * out of the way for good once it is gone.
+ */
 html[data-akari-ready] #akari-boot {
-  display: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 260ms cubic-bezier(0.2, 0, 0, 1),
+    visibility 0s linear 260ms;
+}
+
+/* Nothing keeps animating while it fades or after it is gone. */
+html[data-akari-ready] #akari-boot *,
+html[data-akari-ready] #akari-boot *::after {
+  animation-play-state: paused;
 }
 
 .akari-boot__bar {
@@ -268,8 +289,9 @@ html[data-akari-ready] #akari-boot {
 }
 
 /*
- * The blocks share one shimmer. Mixed from the text color, so light and dark
- * both get a tint of the right side of the page instead of a fixed grey.
+ * The blocks wear a tint of the theme's primary color. The sweep is one
+ * pseudo-element moved with `transform`: the compositor animates it without
+ * repainting the block, and the block's own paint is a single solid color.
  */
 .akari-boot__mark,
 .akari-boot__brand,
@@ -278,37 +300,58 @@ html[data-akari-ready] #akari-boot {
 .akari-boot__title,
 .akari-boot__line,
 .akari-boot__cards span {
-  background-color: color-mix(in srgb, currentColor 8%, transparent);
-  background-image: linear-gradient(
-    100deg,
-    transparent 35%,
-    color-mix(in srgb, currentColor 6%, transparent) 50%,
-    transparent 65%
-  );
-  background-repeat: no-repeat;
-  background-size: 240% 100%;
-  animation: akari-boot-shimmer 1.8s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--akari-boot-block, color-mix(in srgb, currentColor 8%, transparent));
 }
 
-@keyframes akari-boot-shimmer {
+.akari-boot__mark::after,
+.akari-boot__brand::after,
+.akari-boot__pill::after,
+.akari-boot__rail span::after,
+.akari-boot__title::after,
+.akari-boot__line::after,
+.akari-boot__cards span::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 40%;
+  background-image: linear-gradient(
+    100deg,
+    transparent,
+    var(--akari-boot-shine, color-mix(in srgb, currentColor 20%, transparent)) 50%,
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: akari-boot-sweep 1.6s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes akari-boot-sweep {
   from {
-    background-position: 140% 0;
+    transform: translateX(-100%);
   }
 
   to {
-    background-position: -140% 0;
+    transform: translateX(350%);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .akari-boot__mark,
-  .akari-boot__brand,
-  .akari-boot__pill,
-  .akari-boot__rail span,
-  .akari-boot__title,
-  .akari-boot__line,
-  .akari-boot__cards span {
-    animation: none;
+  .akari-boot__mark::after,
+  .akari-boot__brand::after,
+  .akari-boot__pill::after,
+  .akari-boot__rail span::after,
+  .akari-boot__title::after,
+  .akari-boot__line::after,
+  .akari-boot__cards span::after {
+    display: none;
+  }
+
+  html[data-akari-ready] #akari-boot {
+    transition: none;
   }
 }
 
@@ -335,8 +378,19 @@ html[data-akari-ready] #akari-boot {
  * becoming ready. Freeze the shimmer and offer a reload; the button is the
  * only interactive thing on an otherwise inert screen.
  */
-html[data-akari-boot-stalled] #akari-boot :is(span, div) {
+html[data-akari-boot-stalled] #akari-boot *,
+html[data-akari-boot-stalled] #akari-boot *::after {
   animation-play-state: paused;
+}
+
+html[data-akari-boot-stalled] .akari-boot__mark::after,
+html[data-akari-boot-stalled] .akari-boot__brand::after,
+html[data-akari-boot-stalled] .akari-boot__pill::after,
+html[data-akari-boot-stalled] .akari-boot__rail span::after,
+html[data-akari-boot-stalled] .akari-boot__title::after,
+html[data-akari-boot-stalled] .akari-boot__line::after,
+html[data-akari-boot-stalled] .akari-boot__cards span::after {
+  display: none;
 }
 
 html[data-akari-boot-stalled] .akari-boot__bar,
@@ -353,10 +407,11 @@ html[data-akari-boot-stalled] .akari-boot__frame {
   width: 56px;
   height: 56px;
   padding: 0;
-  color: inherit;
+  color: var(--akari-boot-foreground);
   cursor: pointer;
-  background: color-mix(in srgb, currentColor 6%, transparent);
-  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  background: color-mix(in srgb, var(--akari-boot-foreground) 6%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--akari-boot-foreground) 18%, transparent);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   pointer-events: auto;
