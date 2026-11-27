@@ -37,7 +37,7 @@ export function provideAkariSettings(
   // section list and headings follow the locale being read.
   const { defaults, persist, storageKey } = config.value.settings;
   const state = reactive<AkariThemeSettings>({ ...defaults });
-  const { dir } = useData();
+  const { dir, lang } = useData();
 
   let hydrated = false;
   let storage: StorageLike | undefined;
@@ -48,6 +48,8 @@ export function provideAkariSettings(
 
     const root = document.documentElement;
     root.dir = state.direction === "auto" ? dir.value : state.direction;
+    // Text laid out against its language's direction; see base.css.
+    root.toggleAttribute("data-akari-dir-override", root.dir !== dir.value);
     root.style.fontSize = state.textSize;
   }
 
@@ -107,10 +109,11 @@ export function provideAkariSettings(
     },
   );
 
-  // VitePress rewrites <html dir> from the page's language whenever it
-  // changes; a direction the reader chose wins, `auto` keeps the language's.
+  // VitePress rewrites <html dir> whenever the page's language changes,
+  // even between two languages of the same direction, so this follows `lang`
+  // as well; a direction the reader chose wins, `auto` keeps the language's.
   watch(
-    dir,
+    [dir, lang],
     () => {
       if (hydrated) applyDocumentSettings();
     },
