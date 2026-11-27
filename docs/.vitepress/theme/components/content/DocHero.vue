@@ -293,7 +293,7 @@ const pattern = usePagePattern();
   }
 }
 
-:dir(rtl) .akari-doc-hero__pattern {
+.akari-doc[dir="rtl"] .akari-doc-hero__pattern {
   --_reach: radial-gradient(circle at 0% 0%, #000, transparent 75%);
 }
 
@@ -301,7 +301,7 @@ const pattern = usePagePattern();
   --_reach: radial-gradient(circle at 0% 100%, #000, transparent 75%);
 }
 
-:dir(rtl) .akari-doc-hero__media .akari-doc-hero__pattern {
+.akari-doc[dir="rtl"] .akari-doc-hero__media .akari-doc-hero__pattern {
   --_reach: radial-gradient(circle at 100% 100%, #000, transparent 75%);
 }
 
