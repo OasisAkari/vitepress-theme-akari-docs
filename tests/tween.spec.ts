@@ -65,9 +65,40 @@ describe("parseEasing", () => {
       "ease-out",
       "cubic-bezier(0.2, 0)",
       "cubic-bezier(0.2, 0, x, 1)",
+      "linear(0.4)",
     ]) {
       expect(parseEasing(easing)(0.3)).toBe(0.3);
     }
+  });
+
+  it("reads linear() stops, percentages and omitted positions", () => {
+    const ease = parseEasing("linear(0, 0.25, 1)");
+    expect(ease(0)).toBe(0);
+    expect(ease(0.25)).toBeCloseTo(0.125, 6);
+    expect(ease(0.5)).toBeCloseTo(0.25, 6);
+    expect(ease(0.75)).toBeCloseTo(0.625, 6);
+    expect(ease(1)).toBe(1);
+
+    const positioned = parseEasing("linear(0, 1 80%, 1)");
+    expect(positioned(0.4)).toBeCloseTo(0.5, 6);
+    expect(positioned(0.8)).toBe(1);
+    expect(positioned(1)).toBe(1);
+  });
+
+  it("keeps a spring's overshoot instead of flattening it", () => {
+    const ease = parseEasing(
+      "linear(0, 0.4754 14.8%, 0.9953 41.5%, 1.0152 53.7%, 0.9999 99.9%, 1)",
+    );
+    expect(ease(0.537)).toBeCloseTo(1.0152, 4);
+    expect(ease(0.2)).toBeGreaterThan(0.5);
+    expect(ease(1.4)).toBe(1);
+    expect(ease(-1)).toBe(0);
+  });
+
+  it("pins a curve that runs past the ends", () => {
+    expect(parseEasing("linear(0 10%, 1 90%)")(0.05)).toBe(0);
+    expect(parseEasing("linear(0 10%, 1 90%)")(0.5)).toBeCloseTo(0.5, 6);
+    expect(parseEasing("linear(0 10%, 1 90%)")(0.95)).toBe(1);
   });
 });
 

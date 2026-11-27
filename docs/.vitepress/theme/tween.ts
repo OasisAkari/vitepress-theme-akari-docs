@@ -27,13 +27,85 @@ export function cubicBezier(
   };
 }
 
-/** A CSS `cubic-bezier()` easing as a function; anything else is linear. */
+/**
+ * A CSS `linear()` easing as a function: piecewise straight lines through
+ * `(position, value)` stops, which is how the theme host ships its springs.
+ * Positions may be omitted, in which case the gaps between the given ones
+ * are split evenly, exactly as the browser does it.
+ */
+export function linearEasing(stops: string): ((t: number) => number) | null {
+  const points: { x: number | null; y: number }[] = [];
+
+  for (const stop of stops.split(",")) {
+    const tokens = stop.trim().split(/\s+/).filter(Boolean);
+    if (!tokens.length) return null;
+    const y = Number(tokens[0]);
+    if (!Number.isFinite(y)) return null;
+
+    let x: number | null = null;
+    if (tokens[1] !== undefined) {
+      const raw = tokens[1]!;
+      const position = Number.parseFloat(raw);
+      if (!Number.isFinite(position)) return null;
+      x = raw.endsWith("%") ? position / 100 : position;
+    }
+    points.push({ x, y });
+  }
+
+  if (points.length < 2) return null;
+
+  // The ends are pinned to 0 and 1; every unpositioned stop between two
+  // anchored ones sits at an equal share of the gap.
+  if (points[0]!.x === null) points[0]!.x = 0;
+  const last = points[points.length - 1]!;
+  if (last.x === null) last.x = 1;
+
+  let anchor = 0;
+  for (let i = 1; i < points.length; i++) {
+    const position = points[i]!.x;
+    if (position === null) continue;
+    const from = points[anchor]!.x!;
+    for (let j = anchor + 1; j < i; j++) {
+      points[j]!.x = from + ((position - from) * (j - anchor)) / (i - anchor);
+    }
+    anchor = i;
+  }
+
+  const curve = points.map((point) => ({ x: point.x!, y: point.y }));
+  // The offsets have to be monotonic for the lookup below to be a plain walk.
+  for (let i = 1; i < curve.length; i++) {
+    if (curve[i]!.x < curve[i - 1]!.x) curve[i]!.x = curve[i - 1]!.x;
+  }
+
+  return (t) => {
+    if (t <= curve[0]!.x) return curve[0]!.y;
+    const tail = curve[curve.length - 1]!;
+    if (t >= tail.x) return tail.y;
+
+    let i = 1;
+    while (i < curve.length - 1 && curve[i]!.x < t) i++;
+    const a = curve[i - 1]!;
+    const b = curve[i]!;
+    const span = b.x - a.x;
+    return span <= 0 ? b.y : a.y + ((b.y - a.y) * (t - a.x)) / span;
+  };
+}
+
+/**
+ * A CSS easing as a function of time. `cubic-bezier()` and `linear()` are
+ * read; keywords and `steps()` stay linear, which is what they fall back to
+ * here rather than a wrong curve.
+ */
 export function parseEasing(easing: string): (t: number) => number {
-  const match = /cubic-bezier\(([^)]+)\)/.exec(easing);
-  const values = match?.[1]?.split(",").map(Number);
-  return values?.length === 4 && values.every(Number.isFinite)
-    ? cubicBezier(values[0]!, values[1]!, values[2]!, values[3]!)
-    : (t) => t;
+  const bezier = /cubic-bezier\(([^)]*)\)/.exec(easing);
+  const values = bezier?.[1]?.split(",").map(Number);
+  if (values?.length === 4 && values.every(Number.isFinite)) {
+    return cubicBezier(values[0]!, values[1]!, values[2]!, values[3]!);
+  }
+
+  const linear = /linear\(([^)]*)\)/.exec(easing);
+  const curve = linear ? linearEasing(linear[1]!) : null;
+  return curve ?? ((t) => t);
 }
 
 /** `rgb()`, `rgba()` or `color(srgb …)` as 0–255 channels and alpha. */
