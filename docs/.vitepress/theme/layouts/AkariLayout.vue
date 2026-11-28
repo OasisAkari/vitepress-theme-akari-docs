@@ -27,6 +27,7 @@ import {
   useContentLight,
 } from "../composables/usePattern";
 import { provideAkariConfig } from "../composables/useAkariConfig";
+import { useCompositedDrawer } from "../composables/useCompositedDrawer";
 import { usePageTransition } from "../composables/usePageTransition";
 import { useScrolledUnder } from "../composables/useScrolledUnder";
 import { provideAkariSettings } from "../composables/useSettings";
@@ -71,6 +72,7 @@ const themeColor = computed(() => heroColor.value ?? settings.color);
 const themeScheme = computed(() => resolvedScheme.value ?? "auto");
 const themeElement = ref<HTMLElement | null>(null);
 const drawerElement = ref<(HTMLElement & { start: boolean }) | null>(null);
+useCompositedDrawer(drawerElement);
 const pageElement = ref<HTMLElement | null>(null);
 const scrollSentinel = ref<HTMLElement | null>(null);
 const isNotFound = computed(() => page.value.isNotFound === true);
